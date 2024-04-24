@@ -22,3 +22,18 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 
 `python manage.py runserver`
 
+## Integrantes
+-
+-
+-
+-
+
+## Convenciones de git
+### commits
+- ADD(commit_msg): Añade desarrollo a una funcionalidad existente.
+- FIX(commit_msg): Corrige un error para una funcionalidad.
+- MOD(commit_msg): Modifica el código de una funcionalidad.
+### ramas
+- MAIN (Rama principal del proyecto)
+- NOMBRE_INTEGRANTE (Rama de desarrollo para cada integrante)
+- NOMBRE_INTEGRANTE/FUNCIONALIDAD (Rama en opcional en caso de querer separar desarrollo)
