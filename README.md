@@ -2,6 +2,9 @@
 
 Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y Calidad de Software. UTN-FRLP
 
+Nombre de los intengrantes:
+    - Luciana Danise
+
 ## Dependencias
 
 - python 3
