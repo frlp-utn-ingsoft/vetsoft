@@ -28,7 +28,9 @@
                     <td>{{product.type}}</td>
                     <td>{{product.price}}</td>
                     <td>
-                        
+                        <a class="btn btn-outline-primary"
+                            href="{% url 'products_edit' id=product.id %}"
+                        >Editar</a>
                     </td>
             </tr>
             {% empty %}

@@ -13,4 +13,5 @@ urlpatterns = [
     path("proveedores/eliminar/", view=views.providers_delete, name="providers_delete"),
     path("products/", view=views.products_repository, name="products_repo"),
     path("products/nuevo", view=views.products_form, name="products_form"),
+    path("products/editar/<int:id>/", view=views.products_form, name="products_edit"),
 ]
