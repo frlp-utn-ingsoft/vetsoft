@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from .models import Client
+from .models import Medicine
 
 
 def home(request):
@@ -43,3 +44,26 @@ def clients_delete(request):
     client.delete()
 
     return redirect(reverse("clients_repo"))
+
+##Medicines
+
+def medicines_form(request, id=None):
+    if request.method == "POST":
+        medicine_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if medicine_id == "":
+            saved, errors = Medicine.save_medicine(request.POST)
+        else:
+            medicine = get_object_or_404(Medicine, pk=medicine_id)
+
+        return render(
+            request, "medicines/form.html", {"errors": errors, "medicine": request.POST}
+        )
+
+    medicine = None
+    if id is not None:
+        medicine = get_object_or_404(Client, pk=id)
+
+    return render(request, "medicines/form.html", {"medicine": medicine})
