@@ -38,6 +38,26 @@ def validate_provider(data):
 
     return errors
 
+def validate_medicine(data):
+    errors = {}
+
+    name = data.get("name", "")
+    description = data.get("description", "")
+    dose = data.get("dose")
+
+    if not name:
+        errors["name"] = "Por favor, ingrese un nombre de la medicina"
+    
+    if not description:
+        errors["description"] = "Por favor, ingrese una descripcion de la medicina"
+    
+    if dose is None:
+        errors["dose"] = "Por favor, ingrese una cantidad de la dosis de la medicina"
+    elif not isinstance(dose,int):
+        errors["dose"] = "La dosis debe ser un numero entero"
+
+    return errors
+
 
 class Client(models.Model):
     name = models.CharField(max_length=100)
@@ -97,5 +117,35 @@ class Provider (models.Model):
     def update_provider(self, provider_data):
         self.name = provider_data.get("name", "") or self.name
         self.email = provider_data.get("email", "") or self.email
+
+        self.save()
+
+class Medicine(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=255)
+    dose = models.IntegerField()
+
+    def __str__(self):
+        return self.name
+    
+    @classmethod
+    def save_medicine(cls, medicine_data):
+        errors = validate_medicine(medicine_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
+        Medicine.objects.create(
+            name=medicine_data.get("name"),
+            description=medicine_data.get("description"),
+            dose=medicine_data.get("dose"),
+        )
+
+        return True, None
+    
+    def update_medicine(self, medicine_data):
+        self.name = medicine_data.get("name", "") or self.name
+        self.description = medicine_data.get("description", "") or self.description
+        self.dose = medicine_data.get("dose", None) or self.dose
 
         self.save()
