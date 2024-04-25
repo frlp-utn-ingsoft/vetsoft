@@ -5,6 +5,7 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 Nombre de los intengrantes:
     - Luciana Danise
     - Renata Victoria Catelli
+    - Rocio Belen Tantos
 
 ## Dependencias
 
