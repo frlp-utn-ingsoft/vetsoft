@@ -54,3 +54,27 @@ class Client(models.Model):
         self.address = client_data.get("address", "") or self.address
 
         self.save()
+
+
+class Medicine(models.Model):
+    name = models.CharField(max_length=30)
+    description = models.CharField(max_length=50)
+    dose = models.IntegerField(max_length=3)
+
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def save_medicine(cls, medicine_data):
+        errors = validate_client(medicine_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
+        Medicine.objects.create(
+            name=medicine_data.get("name"),
+            phone=medicine_data.get("description"),
+            email=medicine_data.get("dose"),
+        )
+
+        return True, None
