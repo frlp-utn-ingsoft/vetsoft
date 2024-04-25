@@ -22,4 +22,10 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 
 `python manage.py runserver`
 
--Alumno: Angel Daniel Marocchi
+## Integrantes
+
+- Angel Daniel Marocchi
+- Dalma Florencia Muñoz
+-
+-
+-
