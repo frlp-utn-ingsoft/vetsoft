@@ -8,5 +8,6 @@ urlpatterns = [
     path("clientes/editar/<int:id>/", view=views.clients_form, name="clients_edit"),
     path("clientes/eliminar/", view=views.clients_delete, name="clients_delete"),
 
+    path("medicamentos/", view=views.medicines_repository, name="medicines_repo"),
     path("medicamentos/nuevo/", view=views.medicines_form, name="medicines_form"),
 ]

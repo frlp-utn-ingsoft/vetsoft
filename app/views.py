@@ -47,6 +47,10 @@ def clients_delete(request):
 
 ##Medicines
 
+def medicines_repository(request):
+    medicines = Medicine.objects.all()
+    return render(request, "medicines/repository.html", {"medicines": medicines})
+
 def medicines_form(request, id=None):
     if request.method == "POST":
         medicine_id = request.POST.get("id", "")
