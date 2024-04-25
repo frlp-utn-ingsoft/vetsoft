@@ -25,6 +25,11 @@
             <tr>
                     <td>{{provider.name}}</td>
                     <td>{{provider.email}}</td>
+                    <td>
+                        <a class="btn btn-outline-primary"
+                            href="{% url 'providers_edit' id=provider.id %}"
+                        >Editar</a>
+                    </td>
             </tr>
             {% empty %}
                 <tr>

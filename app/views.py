@@ -73,4 +73,4 @@ def providers_form(request, id=None):
     if id is not None:
         provider = get_object_or_404(Provider, pk=id)
 
-    return render(request, "providers/form.html", {"Provider": provider})
+    return render(request, "providers/form.html", {"provider": provider})
