@@ -55,11 +55,27 @@ class Client(models.Model):
 
         self.save()
 
+def validate_medicine(data):
+    errors = {}
+
+    name = data.get("name", "")
+    description = data.get("description", "")
+    dose = data.get("dose", "")
+
+    if name == "":
+        errors["name"] = "Por favor ingrese un nombre"
+
+    if description == "":
+        errors["description"] = "Por favor ingrese una descripción"
+
+    if dose == "":
+        errors["dose"] = "Por favor ingrese una dosis"
+    return errors
 
 class Medicine(models.Model):
     name = models.CharField(max_length=30)
     description = models.CharField(max_length=50)
-    dose = models.IntegerField(max_length=3)
+    dose = models.IntegerField()
 
     def __str__(self):
         return self.name
