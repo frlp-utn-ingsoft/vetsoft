@@ -26,5 +26,5 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 
 * Leo Sebastian Gonzales Tello
 * Juan Ignacio Frangolini
-* Nuria Robledo
+* Nuria Robledo  
 * Milagros Soberon
