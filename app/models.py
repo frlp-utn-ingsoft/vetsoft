@@ -94,3 +94,12 @@ class Medicine(models.Model):
         )
 
         return True, None
+    
+    class Pet(models.Model):
+        name = models.CharField(max_length=100)
+        breed = models.CharField(max_length=50)
+        birthday = models.DateField()
+
+        def __str__(self):
+            return self.name
+        
