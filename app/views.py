@@ -83,10 +83,6 @@ def providers_delete(request):
 
     return redirect(reverse("providers_repo"))
 
-def medicine_repository(request):
-    medicines = Medicine.objects.all()
-    return render(request, "medicine/repository.html", {"medicines": medicines})
-
 def medicine_form(request, id=None):
     if request.method == "POST":
         medicine_id = request.POST.get("id", "")
@@ -100,7 +96,7 @@ def medicine_form(request, id=None):
             medicine.update_medicine(request.POST)
 
         if saved:
-            return redirect("medicine_list")
+            return redirect(reverse("medicine_repo"))
 
         return render(
             request, "medicine/form.html", {"errors": errors, "medicine": request.POST}
@@ -109,12 +105,12 @@ def medicine_form(request, id=None):
     medicine = None
     if id is not None:
         medicine = get_object_or_404(Medicine, pk=id)
+   
+        if not hasattr(medicine, 'name'):
+            medicine.name = ''
 
     return render(request, "medicine/form.html", {"medicine": medicine})
 
-def medicine_delete(request):
-    medicine_id = request.POST.get("medicine_id")
-    medicine = get_object_or_404(Medicine, pk=int(medicine_id))
-    medicine.delete()
-
-    return redirect("medicine_list")
+def medicine_list(request):
+    medicines = Medicine.objects.all()
+    return render(request, 'medicine/list.html', {'medicines': medicines})
