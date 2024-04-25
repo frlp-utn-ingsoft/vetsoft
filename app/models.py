@@ -89,8 +89,15 @@ class Medicine(models.Model):
 
         Medicine.objects.create(
             name=medicine_data.get("name"),
-            phone=medicine_data.get("description"),
-            email=medicine_data.get("dose"),
+            description=medicine_data.get("description"),
+            dose=medicine_data.get("dose"),
         )
 
         return True, None
+    
+    def update_medicine(self, medicine_data):
+        self.name = medicine_data.get("name", "") or self.name
+        self.description = medicine_data.get("description", "") or self.description
+        self.dose = medicine_data.get("dose", "") or self.dose
+
+        self.save()
