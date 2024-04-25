@@ -51,7 +51,7 @@ def validate_product(data):
     if type == "":
         errors["type"] = "Por favor ingrese un tipo"
 
-    if price == 0:
+    if price == "" or price == "0":
         errors["price"] = "Por favor ingrese un precio mayor a cero"
 
     return errors
