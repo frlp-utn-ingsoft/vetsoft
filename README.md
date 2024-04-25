@@ -2,6 +2,10 @@
 
 Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y Calidad de Software. UTN-FRLP
 
+## Integrantes
+
+- Facundo Larrauri
+
 ## Dependencias
 
 - python 3
