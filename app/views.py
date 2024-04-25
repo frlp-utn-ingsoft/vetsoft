@@ -64,6 +64,6 @@ def medicines_form(request, id=None):
 
     medicine = None
     if id is not None:
-        medicine = get_object_or_404(Client, pk=id)
+        medicine = get_object_or_404(Medicine, pk=id)
 
     return render(request, "medicines/form.html", {"medicine": medicine})
