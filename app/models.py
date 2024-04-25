@@ -1,26 +1,16 @@
 from django.db import models
 
-
-def validate_client(data):
+def validate_fields(data, required_fields):
     errors = {}
 
-    name = data.get("name", "")
-    phone = data.get("phone", "")
-    email = data.get("email", "")
-
-    if name == "":
-        errors["name"] = "Por favor ingrese un nombre"
-
-    if phone == "":
-        errors["phone"] = "Por favor ingrese un teléfono"
-
-    if email == "":
-        errors["email"] = "Por favor ingrese un email"
-    elif email.count("@") == 0:
-        errors["email"] = "Por favor ingrese un email valido"
+    for key, value in required_fields.items():
+        field_value = data.get(key, "")
+        if field_value == "":
+            errors[key] = f"Por favor ingrese un {value}"
+        elif key == 'email' and field_value.count("@") == 0:
+            errors["email"] = "Por favor ingrese un email valido"
 
     return errors
-
 
 class Client(models.Model):
     name = models.CharField(max_length=100)
@@ -30,10 +20,18 @@ class Client(models.Model):
 
     def __str__(self):
         return self.name
+    
+    @staticmethod
+    def get_required_fields():
+        return {
+            "name": "nombre",
+            "email": "email",
+            "phone": "teléfono"
+        }
 
     @classmethod
     def save_client(cls, client_data):
-        errors = validate_client(client_data)
+        errors = validate_fields(client_data, Client.get_required_fields())
 
         if len(errors.keys()) > 0:
             return False, errors
@@ -48,7 +46,7 @@ class Client(models.Model):
         return True, None
 
     def update_client(self, client_data):
-        errors = validate_client(client_data)
+        errors = validate_fields(client_data, Client.get_required_fields())
 
         if len(errors.keys()) > 0:
             return False, errors
@@ -57,6 +55,51 @@ class Client(models.Model):
         self.email = client_data.get("email", "") or self.email
         self.phone = client_data.get("phone", "") or self.phone
         self.address = client_data.get("address", "")
+
+        self.save()
+
+        return True, None
+
+class Pet(models.Model):
+    name = models.CharField(max_length=100)
+    breed = models.CharField(max_length=50)
+    birthday = models.DateField()
+
+    def __str__(self):
+        return self.name
+    
+    @staticmethod
+    def get_required_fields():
+        return {
+            "name": "nombre",
+            "breed": "raza", 
+            "birthday": "fecha de nacimiento"
+        }
+
+    @classmethod
+    def save_pet(cls, pet_data):
+        errors = validate_fields(pet_data, Pet.get_required_fields())
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
+        Pet.objects.create(
+            name=pet_data.get("name"),
+            breed=pet_data.get("breed"),
+            birthday=pet_data.get("birthday"),
+        )
+
+        return True, None
+    
+    def update_pet(self, pet_data):
+        errors = validate_fields(pet_data, Pet.get_required_fields())
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
+        self.name = pet_data.get("name", "") or self.name
+        self.breed = pet_data.get("breed", "") or self.breed
+        self.birthday = pet_data.get("birthday", "") or self.birthday
 
         self.save()
 
