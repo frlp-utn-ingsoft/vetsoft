@@ -1,16 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listado de Medicinas</title>
-</head>
-<body>
-    <h1>Listado de Medicinas</h1>
-    <ul>
-        {% for medicine in medicines %}
-            <li>{{ medicine.name }} - {{ medicine.description }} - Dosis: {{ medicine.dose }}</li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% for medicine in medicines %}
+<tr>
+    <td>{{ medicine.name }}</td>
+    <td>{{ medicine.description }}</td>
+    <td>{{ medicine.dose }}</td>
+    <td>
+        <a class="btn btn-outline-primary"
+            href="{% url 'medicine_edit' id=medicine.id %}"
+        >Editar</a>
+        <form method="POST" action="{% url 'medicine_delete' %}">
+            {% csrf_token %}
+            <input type="hidden" name="medicine_id" value="{{ medicine.id }}" />
+            <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+        </form>
+    </td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="4" class="text-center">
+        No existen medicinas
+    </td>
+</tr>
+{% endfor %}

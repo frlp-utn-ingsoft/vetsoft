@@ -1,16 +1,13 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from .models import Client, Provider, Medicine
-
-
+from django.http import HttpResponseBadRequest
 
 def home(request):
     return render(request, "home.html")
 
-
 def clients_repository(request):
     clients = Client.objects.all()
     return render(request, "clients/repository.html", {"clients": clients})
-
 
 def clients_form(request, id=None):
     if request.method == "POST":
@@ -37,7 +34,6 @@ def clients_form(request, id=None):
 
     return render(request, "clients/form.html", {"client": client})
 
-
 def clients_delete(request):
     client_id = request.POST.get("client_id")
     client = get_object_or_404(Client, pk=int(client_id))
@@ -45,11 +41,9 @@ def clients_delete(request):
 
     return redirect(reverse("clients_repo"))
 
-
 def providers_repository(request):
     providers = Provider.objects.all()
     return render(request, "providers/repository.html", {"providers": providers})
-
 
 def providers_form(request, id=None):
     if request.method == "POST":
@@ -105,7 +99,7 @@ def medicine_form(request, id=None):
     medicine = None
     if id is not None:
         medicine = get_object_or_404(Medicine, pk=id)
-   
+    
         if not hasattr(medicine, 'name'):
             medicine.name = ''
 
@@ -114,3 +108,13 @@ def medicine_form(request, id=None):
 def medicine_list(request):
     medicines = Medicine.objects.all()
     return render(request, 'medicine/list.html', {'medicines': medicines})
+
+def medicine_delete(request):
+    if request.method == "POST":
+        medicine_id = request.POST.get("medicine_id")
+        if medicine_id:
+            medicine = get_object_or_404(Medicine, pk=int(medicine_id))
+            medicine.delete()
+            return redirect(reverse("medicine_repo"))
+    # Si la solicitud no es POST o no se proporciona un ID de medicina válido,devolvemos un error de solicitud incorrecta.
+    return HttpResponseBadRequest("Solicitud incorrecta")
