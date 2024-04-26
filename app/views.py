@@ -139,6 +139,7 @@ def products_form(request, id=None):
             product.update_product(request.POST)
         if saved:
             return redirect(reverse("products_repo"))
+        
 
         return render(
             request, "products/form.html", {"errors": errors, "product": request.POST}
