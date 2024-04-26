@@ -85,6 +85,11 @@ def medicines_delete(request):
 
 
 ##Pets
+def pets_repository(request):
+    pets = Pet.objects.all()
+    return render(request, "pets/repository.html", {"pets": pets})
+
+
 def pets_form(request, id=None):
     if request.method == "POST":
         pet_id = request.POST.get("id", "")
