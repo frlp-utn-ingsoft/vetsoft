@@ -63,3 +63,13 @@ class Pet(models.Model):
     def __str__(self):
         return self.name
     
+    @classmethod
+    def save_pet(pet_data):
+        Pet.objects.create(
+            name = pet_data.get("name"),
+            breed= pet_data.get("breed"),
+            birthday = pet_data.get("birthday"),
+        )
+
+        return True, None
+    
