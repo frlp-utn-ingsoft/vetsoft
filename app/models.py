@@ -143,6 +143,7 @@ class Pet(models.Model):
         )
 
         return True, None
+    
     def update_pet(self, pet_data):
         self.name = pet_data.get("name", "") or self.name
         self.breed = pet_data.get("breed", "") or self.breed
