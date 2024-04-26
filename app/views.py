@@ -89,4 +89,4 @@ def pets_form(request, id=None):
     if id is not None:
         pet = get_object_or_404(Pet, pk=id)
 
-    return render(request, "pet/form.html", {"pet": pet})
+    return render(request, "pets/form.html", {"pet": pet})
