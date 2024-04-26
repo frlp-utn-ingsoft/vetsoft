@@ -95,11 +95,45 @@ class Medicine(models.Model):
 
         return True, None
     
-    class Pet(models.Model):
-        name = models.CharField(max_length=100)
-        breed = models.CharField(max_length=50)
-        birthday = models.DateField()
+def validate_pet(data):
+    errors = {}
 
-        def __str__(self):
-            return self.name
+    name = data.get("name", "")
+    breed = data.get("breed", "")
+    birthday = data.get("birthday", "")
+
+    if name == "":
+        errors["name"] = "Por favor ingrese un nombre"
+
+    if breed == "":
+        errors["breed"] = "Por favor ingrese una raza"
+
+    if birthday == "":
+        errors["dose"] = "Por favor ingrese una fecha de nacimiento"
+    return errors
+    
+    
+class Pet(models.Model):
+    name = models.CharField(max_length=100)
+    breed = models.CharField(max_length=50)
+    birthday = models.DateField()
+
+    def __str__(self):
+        return self.name
+    
+    @classmethod
+    def save_pet(cls, pet_data):
+        errors = validate_pet(pet_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
+        Pet.objects.create(
+            name=pet_data.get("name"),
+            breed=pet_data.get("breed"),
+            birthday=pet_data.get("birthday"),
+        )
+
+        return True, None
+
         
