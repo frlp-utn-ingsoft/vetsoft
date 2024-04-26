@@ -9,4 +9,8 @@ urlpatterns = [
     path("clientes/eliminar/", view=views.clients_delete, name="clients_delete"),
 
     path("medicamentos/nuevo/", view=views.medicines_form, name="medicines_form"),
+
+
+    ##pet
+    path("mascotas/nuevo/", view=views.pets_form, name="pets_form"),
 ]
