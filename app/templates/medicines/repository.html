@@ -22,12 +22,12 @@
         </thead>
 
         <tbody>
-            {% for medicamento in medicine %}
+            {% for medicine in medicines %}
 
             <tr>
-                    <td>{{medicamento.name}}</td>
-                    <td>{{medicamento.description}}</td>
-                    <td>{{medicamento.dose}}</td>
+                    <td>{{medicine.name}}</td>
+                    <td>{{medicine.description}}</td>
+                    <td>{{medicine.dose}}</td>
                     <td>
                         <a class="btn btn-outline-primary"
                            href="{% url 'medicines_edit' id=medicine.id %}"
