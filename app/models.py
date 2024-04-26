@@ -151,5 +151,13 @@ class Pet(models.Model):
 
         self.save()
 
+
+class Product(models.Model):
+    name = models.CharField(max_length=50)
+    type = models.CharField(max_length=50)
+    price = models.FloatField()
+
+    def __str__(self):
+        return self.name
         
     
