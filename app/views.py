@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from .models import Client
 from .models import Medicine
-
+from .models import Pet
 
 def home(request):
     return render(request, "home.html")
@@ -67,3 +67,26 @@ def medicines_form(request, id=None):
         medicine = get_object_or_404(Medicine, pk=id)
 
     return render(request, "medicines/form.html", {"medicine": medicine})
+
+
+##Pets
+def pets_form(request, id=None):
+    if request.method == "POST":
+        pet_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if pet_id == "":
+            saved, errors = Pet.save_pet(request.POST)
+        else:
+            pet = get_object_or_404(Pet, pk=pet_id)
+
+        return render(
+            request, "pets/form.html", {"errors": errors, "pet": request.POST}
+        )
+
+    pet = None
+    if id is not None:
+        pet = get_object_or_404(Pet, pk=id)
+
+    return render(request, "pet/form.html", {"pet": pet})
