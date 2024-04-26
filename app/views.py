@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
-from .models import Client
-from .models import Medicine
-from .models import Pet
+from .models import Client, Medicine, Pet, Product
+
 
 def home(request):
     return render(request, "home.html")
