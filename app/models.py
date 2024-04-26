@@ -45,16 +45,18 @@ def validate_medicine(data):
     description = data.get("description", "")
     dose = data.get("dose")
 
-    if not name:
+    if name == "":
         errors["name"] = "Por favor, ingrese un nombre de la medicina"
     
-    if not description:
+    if description == "":
         errors["description"] = "Por favor, ingrese una descripcion de la medicina"
     
     if dose is None:
         errors["dose"] = "Por favor, ingrese una cantidad de la dosis de la medicina"
     elif not (isinstance(dose, str) and dose.isdigit()):
         errors["dose"] = "La dosis debe ser un numero entero"
+    
+    return errors
     
 def validate_product(data):
     errors={}
@@ -140,14 +142,10 @@ class Medicine(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=255)
     dose = models.IntegerField()
-class Product (models.Model):
-    name = models.CharField(max_length=100)
-    type = models.CharField(max_length=100)
-    price = models.FloatField()
 
     def __str__(self):
         return self.name
-    
+
     @classmethod
     def save_medicine(cls, medicine_data):
         errors = validate_medicine(medicine_data)
@@ -160,6 +158,22 @@ class Product (models.Model):
             description=medicine_data.get("description"),
             dose=medicine_data.get("dose"),
         )
+        return True, None
+
+    def update_medicine(self, medicine_data):
+        self.name = medicine_data.get("name", "") or self.name
+        self.description = medicine_data.get("description", "") or self.description
+        self.dose = medicine_data.get("dose", None) or self.dose
+
+        self.save()
+
+class Product (models.Model):
+    name = models.CharField(max_length=100)
+    type = models.CharField(max_length=100)
+    price = models.FloatField()
+
+    def __str__(self):
+        return self.name
         
     def save_product(cls, product_data):
         errors = validate_product(product_data)
@@ -175,12 +189,6 @@ class Product (models.Model):
 
         return True, None
     
-    def update_medicine(self, medicine_data):
-        self.name = medicine_data.get("name", "") or self.name
-        self.description = medicine_data.get("description", "") or self.description
-        self.dose = medicine_data.get("dose", None) or self.dose
-
-        self.save()
     def update_product(self, product_data):
         self.name=product_data.get("name", "") or self.name
         self.type=product_data.get("type", "") or self.type

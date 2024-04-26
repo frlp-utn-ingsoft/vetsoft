@@ -4,25 +4,21 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-6 offset-lg-3">
-            <h1>{% if medicine %}Editar{% else %}Nueva{% endif %} Medicina</h1>
+            <h1>Nueva Medicina </h1>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-6 offset-lg-3">
             <form class="vstack gap-3 {% if errors %}was-validated{% endif %}"
-                aria-label="Formulario de edición de medicina"
+                aria-label="Formulario de creacion de medicina"
                 method="POST"
-                {% if medicine and medicine.id %}
-                action="{% url 'medicine_edit' id=medicine.id %}"
-                {% endif %}
+                action="{% url 'medicine_form' %}"
                 novalidate>
           
                 {% csrf_token %}
 
-                {% if medicine and medicine.id %}
                 <input type="hidden" value="{{ medicine.id }}" name="id" />
-                {% endif %}
 
                 <div>
                     <label for="name" class="form-label">Nombre</label>
@@ -44,8 +40,8 @@
                     <input type="text"
                            id="description"
                            name="description"
-                           value="{{ medicine.description }}"
                            class="form-control"
+                           value="{{ medicine.description }}"
                            required/>
 
                     {% if errors.description %}
@@ -59,8 +55,8 @@
                     <input type="number"
                            id="dose"
                            name="dose"
-                           value="{{ medicine.description }}"
                            class="form-control"
+                           value="{{ medicine.description }}"
                            required/>
 
                     {% if errors.dose %}
