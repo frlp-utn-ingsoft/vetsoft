@@ -82,18 +82,24 @@ class Medicine(models.Model):
 
     @classmethod
     def save_medicine(cls, medicine_data):
-        errors = validate_client(medicine_data)
+        errors = validate_medicine(medicine_data)
 
         if len(errors.keys()) > 0:
             return False, errors
 
         Medicine.objects.create(
             name=medicine_data.get("name"),
-            phone=medicine_data.get("description"),
-            email=medicine_data.get("dose"),
+            description=medicine_data.get("description"),
+            dose=medicine_data.get("dose"),
         )
 
         return True, None
+    def update_medicine(self, medicine_data):
+        self.name = medicine_data.get("name", "") or self.name
+        self.description = medicine_data.get("description", "") or self.description
+        self.dose = medicine_data.get("dose", "") or self.dose
+
+        self.save()
     
 def validate_pet(data):
     errors = {}
@@ -137,3 +143,4 @@ class Pet(models.Model):
         return True, None
 
         
+    
