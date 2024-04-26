@@ -101,6 +101,8 @@ class Medicine(models.Model):
 
         self.save()
     
+
+ ##---------pets----------   
 def validate_pet(data):
     errors = {}
 
