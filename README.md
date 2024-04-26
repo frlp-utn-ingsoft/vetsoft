@@ -23,3 +23,4 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 `python manage.py runserver`
 
 #Iñaki Jose Zelayeta
+#Bruno Alejo Santillan
