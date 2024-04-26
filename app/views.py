@@ -122,6 +122,9 @@ def pets_delete(request):
     return redirect(reverse("pets_repo"))
 
 ##Products
+def products_repository(request):
+    products = Product.objects.all()
+    return render(request, "products/repository.html", {"products": products})
 
 def products_form(request, id=None):
     if request.method == "POST":
