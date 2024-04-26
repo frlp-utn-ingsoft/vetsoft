@@ -80,8 +80,8 @@ def providers_delete(request):
     return redirect(reverse("providers_repo"))
 
 def medicine_repository(request):
-    medicine = Provider.objects.all()
-    return render(request, "medicine/repository.html", {"medicine": medicine})
+    medicines = Medicine.objects.all()
+    return render(request, "medicine/repository.html", {"medicines": medicines})
 
 def medicine_form(request, id=None):
     if request.method == "POST":
