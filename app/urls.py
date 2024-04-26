@@ -20,5 +20,6 @@ urlpatterns = [
     path("mascotas/eliminar/", view=views.pets_delete, name="pets_delete"),
 
     ##products
+    path("productos/", view=views.products_repository, name="products_repo"),
     path("productos/nuevo/", view=views.products_form, name="products_form"),
 ]
