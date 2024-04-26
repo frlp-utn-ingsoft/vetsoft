@@ -151,6 +151,33 @@ class Pet(models.Model):
 
         self.save()
 
+##---------products----------   
+def validate_product(data):
+    errors = {}
+
+    name = data.get("name", "")
+    type = data.get("type", "") 
+    price = data.get("price", "")
+
+    if name == "":
+        errors["name"] = "Por favor ingrese un nombre"
+    
+    if type == "":
+        errors["type"] = "Por favor ingrese un tipo"
+
+    if price == "": 
+        errors["price"] = "Por favor ingrese un precio"
+    elif not price.isdigit():
+        errors["price"] = "El precio debe ser un número válido"
+    else:
+        try:
+            float_price = float(price)
+            if float_price <= 0:
+                errors["price"] = "El precio debe ser mayor que cero"
+        except ValueError:
+            errors["price"] = "El precio debe ser un número válido"
+    return errors
+
 
 class Product(models.Model):
     name = models.CharField(max_length=50)
@@ -159,5 +186,20 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+    
+    @classmethod
+    def save_product(cls, product_data):
+        errors = validate_product(product_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
+        Product.objects.create(
+            name=product_data.get("name"),
+            type=product_data.get("type"),
+            price=product_data.get("price"),
+        )
+
+        return True, None
         
     
