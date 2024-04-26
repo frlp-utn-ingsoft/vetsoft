@@ -109,7 +109,7 @@ def validate_pet(data):
         errors["breed"] = "Por favor ingrese una raza"
 
     if birthday == "":
-        errors["dose"] = "Por favor ingrese una fecha de nacimiento"
+        errors["birthday"] = "Por favor ingrese una fecha de nacimiento"
     return errors
     
     
