@@ -100,6 +100,10 @@ def pets_form(request, id=None):
             saved, errors = Pet.save_pet(request.POST)
         else:
             pet = get_object_or_404(Pet, pk=pet_id)
+            pet.update_pet(request.POST)
+        if saved:
+            return redirect(reverse("pets_repo"))
+
 
         return render(
             request, "pets/form.html", {"errors": errors, "pet": request.POST}
