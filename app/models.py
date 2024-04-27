@@ -54,3 +54,12 @@ class Client(models.Model):
         self.address = client_data.get("address", "") or self.address
 
         self.save()
+
+class Medicine(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=500)
+    dose = models.IntegerField()
+#    pets = models.ManyToManyField('Pet', related_name='medicines')
+
+    def __str__(self):
+        return self.name
