@@ -54,3 +54,11 @@ class Client(models.Model):
         self.address = client_data.get("address", "") or self.address
 
         self.save()
+
+class Product(models.Model):
+    name = models.CharField(max_length=100)
+    type = models.CharField(max_length=100)
+    price = models.IntegerField()
+
+    def __str__(self):
+        return self.name
