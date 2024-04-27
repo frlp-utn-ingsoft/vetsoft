@@ -112,3 +112,13 @@ class Vet(models.Model):
         )
 
         return True, None
+    
+    def update_vet(self, vet_data):
+        self.name = vet_data.get("name", "") or self.name
+        self.email = vet_data.get("email", "") or self.email
+        self.phone = vet_data.get("phone", "") or self.phone
+        self.address = vet_data.get("address", "") or self.address
+        self.opening_time = vet_data.get("opening_time", "") or self.opening_time
+        self.closing_time = vet_data.get("closing_time", "") or self.closing_time
+
+        self.save()
