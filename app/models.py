@@ -93,3 +93,9 @@ class Provider(models.Model):
         )
 
         return True, None
+    
+    def update_provider(self, provider_data):
+        self.name = provider_data.get("name", "") or self.name
+        self.email = provider_data.get("email", "") or self.email
+
+        self.save()
