@@ -37,12 +37,8 @@ def validate_pet(data):
 
     if birthday == "":
         errors["birthday"] = "Por favor ingrese una fecha"
-    else:
-        birthday_date = datetime.strptime(birthday, "%Y-%m-%d").date()
-        current_date = datetime.now().date()
-
-        if birthday_date > current_date:
-            errors["birthday"] = "La fecha de cumpleaños no puede ser mayor al dia actual"
+    elif datetime.strptime(birthday, "%Y-%m-%d").date() > datetime.now().date():
+        errors["birthday"] = "La fecha de cumpleaños no puede ser mayor al dia actual"
 
     return errors
 
