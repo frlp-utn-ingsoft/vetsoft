@@ -74,3 +74,9 @@ class Medicine(models.Model):
     
         return True, None
     
+    def update_medicine(self, medicine_data):
+        self.name =medicine_data.get("name", "") or self.name
+        self.description = medicine_data.get("description", "") or self.description
+        self.dose = medicine_data.get("dose", "") or self.dose
+
+        self.save()
