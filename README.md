@@ -28,4 +28,4 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 - Dalma Florencia Muñoz
 - Tomas Maximiliano Sbert
 - Muñoz Joaquin
--
+- Llontop Jose
