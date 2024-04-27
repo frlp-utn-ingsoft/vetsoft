@@ -84,3 +84,18 @@ class Product(models.Model):
         return self.name
 
     
+    # @classmethod
+    # def save_product(cls, product_data):
+    #     errors = validate_product(product_data)
+
+    #     if len(errors.keys()) > 0:
+    #         return False, errors
+
+    #     Product.objects.create(
+    #         name=client_data.get("name"),
+    #         phone=client_data.get("phone"),
+    #         email=client_data.get("email"),
+    #         address=client_data.get("address"),
+    #     )
+
+    #     return True, None
