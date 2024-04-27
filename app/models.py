@@ -55,6 +55,31 @@ class Client(models.Model):
 
         self.save()
 
+
+# Función de validación de medicamentos
+def validate_medicine(data):
+    errors = {}
+
+    name = data.get("name", "")
+    description = data.get("description", "")
+    dose = data.get("dose", "")
+
+    # Validación del nombre
+    if name == "":
+        errors["name"] = "Por favor ingrese un nombre"
+
+    # Validación de la descripción
+    if description == "":
+        errors["description"] = "Por favor ingrese una descripción"
+
+    # Validación de la dosis
+    if dose == "":
+        errors["dose"] = "Por favor ingrese una dosis"
+    elif not dose.isdigit():
+        errors["dose"] = "La dosis debe ser un número entero"
+
+    return errors
+
 # Definition of the Medicine model
 class Medicine(models.Model):
     name = models.CharField(max_length=100)
@@ -63,3 +88,27 @@ class Medicine(models.Model):
 
     def __str__(self):
         return self.name
+
+# Método de clase para guardar un nuevo medicamento
+    @classmethod
+    def save_medicine(cls, medicine_data):
+        errors = validate_medicine(medicine_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
+        Medicine.objects.create(
+            name=medicine_data.get("name"),
+            description=medicine_data.get("description"),
+            dose=medicine_data.get("dose"),
+        )
+
+        return True, None
+
+    # Método para actualizar un medicamento existente
+    def update_medicine(self, medicine_data):
+        self.name = medicine_data.get("name", "") or self.name
+        self.description = medicine_data.get("description", "") or self.description
+        self.dose = medicine_data.get("dose", "") or self.dose
+
+        self.save()
