@@ -55,6 +55,26 @@ class Client(models.Model):
 
         self.save()
 
+
+
+def validate_product():
+    errors = {}
+
+    name = data.get("name", "")
+    type = data.get("type", "")
+    price = data.get("price", "")
+
+    if name == "":
+        errors["name"] = "Por favor ingrese un nombre"
+
+    if type == "":
+        errors["type"] = "Por favor ingrese un tipo del producto"
+
+    if price == "":
+        errors["price"] = "Por favor ingrese un precio"
+
+    return errors
+
 class Product(models.Model):
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
@@ -62,3 +82,5 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    
