@@ -67,7 +67,7 @@ def vets_form(request, id=None):
             return redirect(reverse("vets_repo"))
 
         return render(
-            request, "vets/form.html", {"errors": errors, "vet": request.POST}
+            request, "vets/form.html", {"vet_errors": errors, "vet": request.POST}
         )
 
     vet = None
