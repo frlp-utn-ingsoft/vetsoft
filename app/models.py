@@ -22,6 +22,23 @@ def validate_client(data):
     return errors
 
 
+def validate_provider(data):
+    errors = {}
+
+    name = data.get("name", "")
+    email = data.get("email", "")
+
+    if name == "":
+        errors["name"] = "Por favor ingrese un nombre"
+
+    if email == "":
+        errors["email"] = "Por favor ingrese un email"
+    elif email.count("@") == 0:
+        errors["email"] = "Por favor ingrese un email valido"
+
+    return errors
+
+
 class Client(models.Model):
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
