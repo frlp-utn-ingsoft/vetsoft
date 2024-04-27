@@ -57,7 +57,7 @@ class Client(models.Model):
 
 
 
-def validate_product():
+def validate_product(data):
     errors = {}
 
     name = data.get("name", "")
@@ -92,9 +92,9 @@ class Product(models.Model):
             return False, errors
 
         Product.objects.create(
-            name=client_data.get("name"),
-            type=client_data.get("phone"),
-            price=client_data.get("price"),
+            name=product_data.get("name"),
+            type=product_data.get("type"),
+            price=product_data.get("price"),
         )
 
         return True, None
