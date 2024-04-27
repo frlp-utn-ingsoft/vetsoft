@@ -79,3 +79,17 @@ class Provider(models.Model):
 
     def __str__(self):
         return self.name
+    
+    @classmethod
+    def save_provider(cls, provider_data):
+        errors = validate_client(provider_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
+        Provider.objects.create(
+            name=provider_data.get("name"),
+            email=provider_data.get("email"),
+        )
+
+        return True, None
