@@ -54,3 +54,12 @@ class Client(models.Model):
         self.address = client_data.get("address", "") or self.address
 
         self.save()
+
+# Definition of the Medicine model
+class Medicine(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    dose = models.IntegerField()
+
+    def __str__(self):
+        return self.name
