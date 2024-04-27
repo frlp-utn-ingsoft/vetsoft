@@ -102,7 +102,7 @@ class Vet(models.Model):
         if len(errors.keys()) > 0:
             return False, errors
 
-        Client.objects.create(
+        Vet.objects.create(
             name=vet_data.get("name"),
             phone=vet_data.get("phone"),
             email=vet_data.get("email"),
