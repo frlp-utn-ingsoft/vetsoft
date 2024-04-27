@@ -98,3 +98,10 @@ class Product(models.Model):
         )
 
         return True, None
+
+    def update_product(self, product_data):
+        self.name = client_data.get("name", "") or self.name
+        self.type = client_data.get("type", "") or self.type
+        self.price = client_data.get("price", "") or self.price
+
+        self.save()
