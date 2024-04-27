@@ -25,3 +25,4 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 ## Integrantes
 
 Peres, Benjamin
+Peres, Valentin
