@@ -63,3 +63,14 @@ class Medicine(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def save_medicine(cls, medicine_data):
+        Medicine.objects.create(
+            name = models.medicine_data.get("name"),
+            description = models.medicine_data.get("description"),
+            dose = models.medicine_data.get("dose"),
+        )
+    
+        return True, None
+    
