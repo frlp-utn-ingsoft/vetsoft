@@ -160,7 +160,7 @@ def products_delete(request):
     
 ##Provider
 def providers_repository(request):
-   providers = Client.objects.all()
+   providers = Provider.objects.all()
    return render(request, "providers/repository.html", {"Providers": providers})
 
 def providers_form(request, id=None):
@@ -170,7 +170,7 @@ def providers_form(request, id=None):
         saved = True
 
         if provider_id == "":
-            saved, errors = Client.save_client(request.POST)
+            saved, errors = Provider.save_provider(request.POST)
         else:
             provider = get_object_or_404(Provider, pk=provider_id)
             provider.update_provider(request.POST)
