@@ -1,6 +1,5 @@
 from django.db import models
 
-
 def validate_client(data):
     errors = {}
 
@@ -22,16 +21,17 @@ def validate_client(data):
     return errors
 
 
-class Vet(models.Model):
+class Client(models.Model):
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
     email = models.EmailField()
+    address = models.CharField(max_length=100, blank=True)
 
-    def __str__(self):
+    def str(self):
         return self.name
 
     @classmethod
-    def save_vet(cls, client_data):
+    def save_client(cls, client_data):
         errors = validate_client(client_data)
 
         if len(errors.keys()) > 0:
@@ -53,6 +53,8 @@ class Vet(models.Model):
         self.address = client_data.get("address", "") or self.address
 
         self.save()
+
+#_______________________________________________________________________________
 
 def validate_vet(data):
     errors = {}
