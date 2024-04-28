@@ -43,3 +43,6 @@ def clients_delete(request):
     client.delete()
 
     return redirect(reverse("clients_repo"))
+
+def pets_form(request):
+    return render(request,"pets/form.html",)
