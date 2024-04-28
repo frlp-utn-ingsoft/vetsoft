@@ -22,17 +22,16 @@ def validate_client(data):
     return errors
 
 
-class Client(models.Model):
+class Vet(models.Model):
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
     email = models.EmailField()
-    address = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return self.name
 
     @classmethod
-    def save_client(cls, client_data):
+    def save_vet(cls, client_data):
         errors = validate_client(client_data)
 
         if len(errors.keys()) > 0:
@@ -55,7 +54,12 @@ class Client(models.Model):
 
         self.save()
 
+<<<<<<< HEAD
 #____________________________________________________________
+=======
+#_______________________________________________________________________________________________
+
+>>>>>>> 8138911243cf12a6cfb73da80603de7aeda18352
 def validate_vet(data):
     errors = {}
 
@@ -106,4 +110,7 @@ class Vet(models.Model):
         self.phone = vet_data.get("phone", "") or self.phone
 
         self.save()
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8138911243cf12a6cfb73da80603de7aeda18352
