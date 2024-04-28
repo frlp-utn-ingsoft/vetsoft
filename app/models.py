@@ -54,3 +54,51 @@ class Client(models.Model):
         self.address = client_data.get("address", "") or self.address
 
         self.save()
+
+def validate_medicines(data):
+        errors = {}
+        name = data.get("name", "")
+        description = data.get("description", "")
+        dose = data.get("dose", "")
+
+        if name == "":
+            errors["name"] = "Por favor, ingrese un nombre para la medicina"
+
+        if description == "":
+            errors["description"] = "Por favor, ingrese una descripcion"
+        
+        if dose == "":
+            errors["dose"] = "Por favor, ingrese una dosis para la medicina"
+
+        return errors
+
+class Medicine(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    dose = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+        
+    @classmethod
+    def save_medicine(cls, medicine_data):
+        errors = validate_medicines(medicine_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+            
+        Medicine.objects.create(
+            name=medicine_data.get("name"),
+            description=medicine_data.get("description"),
+            dose=medicine_data.get("dose"),
+            )
+        
+        return True, None
+    
+    def update_medicine(self, medicine_data):
+        self.name = medicine_data.get("name", "") or self.name
+        self.description = medicine_data.get("description", "") or self.description
+        self.dose = medicine_data.get("dose", "") or self.dose
+
+        self.save()
+    
