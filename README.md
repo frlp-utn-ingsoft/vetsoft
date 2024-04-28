@@ -27,3 +27,4 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
  - Bifano Ian
  - Pavoni Nicolás
  - Garcia Montes Luciano
+ - Rodríguez Luciano Matias
