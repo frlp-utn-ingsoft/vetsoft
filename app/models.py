@@ -40,6 +40,23 @@ def validate_product(data):
 
     return errors
 
+def validate_med(data):
+    errors = {}
+
+    name = data.get("name", "")
+    desc = data.get("desc", "")
+    dose = data.get("dose", "")
+
+    if name == "":
+        errors["name"] = "Por favor ingrese un nombre"
+
+    if desc == "":
+        errors["desc"] = "Por favor ingrese una descripcion"
+
+    if dose == "":
+        errors["dose"] = "Por favor ingrese una dosis"
+
+    return errors
 
 class Client(models.Model):
     name = models.CharField(max_length=100)
@@ -97,6 +114,36 @@ class Product(models.Model):
         )
 
         return True, None
+
+class Med(models.Model):
+    name = models.CharField(max_length=100)
+    desc = models.CharField(max_length=50)
+    dose = models.FloatField()
+
+    def __str__(self):
+            return self.name
+    
+    @classmethod
+    def save_med(cls, med_data):
+        errors = validate_med(med_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+        
+        Med.objects.create(
+            name=med_data.get("name"),
+            desc=med_data.get("desc"),
+            dose=med_data.get("dose"),
+        )
+        return True, None
+
+def update_med(self, med_data):
+    self.name = med_data.get("name","") or self.name
+    self.desc = med_data.get("desc","") or self.desc
+    self.dose = med_data.get("desc","") or self.dose
+
+    self.save()
+
     
     def update_product(self, product_data):
         self.name = product_data.get("name", "") or self.name
