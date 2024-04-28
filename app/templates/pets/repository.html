@@ -29,9 +29,9 @@
                 <td>{{pet.birthday}}</td>
                 <td>
                     <a class="btn btn-outline-primary"
-                       href="{% url 'home' %}"
+                       href="{% url 'pets_edit' id=pet.id %}"
                     >Editar</a>
-                    <form
+                    <form method="POST"
                         action="{% url 'home' %}"
                         aria-label="Formulario de eliminación de mascota">
 
