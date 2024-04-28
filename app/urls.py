@@ -30,5 +30,4 @@ urlpatterns = [
     path("proveedores/nuevo/", view=views.providers_form, name="providers_form"),
     path("proveedores/editar/<int:id>/", view=views.providers_form, name="providers_edit"),
 
-
 ]
