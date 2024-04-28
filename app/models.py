@@ -54,12 +54,6 @@ class Vet(models.Model):
 
         self.save()
 
-<<<<<<< HEAD
-#____________________________________________________________
-=======
-#_______________________________________________________________________________________________
-
->>>>>>> 8138911243cf12a6cfb73da80603de7aeda18352
 def validate_vet(data):
     errors = {}
 
@@ -110,7 +104,3 @@ class Vet(models.Model):
         self.phone = vet_data.get("phone", "") or self.phone
 
         self.save()
-<<<<<<< HEAD
-
-=======
->>>>>>> 8138911243cf12a6cfb73da80603de7aeda18352
