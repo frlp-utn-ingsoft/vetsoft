@@ -45,7 +45,9 @@ def clients_delete(request):
 
     return redirect(reverse("clients_repo"))
 
-
+def pets_repository(request):
+    pets=Pet.objects.all()
+    return render(request,"pets/repository.html", {"pets":pets})
 
 def pets_form(request, id=None):
     if request.method == "POST":
