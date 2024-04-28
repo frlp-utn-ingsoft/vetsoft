@@ -158,3 +158,32 @@ def products_delete(request):
 
     return redirect(reverse("products_repo"))
     
+##Provider
+def providers_repository(request):
+   providers = Client.objects.all()
+   return render(request, "providers/repository.html", {"Providers": providers})
+
+def providers_form(request, id=None):
+    if request.method == "POST":
+        provider_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if provider_id == "":
+            saved, errors = Client.save_client(request.POST)
+        else:
+            provider = get_object_or_404(Provider, pk=provider_id)
+            provider.update_provider(request.POST)
+
+        if saved:
+            return redirect(reverse("providers_repo"))
+
+        return render(
+            request, "providers/form.html", {"errors": errors, "provider": request.POST}
+        )
+
+    provider = None
+    if id is not None:
+        provider = get_object_or_404(Provider, pk=id)
+
+    return render(request, "providers/form.html", {"provider": provider})
