@@ -82,7 +82,7 @@ class Provider(models.Model):
     
     @classmethod
     def save_provider(cls, provider_data):
-        errors = validate_client(provider_data)
+        errors = validate_provider(provider_data)
 
         if len(errors.keys()) > 0:
             return False, errors
