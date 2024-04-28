@@ -44,6 +44,16 @@ def clients_delete(request):
 
     return redirect(reverse("clients_repo"))
 
+def medicine_repository(request):
+    medicine = Medicine.objects.all()
+    return render(request, "medicine/repository.html", {"medicine": medicine})
+
 def medicine_form(request):
     return render(request,"medicine/form.html",)
 
+def medicine_delete(request):
+    medicine_id = request.POST.get("medicine_id")
+    medicine = get_object_or_404(Medicine, pk=int(medicine_id))
+    medicine.delete()
+
+    return redirect(reverse("medicine_repo"))
