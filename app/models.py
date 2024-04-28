@@ -64,7 +64,7 @@ class Pet(models.Model):
         return self.name
     
     @classmethod
-    def save_pet(pet_data):
+    def save_pet(cls,pet_data):
         Pet.objects.create(
             name = pet_data.get("name"),
             breed= pet_data.get("breed"),
