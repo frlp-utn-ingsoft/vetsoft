@@ -113,7 +113,13 @@ class Product(models.Model):
             price=product_data.get("price"),
         )
 
-        return True, None
+        return True, None    
+    def update_product(self, product_data):
+        self.name = product_data.get("name", "") or self.name
+        self.type = product_data.get("type", "") or self.type
+        self.price = product_data.get("price", "") or self.price
+
+        self.save()
 
 class Med(models.Model):
     name = models.CharField(max_length=100)
@@ -143,11 +149,3 @@ def update_med(self, med_data):
     self.dose = med_data.get("desc","") or self.dose
 
     self.save()
-
-    
-    def update_product(self, product_data):
-        self.name = product_data.get("name", "") or self.name
-        self.type = product_data.get("type", "") or self.type
-        self.price = product_data.get("price", "") or self.price
-
-        self.save()
