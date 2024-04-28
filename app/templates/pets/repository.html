@@ -32,8 +32,9 @@
                        href="{% url 'pets_edit' id=pet.id %}"
                     >Editar</a>
                     <form method="POST"
-                        action="{% url 'home' %}"
+                        action="{% url 'pets_delete' %}"
                         aria-label="Formulario de eliminación de mascota">
+                        {% csrf_token %}
 
                         <input type="hidden" name="pet_id" value="{{ pet.id }}" />
                         <button class="btn btn-outline-danger">Eliminar</button>
