@@ -36,7 +36,7 @@
                     {% endif %}
                 </div>
                 <div>
-                    <label for="phone" class="form-label">Tipo</label>
+                    <label for="type" class="form-label">Tipo</label>
                     <input type="text"
                         id="type"
                         name="type"
@@ -51,19 +51,15 @@
                     {% endif %}
                 </div>
                 <div>
-                    <label for="email" class="form-label">Precio</label>
+                    <label for="price" class="form-label">Precio</label>
                     <input type="text"
                         id="price"
                         name="price"
                         class="form-control"
-                        value="{{ product.price }}"
+                        value="{{product.price}}"
                         required/>
-
-                    {% if errors.price %}
-                        <div class="invalid-feedback">
-                            {{ errors.price }}
-                        </div>
-                    {% endif %}
+                    <div style="color: #ea868f; font-size: 0.875rem; margin-top: 0.25rem;"> {{errors.price}} </div>
+                    
                 </div>
                 <button class="btn btn-primary">Guardar</button>
             </form>
