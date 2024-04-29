@@ -5,6 +5,10 @@ from .models import Client, Pet
 def home(request):
     return render(request, "home.html")
 
+########################### SEPARADOR ###################################
+# views de clientes
+#########################################################################
+
 
 def clients_repository(request):
     clients = Client.objects.all()
@@ -44,3 +48,49 @@ def clients_delete(request):
     client.delete()
 
     return redirect(reverse("clients_repo"))
+
+########################### SEPARADOR ###################################
+# creo las vistas para la lista de mascotas
+#########################################################################
+
+
+def pets_repository(request):
+    pets = Pet.objects.all()
+    return render(request, "pets/repository.html", {"pets": pets})
+
+
+def pets_form(request, id=None):
+    if request.method == "POST":
+        pet_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if pet_id == "":
+            saved, errors = Pet.save_pet(request.POST)
+        else:
+            pet = get_object_or_404(Pet, pk=pet_id)
+            pet.update_pet(request.POST)
+
+        if saved:
+            return redirect(reverse("pets_repo"))
+
+        return render(
+            request, "pets/form.html", {"errors": errors,
+                                        "pet": request.POST}
+        )
+
+    pet = None
+    if id is not None:
+        pet = get_object_or_404(Pet, pk=id)
+
+    clients = Client.objects.all()
+
+    return render(request, "pets/form.html", {"pet": pet, "clients": clients})
+
+
+def pets_delete(request):
+    pet_id = request.POST.get("pet_id")
+    pet = get_object_or_404(Pet, pk=int(pet_id))
+    pet.delete()
+
+    return redirect(reverse("pets_repo"))
