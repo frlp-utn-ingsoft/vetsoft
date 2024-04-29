@@ -42,7 +42,7 @@ def validate_product(data):
         except ValueError:
             errors["price"] = "Por favor ingrese un precio valido"
         else:
-            if float_price < 0:
+            if float_price <= 0:
                 errors["price"] = "Por favor ingrese un precio mayor que 0"
             else:
                 integer_part, decimal_part = str(float_price).split(".")
@@ -104,3 +104,14 @@ class Product(models.Model):
             type=product_data.get("type"),
             price=product_data.get("price"),
         )
+        return True, None
+    
+    def update_product(self, product_data):
+        self.name = product_data.get("name", "") or self.name
+        self.type = product_data.get("type", "") or self.type
+        try:
+            self.price = float(product_data.get("price", "")) or self.price
+        except ValueError:
+            pass
+
+        self.save()
