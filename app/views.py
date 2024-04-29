@@ -50,6 +50,7 @@ def pets_repository(request):
     return render(request,"pets/repository.html", {"pets":pets})
 
 def pets_form(request, id=None):
+    clients = Client.objects.all()
     if request.method == "POST":
         pet_id = request.POST.get("id", "")
         errors = {}
@@ -65,13 +66,13 @@ def pets_form(request, id=None):
             return redirect(reverse("pets_repo"))
 
         return render(
-            request, "pets/form.html", {"errors": errors, "pet": request.POST}
+            request, "pets/form.html", {"errors": errors, "pet": request.POST, "clients":clients},
         )
     pet = None
     if id is not None:
         pet = get_object_or_404(Pet, pk=id)
 
-    return render(request, "pets/form.html", {"pet": pet})
+    return render(request, "pets/form.html", {"pet": pet, "clients":clients})
 
 def pets_delete(request):
     pet_id = request.POST.get("pet_id")
