@@ -159,9 +159,11 @@ def products_delete(request):
     return redirect(reverse("products_repo"))
     
 ##Provider
+
 def providers_repository(request):
-   providers = Provider.objects.all()
-   return render(request, "providers/repository.html", {"Providers": providers})
+    providers = Provider.objects.all()
+    return render(request, "providers/repository.html", {"providers": providers})
+
 
 def providers_form(request, id=None):
     if request.method == "POST":
@@ -187,6 +189,7 @@ def providers_form(request, id=None):
         provider = get_object_or_404(Provider, pk=id)
 
     return render(request, "providers/form.html", {"provider": provider})
+
 
 def providers_delete(request):
     provider_id = request.POST.get("provider_id")
