@@ -46,7 +46,8 @@ def clients_delete(request):
 
 def medicine_repository(request):
     medicine = Medicine.objects.all()
-    return render(request, "medicine/repository.html", {"medicine": medicine})
+    print(medicine)
+    return render(request, "medicine/repository.html", {"medicines": medicine})
 
 #def medicine_form(request):
 #    return render(request,"medicine/form.html",)
