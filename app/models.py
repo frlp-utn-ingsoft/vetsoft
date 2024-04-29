@@ -21,6 +21,35 @@ def validate_client(data):
 
     return errors
 
+def validate_product(data):
+    errors = {}
+
+    name = data.get("name", "")
+    type = data.get("type", "")
+    price = data.get("price", "")
+
+    if name == "":
+        errors["name"] = "Por favor ingrese un nombre"
+
+    if type == "":
+        errors["type"] = "Por favor ingrese un tipo"
+
+    if price == "":
+        errors["price"] = "Por favor ingrese un precio"
+    else:
+        try:
+            float_price = float(price)
+        except ValueError:
+            errors["price"] = "Por favor ingrese un precio valido"
+        else:
+            if float_price < 0:
+                errors["price"] = "Por favor ingrese un precio mayor que 0"
+            else:
+                integer_part, decimal_part = str(float_price).split(".")
+                if len(decimal_part) > 2:
+                    errors["price"] = "Por favor ingrese un precio con maximo 2 decimales"
+    return errors
+
 
 class Client(models.Model):
     name = models.CharField(max_length=100)
@@ -62,3 +91,16 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def save_product(cls, product_data):
+        errors = validate_product(product_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
+        Product.objects.create(
+            name=product_data.get("name"),
+            type=product_data.get("type"),
+            price=product_data.get("price"),
+        )
