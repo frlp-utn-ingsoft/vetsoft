@@ -85,7 +85,7 @@ def validate_pet(data):
 
 class Pet(models.Model):
     name = models.CharField(max_length=100)
-    breed = models.CharField(max_length=100)
+    breed = models.CharField(max_length=100)  # raza
     birthday = models.DateField()
     owner = models.ForeignKey(Client, on_delete=models.CASCADE)
 
