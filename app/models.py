@@ -67,9 +67,9 @@ class Medicine(models.Model):
     @classmethod
     def save_medicine(cls, medicine_data):
         Medicine.objects.create(
-            name = models.medicine_data.get("name"),
-            description = models.medicine_data.get("description"),
-            dose = models.medicine_data.get("dose"),
+            name=medicine_data.get("name"),
+            description=medicine_data.get("description"),
+            dose=medicine_data.get("dose"),
         )
     
         return True, None
