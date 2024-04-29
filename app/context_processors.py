@@ -5,7 +5,7 @@ links = [
     {"label": "Home", "href": reverse("home"), "icon": "bi bi-house-door"},
     {"label": "Clientes", "href": reverse(
         "clients_repo"), "icon": "bi bi-people"},
-    {"label": "Mascotas", "href": reverse("pets_repo"), "icon": "bi bi-paw"}]
+    {"label": "Mascotas", "href": reverse("pets_repo"), "icon": "bi bi-paw bi-heart-fill"},]
 
 
 def navbar(request):
