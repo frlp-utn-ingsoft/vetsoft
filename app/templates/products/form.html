@@ -44,7 +44,7 @@
                         value="{{product.type}}"
                         required/>
 
-                    {% if errors.phone %}
+                    {% if errors.type %}
                         <div class="invalid-feedback">
                             {{ errors.type }}
                         </div>
@@ -59,7 +59,7 @@
                         value="{{ product.price }}"
                         required/>
 
-                    {% if errors.email %}
+                    {% if errors.price %}
                         <div class="invalid-feedback">
                             {{ errors.price }}
                         </div>

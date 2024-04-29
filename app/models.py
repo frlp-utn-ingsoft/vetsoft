@@ -36,19 +36,18 @@ def validate_product(data):
 
     if price == "":
         errors["price"] = "Por favor ingrese un precio"
-    else:
-        try:
-            float_price = float(price)
-        except ValueError:
-            errors["price"] = "Por favor ingrese un precio valido"
-        else:
-            if float_price <= 0:
-                errors["price"] = "Por favor ingrese un precio mayor que 0"
-            else:
-                integer_part, decimal_part = str(float_price).split(".")
-                if len(decimal_part) > 2:
-                    errors["price"] = "Por favor ingrese un precio con maximo 2 decimales"
+    try:
+        float_price = float(price)
+        if float_price <= 0:
+            errors["price"] = "Por favor ingrese un precio mayor que 0"
+        integer_part, decimal_part = str(float_price).split(".")
+        if len(decimal_part) > 2:
+            errors["price"] = "Por favor ingrese un precio con maximo 2 decimales"
+    except ValueError:
+        errors["price"] = "Por favor ingrese un precio valido"
+
     return errors
+                
 
 
 class Client(models.Model):
