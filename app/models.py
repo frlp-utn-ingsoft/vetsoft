@@ -102,3 +102,49 @@ class Medicine(models.Model):
 
         self.save()
     
+def validate_products(data):
+        errors = {}
+        name = data.get("name", "")
+        type = data.get("type", "")
+        price = data.get("price", "")
+
+        if name == "":
+            errors["name"] = "Ingrese el nombre del producto"
+
+        if type == "":
+            errors["type"] = "Ingrese el tipo de producto"
+        
+        if price == "":
+            errors["price"] = "Ingrese precio del producto, el precio no puede ser 0"
+
+        return errors
+
+class Product(models.Model):
+    name = models.CharField(max_length=100)
+    type = models.CharField(max_length=100)
+    price = models.FloatField()
+
+    def __str__(self):
+        return self.name
+        
+    @classmethod
+    def save_product(cls, product_data):
+        errors = validate_products(product_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+            
+        Product.objects.create(
+            name=product_data.get("name"),
+            type=product_data.get("type"),
+            price=product_data.get("price"),
+            )
+        
+        return True, None
+    
+    def update_product(self, product_data):
+        self.name = product_data.get("name", "") or self.name
+        self.type = product_data.get("type", "") or self.type
+        self.price = product_data.get("price", "") or self.price
+
+        self.save()
