@@ -31,4 +31,10 @@ urlpatterns = [
     path("proveedores/editar/<int:id>/", view=views.providers_form, name="providers_edit"),
     path("proveedores/eliminar/", view=views.providers_delete, name="providers_delete"),
 
+    ##vets
+    path("veterinarios/", view=views.vets_repository, name="vets_repo"),
+    path("veterinarios/nuevo/", view=views.vets_form, name="vets_form"),
+    path("veterinarios/editar/<int:id>/", view=views.vets_form, name="vets_edit"),
+    path("veterinarios/eliminar/", view=views.vets_delete, name="vets_delete"),
+
 ]
