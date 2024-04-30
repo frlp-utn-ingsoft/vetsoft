@@ -174,7 +174,8 @@ class Product (models.Model):
 
     def __str__(self):
         return self.name
-        
+    
+    @classmethod
     def save_product(cls, product_data):
         errors = validate_product(product_data)
 
