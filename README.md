@@ -2,10 +2,11 @@
 
 Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y Calidad de Software. UTN-FRLP
 
-Nombre de los intengrantes:
+Nombre de los integrantes:
     - Luciana Danise
     - Renata Victoria Catelli
     - Rocio Belen Tantos
+    - Demian Bogado
 
 ## Dependencias
 
