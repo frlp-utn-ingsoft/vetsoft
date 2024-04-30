@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
-from .models import Client
-from .models import Pet
+from .models import Client, Product, Provider, Veterinary, Pet
 
 def home(request):
     return render(request, "home.html")
@@ -82,3 +81,119 @@ def pets_delete(request):
     pet.delete()
 
     return redirect(reverse("pets_repo"))
+
+
+def products_repository(request):
+    products = Product.objects.all()
+    return render(request, "products/repository.html", {"products": products})
+
+
+def products_form(request, id=None):
+    if request.method == "POST":
+        product_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if product_id == "":
+            saved, errors = Product.save_product(request.POST)
+        else:
+            product = get_object_or_404(Product, pk=product_id)
+            product.update_product(request.POST)
+
+        if saved:
+            return redirect(reverse("products_repo"))
+
+        return render(
+            request, "products/form.html", {"errors": errors, "product": request.POST}
+        )
+
+    product = None
+    if id is not None:
+        product = get_object_or_404(Product, pk=id)
+
+    return render(request, "products/form.html", {"product": product})
+
+
+def products_delete(request):
+    product_id = request.POST.get("product_id")
+    product = get_object_or_404(Product, pk=int(product_id))
+    product.delete()
+
+    return redirect(reverse("products_repo"))
+
+
+
+def providers_repository(request):
+    providers = Provider.objects.all()
+    return render(request, "providers/repository.html", {"providers": providers})
+
+
+def providers_form(request, id=None):
+    if request.method == "POST":
+        provider_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if provider_id == "":
+            saved, errors = Provider.save_provider(request.POST)
+        else:
+            provider = get_object_or_404(Provider, pk=provider_id)
+            provider.update_provider(request.POST)
+
+        if saved:
+            return redirect(reverse("providers_repo"))
+
+        return render(
+            request, "providers/form.html", {"errors": errors, "provider": request.POST}
+        )
+
+    provider = None
+    if id is not None:
+        provider = get_object_or_404(Provider, pk=id)
+
+    return render(request, "providers/form.html", {"provider": provider})
+
+
+def providers_delete(request):
+    provider_id = request.POST.get("provider_id")
+    provider = get_object_or_404(Provider, pk=int(provider_id))
+    provider.delete()
+
+    return redirect(reverse("providers_repo"))
+
+def veterinary_repository(request):
+    veterinarians = Veterinary.objects.all()
+    return render(request, "veterinary/repository.html", {"veterinarians": veterinarians})
+
+def veterinary_form(request, id=None):
+    if request.method == "POST":
+        veterinary_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if veterinary_id == "":
+            saved, errors = Veterinary.save_veterinary(request.POST)
+        else:
+            veterinary = get_object_or_404(Veterinary, pk=veterinary_id)
+            veterinary.update_veterinary(request.POST)
+
+        if saved:
+            return redirect(reverse("veterinary_repo"))
+
+        return render(
+            request, "veterinary/form.html", {"errors": errors, "veterinary": request.POST}
+        )
+
+    veterinary = None
+    if id is not None:
+        veterinary = get_object_or_404(Veterinary, pk=id)
+
+    return render(request, "veterinary/form.html", {"veterinary": veterinary})
+
+
+def veterinary_delete(request):
+    veterinary_id = request.POST.get("veterinary_id")
+    veterinary = get_object_or_404(Veterinary, pk=int(veterinary_id))
+    veterinary.delete()
+
+    return redirect(reverse("veterinary_repo"))
