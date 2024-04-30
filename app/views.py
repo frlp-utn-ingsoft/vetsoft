@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
-from .models import Client, Medicine, Pet, Product, Provider
+from .models import Client, Medicine, Pet, Product, Provider, Vet
 
 
 def home(request):
@@ -159,7 +159,6 @@ def products_delete(request):
     return redirect(reverse("products_repo"))
     
 ##Provider
-
 def providers_repository(request):
     providers = Provider.objects.all()
     return render(request, "providers/repository.html", {"providers": providers})
@@ -197,3 +196,41 @@ def providers_delete(request):
     provider.delete()
 
     return redirect(reverse("providers_repo"))
+
+
+##Vets
+def vets_repository(request):
+    vets = Vet.objects.all()
+    return render(request, "vets/repository.html", {"vets": vets})
+
+def vets_form(request, id=None):
+    if request.method == "POST":
+        vet_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if vet_id == "":
+            saved, errors = Vet.save_vet(request.POST)
+        else:
+            vet = get_object_or_404(Vet, pk=vet_id)
+            vet.update_vet(request.POST)
+        if saved:
+            return redirect(reverse("vets_repo"))
+        
+
+        return render(
+            request, "vets/form.html", {"errors": errors, "vet": request.POST}
+        )
+
+    vet = None
+    if id is not None:
+        vet = get_object_or_404(Vet, pk=id)
+
+    return render(request, "vets/form.html", {"vet": vet})
+
+def vets_delete(request):
+    vet_id = request.POST.get("vet_id")
+    vet = get_object_or_404(Vet, pk=int(vet_id))
+    vet.delete()
+
+    return redirect(reverse("vets_repo"))
