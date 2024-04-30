@@ -55,6 +55,7 @@ class Client(models.Model):
 
         self.save()
 
+ ##---------medicine----------   
 def validate_medicine(data):
     errors = {}
 
@@ -252,5 +253,36 @@ class Provider(models.Model):
     def update_provider(self, provider_data):
         self.name = provider_data.get("name", "") or self.name
         self.email = provider_data.get("email", "") or self.email
+
+        self.save()
+
+ ##---------vets----------   
+class Vet(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField(max_length=254)
+    phone = models.IntegerField(max_length=15)
+
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def save_vet(cls, vet_data):
+        errors = validate_provider(vet_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
+        Vet.objects.create(
+            name=vet_data.get("name"),
+            email=vet_data.get("email"),
+            phone=vet_data.get("phone"),
+        )
+
+        return True, None
+
+    def update_vet(self, vet_data):
+        self.name = vet_data.get("name", "") or self.name
+        self.email = vet_data.get("email", "") or self.email
+        self.phone = vet_data.get("phone", "") or self.phone
 
         self.save()
