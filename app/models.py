@@ -55,6 +55,25 @@ def validate_product(data):
 
     return errors
 
+def validate_veterinary(data):
+    errors = {}
+
+    name = data.get("name", "")
+    phone = data.get("phone", "")
+    email = data.get("email", "")
+
+    if name == "":
+        errors["name"] = "Por favor ingrese un nombre"
+
+    if phone == "":
+        errors["phone"] = "Por favor ingrese un teléfono"
+
+    if email == "":
+        errors["email"] = "Por favor ingrese un email"
+    elif email.count("@") == 0:
+        errors["email"] = "Por favor ingrese un email valido"
+
+    return errors
 
 class Client(models.Model):
     name = models.CharField(max_length=100)
@@ -147,5 +166,35 @@ class Provider(models.Model):
         self.name = provider_data.get("name", "") or self.name
         self.email = provider_data.get("email", "") or self.email
 
+
+        self.save()
+
+class Veterinary(models.Model):
+    name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=15)
+    email = models.EmailField()
+
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def save_veterinary(cls, veterinary_data):
+        errors = validate_client(veterinary_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
+        Veterinary.objects.create(
+            name=veterinary_data.get("name"),
+            phone=veterinary_data.get("phone"),
+            email=veterinary_data.get("email"),
+        )
+
+        return True, None
+
+    def update_veterinary(self, veterinary_data):
+        self.name = veterinary_data.get("name", "") or self.name
+        self.email = veterinary_data.get("email", "") or self.email
+        self.phone = veterinary_data.get("phone", "") or self.phone
 
         self.save()
