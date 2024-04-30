@@ -4,6 +4,9 @@ links = [
     {"label": "Home", "href": reverse("home"), "icon": "bi bi-house-door"},
     {"label": "Clientes", "href": reverse("clients_repo"), "icon": "bi bi-people"},
     {"label": "Productos", "href": reverse("products_repo"), "icon": "bi bi-list"},
+    {"label": "Proveedores", "href": reverse("providers_repo"), "icon": "bi bi-person-lines-fill"},
+    {"label": "Veterinarios", "href": reverse("veterinary_repo"), "icon": "bi bi-heart-pulse"},
+    {"label": "Mascotas", "href": reverse("pets_repo"), "icon": "bi bi-0-circle"},
     {"label": "Medicamentos", "href": reverse("meds_repo"), "icon": "bi bi-capsule"},
     
 ]

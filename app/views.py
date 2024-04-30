@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
-from .models import Client, Product , Med
-
+from .models import Client, Product , Med, Provider, Veterinary, Pet
 
 def home(request):
     return render(request, "home.html")
@@ -45,6 +44,45 @@ def clients_delete(request):
     return redirect(reverse("clients_repo"))
 
 
+def pets_repository(request):
+    pets = Pet.objects.all()
+    return render(request, "pets/repository.html", {"pets": pets})
+
+
+def pets_form(request, id=None):
+    if request.method == "POST":
+        pet_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if pet_id == "":
+            saved, errors = Pet.save_pet(request.POST)
+        else:
+            pet = get_object_or_404(Pet, pk=pet_id)
+            pet.update_pet(request.POST)
+
+        if saved:
+            return redirect(reverse("pets_repo"))
+
+        return render(
+            request, "pets/form.html", {"errors": errors, "pet": request.POST}
+        )
+
+    pet = None
+    if id is not None:
+        pet = get_object_or_404(Pet, pk=id)
+
+    return render(request, "pets/form.html", {"pet": pet})
+
+
+def pets_delete(request):
+    pet_id = request.POST.get("pet_id")
+    pet = get_object_or_404(Pet, pk=int(pet_id))
+    pet.delete()
+
+    return redirect(reverse("pets_repo"))
+
+
 def products_repository(request):
     products = Product.objects.all()
     return render(request, "products/repository.html", {"products": products})
@@ -82,6 +120,83 @@ def products_delete(request):
     product.delete()
 
     return redirect(reverse("products_repo"))
+
+
+
+def providers_repository(request):
+    providers = Provider.objects.all()
+    return render(request, "providers/repository.html", {"providers": providers})
+
+
+def providers_form(request, id=None):
+    if request.method == "POST":
+        provider_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if provider_id == "":
+            saved, errors = Provider.save_provider(request.POST)
+        else:
+            provider = get_object_or_404(Provider, pk=provider_id)
+            provider.update_provider(request.POST)
+
+        if saved:
+            return redirect(reverse("providers_repo"))
+
+        return render(
+            request, "providers/form.html", {"errors": errors, "provider": request.POST}
+        )
+
+    provider = None
+    if id is not None:
+        provider = get_object_or_404(Provider, pk=id)
+
+    return render(request, "providers/form.html", {"provider": provider})
+
+
+def providers_delete(request):
+    provider_id = request.POST.get("provider_id")
+    provider = get_object_or_404(Provider, pk=int(provider_id))
+    provider.delete()
+
+    return redirect(reverse("providers_repo"))
+
+def veterinary_repository(request):
+    veterinarians = Veterinary.objects.all()
+    return render(request, "veterinary/repository.html", {"veterinarians": veterinarians})
+
+def veterinary_form(request, id=None):
+    if request.method == "POST":
+        veterinary_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if veterinary_id == "":
+            saved, errors = Veterinary.save_veterinary(request.POST)
+        else:
+            veterinary = get_object_or_404(Veterinary, pk=veterinary_id)
+            veterinary.update_veterinary(request.POST)
+
+        if saved:
+            return redirect(reverse("veterinary_repo"))
+
+        return render(
+            request, "veterinary/form.html", {"errors": errors, "veterinary": request.POST}
+        )
+
+    veterinary = None
+    if id is not None:
+        veterinary = get_object_or_404(Veterinary, pk=id)
+
+    return render(request, "veterinary/form.html", {"veterinary": veterinary})
+
+
+def veterinary_delete(request):
+    veterinary_id = request.POST.get("veterinary_id")
+    veterinary = get_object_or_404(Veterinary, pk=int(veterinary_id))
+    veterinary.delete()
+
+    return redirect(reverse("veterinary_repo"))
 
 
 def meds_repository(request):
