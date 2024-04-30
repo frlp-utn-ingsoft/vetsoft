@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from .models import Client, Product
-
+from .models import Pet
+from .models import Medicine
 
 def home(request):
     return render(request, "home.html")
@@ -79,3 +80,78 @@ def products_delete(request):
     product.delete()
     return redirect(reverse("products_repo"))
 
+
+def medicine_repository(request):
+    medicine = Medicine.objects.all()
+    print(medicine)
+    return render(request, "medicine/repository.html", {"medicines": medicine})
+
+#def medicine_form(request):
+#    return render(request,"medicine/form.html",)
+
+def medicine_form(request, id=None):
+    if request.method == "POST":
+        medicine_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if medicine_id == "":
+            saved, errors = Medicine.save_medicine(request.POST)
+        else:
+            medicine = get_object_or_404(Medicine, pk=medicine_id)
+            medicine.update_client(request.POST)
+
+        if saved:
+            return redirect(reverse("medicine_repo"))
+
+        return render(
+            request, "medicine/form.html", {"errors": errors, "medicine": request.POST}
+        )
+
+    medicine = None
+    if id is not None:
+        medicine = get_object_or_404(Client, pk=id)
+
+    return render(request, "medicine/form.html", {"medicine": medicine})
+
+def medicine_delete(request):
+    medicine_id = request.POST.get("medicine_id")
+    medicine = get_object_or_404(Medicine, pk=int(medicine_id))
+    medicine.delete()
+
+    return redirect(reverse("medicine_repo"))
+def pets_repository(request):
+    pets=Pet.objects.all()
+    return render(request,"pets/repository.html", {"pets":pets})
+
+def pets_form(request, id=None):
+    clients = Client.objects.all()
+    if request.method == "POST":
+        pet_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if pet_id == "":
+            saved, errors = Pet.save_pet(request.POST)
+        else:
+            pet = get_object_or_404(Pet, pk=pet_id)
+            pet.update_pet(request.POST)
+
+        if saved:
+            return redirect(reverse("pets_repo"))
+
+        return render(
+            request, "pets/form.html", {"errors": errors, "pet": request.POST, "clients":clients},
+        )
+    pet = None
+    if id is not None:
+        pet = get_object_or_404(Pet, pk=id)
+
+    return render(request, "pets/form.html", {"pet": pet, "clients":clients})
+
+def pets_delete(request):
+    pet_id = request.POST.get("pet_id")
+    pet = get_object_or_404(Pet, pk=int(pet_id))
+    pet.delete()
+
+    return redirect(reverse("pets_repo"))
