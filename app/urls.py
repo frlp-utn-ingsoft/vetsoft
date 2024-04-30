@@ -11,4 +11,8 @@ urlpatterns = [
     path("medicines/nuevo/", view=views.medicines_form, name="medicines_form"),
     path("medicines/editar/<int:id>/", view=views.medicines_form, name="medicines_edit"),
     path("medicines/eliminar/", view=views.medicines_delete, name="medicines_delete"),
+    path("products/", view=views.products_repository, name="products_repo"),
+    path("products/nuevo/", view=views.products_form, name="products_form"),
+    path("products/editar/<int:id>/", view=views.products_form, name="products_edit"),
+    path("products/eliminar/", view=views.products_delete, name="products_delete"),
 ]
