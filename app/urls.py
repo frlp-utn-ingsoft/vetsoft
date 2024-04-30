@@ -15,4 +15,8 @@ urlpatterns = [
     path("proveedores/nuevo/", view=views.providers_form, name="providers_form"),
     path("proveedores/editar/<int:id>/", view=views.providers_form, name="providers_edit"),
     path("proveedores/eliminar/", view=views.providers_delete, name="providers_delete"),
+    path("veterinarios/", view=views.veterinary_repository, name="veterinary_repo"),
+    path("veterinarios/nuevo/", view=views.veterinary_form, name="veterinary_form"),
+    path("veterinarios/editar/<int:id>/", view=views.veterinary_form, name="veterinary_edit"),
+    path("veterinarios/eliminar/", view=views.veterinary_delete, name="veterinary_delete"),
 ]
