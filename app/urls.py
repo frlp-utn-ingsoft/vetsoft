@@ -9,8 +9,8 @@ urlpatterns = [
     path("clientes/eliminar/", view=views.clients_delete, name="clients_delete"),
 
     #URLS del modelo Vet
-    path("veterinaria/", view=views.vets_repository, name="vets_repo"),
-    path("veterinaria/nuevo/", view=views.vets_form, name="vets_form"),
-    path("veterinaria/editar/<int:id>/", view=views.vets_form, name="vets_edit"),
-    path("veterinaria/eliminar/", view=views.vets_delete, name="vets_delete"),
+    path("veterinario/", view=views.vets_repository, name="vets_repo"),
+    path("veterinario/nuevo/", view=views.vets_form, name="vets_form"),
+    path("veterinario/editar/<int:id>/", view=views.vets_form, name="vets_edit"),
+    path("veterinario/eliminar/", view=views.vets_delete, name="vets_delete"),
 ]

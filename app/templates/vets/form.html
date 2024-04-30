@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-lg-6 offset-lg-3">
             <form class="vstack gap-3 {% if vet_errors %}was-validated{% endif %}"
-                aria-label="Formulario de creación de Veterinaria"
+                aria-label="Formulario de creación de Veterinario"
                 method="POST"
                 action="{% url 'vets_form' %}"
                 novalidate>
@@ -72,34 +72,7 @@
                         La dirección es opcional
                     </div>
                 </div>
-                <div>
-                    <label for="vet_opening_time" class="form-label">Horario de Apertura</label>
-                    <input type="time"
-                        id="vet_opening_time"
-                        name="opening_time"
-                        class="form-control"
-                        required/>
-
-                    {% if vet_errors.opening_time %}
-                        <div class="invalid-feedback">
-                            {{ vet_errors.opening_time }}
-                        </div>
-                    {% endif %}
-                </div>
-                <div>
-                    <label for="vet_closing_time" class="form-label">Horario de Cierre</label>
-                    <input type="time"
-                        id="vet_closing_time"
-                        name="closing_time"
-                        class="form-control"
-                        required/>
-
-                    {% if vet_errors.closing_time %}
-                        <div class="invalid-feedback">
-                            {{ vet_errors.closing_time }}
-                        </div>
-                    {% endif %}
-                </div>
+                
 
                 <button class="btn btn-primary">Guardar</button>
             </form>
