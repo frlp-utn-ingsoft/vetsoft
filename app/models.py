@@ -257,6 +257,25 @@ class Provider(models.Model):
         self.save()
 
  ##---------vets----------   
+def validate_vet(data):
+    errors = {}
+
+    name = data.get("name", "")
+    email = data.get("email", "")
+    phone = data.get("phone", "")
+
+    if name == "":
+        errors["name"] = "Por favor ingrese un nombre"
+
+    if email == "":
+        errors["email"] = "Por favor ingrese un email"
+    elif email.count("@") == 0:
+        errors["email"] = "Por favor ingrese un email valido"
+    if phone == "":
+        errors["phone"] = "Por favor ingrese un teléfono"
+
+    return errors
+
 class Vet(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(max_length=254)
@@ -267,7 +286,7 @@ class Vet(models.Model):
 
     @classmethod
     def save_vet(cls, vet_data):
-        errors = validate_provider(vet_data)
+        errors = validate_vet(vet_data)
 
         if len(errors.keys()) > 0:
             return False, errors
