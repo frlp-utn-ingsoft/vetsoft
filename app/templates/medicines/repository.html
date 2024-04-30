@@ -17,7 +17,7 @@
                 <th>Nombre</th>
                 <th>Descripción</th>
                 <th>Dosis</th>
-                <th></th>
+                <th>Acciones</th>
             </tr>
         </thead>
 
@@ -29,17 +29,20 @@
                     <td>{{medicine.description}}</td>
                     <td>{{medicine.dose}}</td>
                     <td>
-                        <a class="btn btn-outline-primary"
-                           href="{% url 'medicines_edit' id=medicine.id %}"
-                        >Editar</a>
-                        <form method="POST"
-                            action="{% url 'medicines_delete' %}"
-                            aria-label="Formulario de eliminación de medicamento">
-                            {% csrf_token %}
+                        <div class="d-inline-flex gap-2">  
 
-                            <input type="hidden" name="medicine_id" value="{{ medicine.id }}" />
-                            <button class="btn btn-outline-danger">Eliminar</button>
-                        </form>
+                            <a class="btn btn-outline-primary"
+                            href="{% url 'medicines_edit' id=medicine.id %}"
+                            >Editar</a>
+                            <form method="POST"
+                                action="{% url 'medicines_delete' %}"
+                                aria-label="Formulario de eliminación de medicamento">
+                                {% csrf_token %}
+
+                                <input type="hidden" name="medicine_id" value="{{ medicine.id }}" />
+                                <button class="btn btn-outline-danger">Eliminar</button>
+                            </form>
+                        </div>
                     </td>
             </tr>
             {% empty %}

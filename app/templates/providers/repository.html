@@ -16,7 +16,7 @@
             <tr>
                 <th>Nombre</th>
                 <th>Email</th>
-                <th></th>
+                <th>Acciones</th>
             </tr>
         </thead>
 
@@ -26,17 +26,19 @@
                     <td>{{provider.name}}</td>
                     <td>{{provider.email}}</td>
                     <td>
-                        <a class="btn btn-outline-primary"
-                           href="{% url 'providers_edit' id=provider.id %}"
-                        >Editar</a>
-                        <form method="POST"
-                            action="{% url 'providers_delete' %}"
-                            aria-label="Formulario de eliminación de proveedor">
-                            {% csrf_token %}
+                        <div class="d-inline-flex gap-2">  
+                            <a class="btn btn-outline-primary"
+                            href="{% url 'providers_edit' id=provider.id %}"
+                            >Editar</a>
+                            <form method="POST"
+                                action="{% url 'providers_delete' %}"
+                                aria-label="Formulario de eliminación de proveedor">
+                                {% csrf_token %}
 
-                            <input type="hidden" name="provider_id" value="{{ provider.id }}" />
-                            <button class="btn btn-outline-danger">Eliminar</button>
-                        </form>
+                                <input type="hidden" name="provider_id" value="{{ provider.id }}" />
+                                <button class="btn btn-outline-danger">Eliminar</button>
+                            </form>
+                        </div>
                     </td>
             </tr>
             {% empty %}

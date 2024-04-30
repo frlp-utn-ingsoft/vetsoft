@@ -17,7 +17,7 @@
                 <th>Nombre</th>
                 <th>Tipo</th>
                 <th>Precio</th>
-                <th></th>
+                <th>Acciones</th>
             </tr>
         </thead>
 
@@ -29,17 +29,19 @@
                     <td>{{product.type}}</td>
                     <td>{{product.price}}</td>
                     <td>
-                        <a class="btn btn-outline-primary"
-                           href="{% url 'products_edit' id=product.id %}"
-                        >Editar</a>
-                        <form method="POST"
-                            action="{% url 'products_delete' %}"
-                            aria-label="Formulario de eliminación de producto">
-                            {% csrf_token %}
+                        <div class="d-inline-flex gap-2">  
+                            <a class="btn btn-outline-primary"
+                            href="{% url 'products_edit' id=product.id %}"
+                            >Editar</a>
+                            <form method="POST"
+                                action="{% url 'products_delete' %}"
+                                aria-label="Formulario de eliminación de producto">
+                                {% csrf_token %}
 
-                            <input type="hidden" name="product_id" value="{{ product.id }}" />
-                            <button class="btn btn-outline-danger">Eliminar</button>
-                        </form>
+                                <input type="hidden" name="product_id" value="{{ product.id }}" />
+                                <button class="btn btn-outline-danger">Eliminar</button>
+                            </form>
+                        </div>
                     </td>
             </tr>
             {% empty %}

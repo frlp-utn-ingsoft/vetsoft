@@ -17,7 +17,7 @@
                 <th>Nombre</th>
                 <th>Email</th>
                 <th>Telefono</th>
-                <th></th>
+                <th>Acciones</th>
             </tr>
         </thead>
 
@@ -28,17 +28,19 @@
                     <td>{{vet.email}}</td>
                     <td>{{vet.phone}}</td>
                     <td>
-                        <a class="btn btn-outline-primary"
-                           href="{% url 'vets_edit' id=vet.id %}"
-                        >Editar</a>
-                        <form method="POST"
-                            action="{% url 'vets_delete' %}"
-                            aria-label="Formulario de eliminación de proveedor">
-                            {% csrf_token %}
+                        <div class="d-inline-flex gap-2">  
+                            <a class="btn btn-outline-primary"
+                            href="{% url 'vets_edit' id=vet.id %}"
+                            >Editar</a>
+                            <form method="POST"
+                                action="{% url 'vets_delete' %}"
+                                aria-label="Formulario de eliminación de proveedor">
+                                {% csrf_token %}
 
-                            <input type="hidden" name="vet_id" value="{{ vet.id }}" />
-                            <button class="btn btn-outline-danger">Eliminar</button>
-                        </form>
+                                <input type="hidden" name="vet_id" value="{{ vet.id }}" />
+                                <button class="btn btn-outline-danger">Eliminar</button>
+                            </form>
+                        </div>
                     </td>
             </tr>
             {% empty %}
