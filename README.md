@@ -27,6 +27,7 @@ NOMBRE DE INTEGRANTES:
     #Iñaki Jose Zelayeta
     #Bruno Alejo Santillan
     #Katerina Mariescurrena 
+    #Lautaro Frias
 
 INFORMACION:
 

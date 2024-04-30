@@ -12,4 +12,9 @@ urlpatterns = [
     path("medicine/nuevo/", view=views.medicine_form, name="medicine_form"),
     path("medicine/editar/<int:id>/", view=views.medicine_form, name="medicine_edit"),
     path("medicine/eliminar/", view=views.medicine_delete, name="medicine_delete"),
+
+    path("mascotas/", view=views.pets_repository, name="pets_repo"),
+    path("mascotas/nuevo/", view=views.pets_form, name="pets_form"),
+    path("mascota/editar/<int:id>/", view=views.pets_form, name="pets_edit"),
+    path("mascota/eliminar", view=views.pets_delete, name="pets_delete"),
 ]
