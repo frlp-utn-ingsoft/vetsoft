@@ -164,6 +164,9 @@ def pets_form(request, id=None):
 
         if pet_id == "":
             saved, errors = Pet.save_pet(request.POST)
+        else:
+            pet = get_object_or_404(Pet, pk=pet_id)
+            pet.update_pet(request.POST)
 
         if saved:
             return redirect(reverse("pets_repo"))
@@ -173,4 +176,7 @@ def pets_form(request, id=None):
         )
     
     pet = None
+    if id is not None:
+        pet = get_object_or_404(Pet, pk=id)
+        
     return render(request, "pets/form.html", {"pet": pet})

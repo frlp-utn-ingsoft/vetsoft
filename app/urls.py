@@ -20,5 +20,6 @@ urlpatterns = [
     path("productos/editar/<int:id>/", view=views.products_form, name="products_edit"),
     path("productos/eliminar/", view=views.products_delete, name="products_delete"),
     path("mascotas/", view=views.pets_repository, name="pets_repo"),
-    path("mascotas/nuevo/", view=views.pets_form, name="pets_form")
+    path("mascotas/nuevo/", view=views.pets_form, name="pets_form"),
+    path("mascotas/editar/<int:id>/", view=views.pets_form, name="pets_edit"),
 ]
