@@ -6,7 +6,8 @@ links = [
     {"label": "Proveedores", "href": reverse("providers_repo"), "icon": "bi bi-people"},
     {"label": "Productos", "href": reverse("products_repo"), "icon": "bi bi-basket3"},
     {"label": "Medicinas", "href": reverse("medicine_repo"), "icon": "bi bi-capsule"},
-    {"label": "Mascotas", "href": reverse("pets_repo"), "icon": "bi bi-github"}
+    {"label": "Mascotas", "href": reverse("pets_repo"), "icon": "bi bi-github"},
+    {"label": "Veterinarios", "href": reverse("vets_repo"), "icon": "bi bi-people"},
 ]
 
 
