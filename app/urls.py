@@ -22,4 +22,5 @@ urlpatterns = [
     path("mascotas/", view=views.pets_repository, name="pets_repo"),
     path("mascotas/nuevo/", view=views.pets_form, name="pets_form"),
     path("mascotas/editar/<int:id>/", view=views.pets_form, name="pets_edit"),
+    path("mascotas/eliminar/", view=views.pets_delete, name="pets_delete"),
 ]
