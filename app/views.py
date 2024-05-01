@@ -21,7 +21,7 @@ def clients_form(request, id=None):
             saved, errors = Client.save_client(request.POST)
         else:
             client = get_object_or_404(Client, pk=client_id)
-            client.update_client(request.POST)
+            saved, errors = client.update_client(request.POST)
 
         if saved:
             return redirect(reverse("clients_repo"))
@@ -57,7 +57,7 @@ def providers_form(request, id=None):
             saved, errors = Provider.save_provider(request.POST)
         else:
             provider = get_object_or_404(Provider, pk=provider_id)
-            provider.update_provider(request.POST)
+            saved, errors = provider.update_provider(request.POST)
 
         if saved:
             return redirect(reverse("providers_repo"))

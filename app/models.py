@@ -140,12 +140,18 @@ class Client(models.Model):
         return True, None
 
     def update_client(self, client_data):
+        errors = validate_client(client_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
         self.name = client_data.get("name", "") or self.name
         self.email = client_data.get("email", "") or self.email
         self.phone = client_data.get("phone", "") or self.phone
         self.address = client_data.get("address", "") or self.address
 
         self.save()
+        return True, None
 
 
 class Provider (models.Model):
@@ -170,10 +176,16 @@ class Provider (models.Model):
         return True, None
 
     def update_provider(self, provider_data):
+        errors = validate_provider(provider_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+        
         self.name = provider_data.get("name", "") or self.name
         self.email = provider_data.get("email", "") or self.email
 
         self.save()
+        return True, None
 
 class Medicine(models.Model):
     name = models.CharField(max_length=100)
