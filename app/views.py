@@ -200,6 +200,9 @@ def vets_form(request, id=None):
 
         if vet_id == "":
             saved, errors = Vet.save_vet(request.POST)
+        else:
+            vet = get_object_or_404(Vet, pk=vet_id)
+            vet.update_vet(request.POST)
 
         if saved:
             return redirect(reverse("vets_repo"))
