@@ -24,4 +24,5 @@ urlpatterns = [
     path("mascotas/editar/<int:id>/", view=views.pets_form, name="pets_edit"),
     path("mascotas/eliminar/", view=views.pets_delete, name="pets_delete"),
     path("vets/", view=views.vets_repository, name="vets_repo"),
+    path("vets/nuevo/", view=views.vets_form, name="vets_form"),
 ]
