@@ -26,7 +26,8 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 - Nicolas Pieroni
 - Colavita Emiliano
 - Espinosa Tomas
--
+- Stuart Ian
+- Maldonado Sergio
 
 ## Convenciones de git
 ### commits
