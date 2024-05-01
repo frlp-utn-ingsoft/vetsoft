@@ -155,3 +155,22 @@ def products_delete(request):
 def pets_repository(request):
     pets = Pet.objects.all()
     return render(request, "pets/repository.html", {"pets": pets})
+
+def pets_form(request, id=None):
+    if request.method == "POST":
+        pet_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if pet_id == "":
+            saved, errors = Pet.save_pet(request.POST)
+
+        if saved:
+            return redirect(reverse("pets_repo"))
+
+        return render(
+            request, "pets/form.html", {"errors": errors, "pet": request.POST}
+        )
+    
+    pet = None
+    return render(request, "pets/form.html", {"pet": pet})
