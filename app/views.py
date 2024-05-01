@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
-from .models import Client, Provider, Medicine, Product, Pet
+from .models import Client, Provider, Medicine, Product, Pet, Vet
 from django.http import HttpResponseBadRequest
 
 
@@ -187,3 +187,7 @@ def pets_delete(request):
     pet.delete()
 
     return redirect(reverse("pets_repo"))
+
+def vets_repository(request):
+    vets = Vet.objects.all()
+    return render(request, "vets/repository.html", {"vets": vets})
