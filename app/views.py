@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
-from .models import Client, Medicine, Product
+from .models import Client, Medicine, Product, Pet
 
 
 def home(request):
@@ -119,3 +119,42 @@ def products_delete(request):
     product.delete()
 
     return redirect(reverse("products_repo"))
+
+
+def pets_repository(request):
+    pets = Pet.objects.all()
+    return render(request, "pets/repository.html", {"pets": pets})
+
+
+def pets_form(request, id=None):
+    if request.method == "POST":
+        pet_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if pet_id == "":
+            saved, errors = Pet.save_pet(request.POST)
+        else:
+            pet = get_object_or_404(Pet, pk=pet_id)
+            pet.update_pet(request.POST)
+
+        if saved:
+            return redirect(reverse("pets_repo"))
+
+        return render(
+            request, "pets/form.html", {"errors": errors, "pet": request.POST}
+        )
+
+    pet = None
+    if id is not None:
+        pet = get_object_or_404(Pet, pk=id)
+
+    return render(request, "pets/form.html", {"pet": pet})
+
+
+def pets_delete(request):
+    pet_id = request.POST.get("pet_id")
+    pet = get_object_or_404(Pet, pk=int(pet_id))
+    pet.delete()
+
+    return redirect(reverse("pets_repo"))
