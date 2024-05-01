@@ -27,6 +27,16 @@
                     <td>{{vet.name}}</td>
                     <td>{{vet.phone}}</td>
                     <td>{{vet.email}}</td>
+                    <td>
+                        <form method="POST"
+                            action="{% url 'vets_delete' %}"
+                            aria-label="Formulario de eliminación de veterinario">
+                            {% csrf_token %}
+
+                            <input type="hidden" name="vet_id" value="{{ vet.id }}" />
+                            <button class="btn btn-outline-danger">Eliminar</button>
+                        </form>
+                    </td>
             </tr>
             {% empty %}
                 <tr>
