@@ -5,6 +5,7 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 ## Integrantes
 
 - Facundo Larrauri
+- Virginia Bruno
 
 ## Dependencias
 
