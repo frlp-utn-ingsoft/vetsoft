@@ -7,6 +7,7 @@ Nombre de los integrantes:
     - Renata Victoria Catelli
     - Rocio Belen Tantos
     - Demian Bogado
+    - Serrano Mariano Ezequiel
 
 ## Dependencias
 
