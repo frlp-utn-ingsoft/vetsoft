@@ -25,8 +25,8 @@
             {% for vet in vets %}
             <tr>
                     <td>{{vet.name}}</td>
-                    <td>{{vet.phone}}</td>
                     <td>{{vet.email}}</td>
+                    <td>{{vet.phone}}</td>
                     <td>
                         <a class="btn btn-outline-primary"
                            href="{% url 'vets_edit' id=vet.id %}"
