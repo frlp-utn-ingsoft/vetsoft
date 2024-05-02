@@ -56,39 +56,53 @@ class Client(models.Model):
         self.save()
 
 
+def validate_pet(data):
+    errors = {}
+
+    name = data.get("name", "")
+    breed = data.get("breed", "")
+    birthday = data.get("birthday", "")
+
+    if name == "":
+        errors["name"] = "Por favor ingrese un nombre"
+
+    if breed == "":
+        errors["breed"] = "Por favor ingrese una raza"
+
+    if birthday == "":
+        errors["birthday"] = "Por favor ingrese una fecha"
+
+    return errors
+
 class Pet(models.Model):
     name = models.CharField(max_length=100)
     breed = models.CharField(max_length=50, blank=True)
     birthday = models.DateField()
-    owner = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='pets') ##conexion con cliente (su propietario)
 
     def __str__(self):
         return self.name
     
     @classmethod
     def save_pet(cls, pet_data):
-        owner_id = pet_data.pop("owner_id", None)  # Obtenemos el ID del propietario
+        errors = validate_pet(pet_data)
 
-        if owner_id is None:
-            raise ValueError("El ID del propietario es necesario para guardar la mascota.")
+        if len(errors.keys()) > 0:
+            return False, errors
         
-        owner = Client.objects.get(pk=owner_id)  # Obtenemos el propietario desde la base de datos
-
-         # Creamos la mascota y la asociamos al propietario
-        pet = cls.objects.create(
-            owner=owner,
+        Pet.objects.create(
             name=pet_data.get("name"),
             breed=pet_data.get("breed"),
             birthday=pet_data.get("birthday"),
-            )
+        )
 
-        return pet
+        return True, None
     
-    def update_pet(cls, pet_data):
-        Pet.name = pet_data.get("name", Pet.name)
-        Pet.breed = pet_data.get("breed", Pet.breed)
-        Pet.birthday = pet_data.get("birthday", Pet.birthday)
-        Pet.save()
+    def update_pet(self, pet_data):
+        self.name = pet_data.get("name", "") or self.name
+        self.breed = pet_data.get("breed", "") or self.breed
+        self.birthday = pet_data.get("birthday", "") or self.birthday
+
+        self.save()
 
         
 
