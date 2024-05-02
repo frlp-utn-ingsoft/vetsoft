@@ -108,7 +108,7 @@ class Pet(models.Model):
 class Medicine(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=50)
-    dose = models.IntField
+    dose = models.IntegerField()
 
     def __str__(self):
         return self.name
@@ -143,8 +143,8 @@ class Medicine(models.Model):
             return False, errors
 
         self.name = medicine_data.get("name", "") or self.name
-        self.description = medicine_data.get("breed", "") or self.breed
-        self.dose = medicine_data.get("birthday", "") or self.birthday
+        self.description = medicine_data.get("description", "") or self.description
+        self.dose = medicine_data.get("dose", "") or self.dose
 
         self.save()
 

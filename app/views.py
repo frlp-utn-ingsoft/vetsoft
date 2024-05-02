@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
-from .models import Client, Pet
+from .models import Client, Pet, Medicine
 
 
 def home(request):
@@ -58,7 +58,6 @@ def pets_form(request, id=None):
             saved, errors = Pet.save_pet(request.POST)
         else:
             pet = get_object_or_404(Pet, pk=pet_id)
-            print(pet)
             pet.update_pet(request.POST)
 
         if saved:
@@ -82,8 +81,8 @@ def pets_delete(request):
     return redirect(reverse("pets_repo"))
 
 
-    def medicines_repository(request):
-    medicines = medicine.objects.all()
+def medicines_repository(request):
+    medicines = Medicine.objects.all()
     return render(request, "medicines/repository.html", {"medicines": medicines})
 
 def medicines_form(request, id=None):
@@ -93,10 +92,9 @@ def medicines_form(request, id=None):
         saved = True
 
         if medicine_id == "":
-            saved, errors = medicine.save_medicine(request.POST)
+            saved, errors = Medicine.save_medicine(request.POST)
         else:
-            medicine = get_object_or_404(medicine, pk=medicine_id)
-            print(medicine)
+            medicine = get_object_or_404(Medicine, pk=medicine_id)
             medicine.update_medicine(request.POST)
 
         if saved:
@@ -108,13 +106,13 @@ def medicines_form(request, id=None):
 
     medicine = None
     if id is not None:
-        medicine = get_object_or_404(medicine, pk=id)
+        medicine = get_object_or_404(Medicine, pk=id)
 
     return render(request, "medicines/form.html", {"medicine": medicine})
 
 def medicines_delete(request):
     medicine_id = request.POST.get("medicine_id")
-    medicine = get_object_or_404(medicine, pk=int(medicine_id))
+    medicine = get_object_or_404(Medicine, pk=int(medicine_id))
     medicine.delete()
 
     return redirect(reverse("medicines_repo"))

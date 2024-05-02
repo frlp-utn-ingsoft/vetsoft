@@ -48,15 +48,15 @@
                         value="{{medicine.description}}"
                         required/>
 
-                    {% if errors.breed %}
+                    {% if errors.description %}
                         <div class="invalid-feedback">
-                            {{ errors.medicine }}
+                            {{ errors.description }}
                         </div>
                     {% endif %}
                 </div>
                 <div>
                     <label for="dose" class="form-label">Dosis</label>
-                    <input type="int"
+                    <input type="number"
                         id="dose"
                         name="dose"
                         class="form-control"

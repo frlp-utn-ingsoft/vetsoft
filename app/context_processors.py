@@ -4,6 +4,7 @@ links = [
     {"label": "Home", "href": reverse("home"), "icon": "bi bi-house-door"},
     {"label": "Clientes", "href": reverse("clients_repo"), "icon": "bi bi-people"},
     {"label": "Animales", "href": reverse("pets_repo"), "icon": "fas fa-dog"},
+    {"label": "Medicamentes", "href": reverse("medicines_repo"), "icon": "fas fa-pills"},
 ]
 
 def navbar(request):
@@ -23,5 +24,6 @@ def home_items(request):
     items = [
         {"label": "Clientes", "href": reverse("clients_repo"), "icon": "bi bi-people"},
         {"label": "Animales", "href": reverse("pets_repo"), "icon": "fas fa-dog"},
+        {"label": "Medicamentos", "href": reverse("medicines_repo"), "icon": "fas fa-pills"},
     ]
     return {"home_items": items}
