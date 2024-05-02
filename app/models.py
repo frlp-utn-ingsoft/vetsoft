@@ -100,6 +100,12 @@ class Provider(models.Model):
 
         self.save()
 
+def isfloat(num):
+    try:
+        float(num)
+        return True
+    except ValueError:
+        return False
 
 def validate_product(data):
     errors = {}
@@ -116,13 +122,16 @@ def validate_product(data):
 
     if price == "":
         errors["price"] = "Por favor ingrese un precio"
+    elif isfloat(price) == False:
+        errors["price"] = "Por favor ingrese un precio"
 
     return errors
+
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
-    price = models.IntegerField()
+    price = models.FloatField()
 
     def __str__(self):
         return self.name
