@@ -54,3 +54,51 @@ class Client(models.Model):
         self.address = client_data.get("address", "") or self.address
 
         self.save()
+
+
+class Product(models.Model):
+    name = models.CharField(max_length=75)
+    type = models.CharField(max_length=25)
+    price = models.FloatField()
+
+    @classmethod
+    def save_product(cls, product_data: dict) -> tuple[bool, dict | None]:
+        errors = cls.validate_product(product_data)
+
+        if errors:
+            return False, errors
+
+        Product.objects.create(
+            name=product_data.get("name"),
+            type=product_data.get("type"),
+            price=product_data.get("price"),
+        )
+        return True, None
+
+    @classmethod
+    def validate_product(cls, data: dict) -> dict | None:
+        """Return the dict of text for the fields with errors (if exists any) None otherwise"""
+        errors = {
+            "name": "Por favor ingrese un nombre",
+            "type": "Por favor ingrese un tipo",
+            "price": "Por favor ingrese un precio"
+        }
+        for key in list(errors.keys()):
+            if data.get(key):
+                errors.pop(key)
+        return errors or None
+
+    def update_product(self, product_data: dict)  -> tuple[bool, dict | None]:
+        errors = self.validate_product(product_data)
+
+        if errors:
+            return False, errors
+
+        self.name = product_data.get("name", self.name)
+        self.type = product_data.get("type", self.type)
+        self.price = product_data.get("price", self.price)
+        self.save()
+        return True, None
+
+    def __str__(self):
+        return self.name
