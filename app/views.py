@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
-from .models import Client, Pet
+from .models import Client, Pet, Vet
 
 
 def home(request):
@@ -80,7 +80,7 @@ def pets_delete(request):
     pet.delete()
 
     return redirect(reverse("pets_repo"))
-def vet_repository(request):
+def vets_repository(request):
     vets = Vet.objects.all()
     return render(request, "vet/repository.html", {"vets": vets})
 
@@ -101,14 +101,14 @@ def vets_form(request, id=None):
             return redirect(reverse("vets_repo"))
 
         return render(
-            request, "vets/form.html", {"errors": errors, "vet": request.POST}
+            request, "vet/form.html", {"errors": errors, "vet": request.POST}
         )
 
     vet = None
     if id is not None:
         vet = get_object_or_404(Vet, pk=id)
 
-    return render(request, "vets/form.html", {"vet": vet})
+    return render(request, "vet/form.html", {"vet": vet})
 
 def vets_delete(request):
     vet_id = request.POST.get("vet_id")
