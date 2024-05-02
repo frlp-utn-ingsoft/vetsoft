@@ -54,3 +54,44 @@ class Client(models.Model):
         self.address = client_data.get("address", "") or self.address
 
         self.save()
+
+
+class pet(models.Model):
+    name = models.CharField(max_length=100)
+    breed = models.CharField(max_length=50, blank=True)
+    birthday = models.DateField()
+    owner = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='pets') ##conexion con cliente (su propietario)
+
+    def __str__(self):
+        return self.name
+    
+    @classmethod
+    def save_pet(cls, pet_data):
+        owner_id = pet_data.pop("owner_id", None)  # Obtenemos el ID del propietario
+
+        if owner_id is None:
+            raise ValueError("El ID del propietario es necesario para guardar la mascota.")
+        
+        owner = Client.objects.get(pk=owner_id)  # Obtenemos el propietario desde la base de datos
+
+         # Creamos la mascota y la asociamos al propietario
+        pet = cls.objects.create(
+            owner=owner,
+            name=pet_data.get("name"),
+            breed=pet_data.get("breed"),
+            birthday=pet_data.get("birthday"),
+            )
+
+        return pet
+    
+    def update_pet(cls, pet_data):
+        pet.name = pet_data.get("name", pet.name)
+        pet.breed = pet_data.get("breed", pet.breed)
+        pet.birthday = pet_data.get("birthday", pet.birthday)
+        pet.save()
+
+        
+
+
+    
+    
