@@ -56,7 +56,7 @@ class Client(models.Model):
         self.save()
 
 
-class pet(models.Model):
+class Pet(models.Model):
     name = models.CharField(max_length=100)
     breed = models.CharField(max_length=50, blank=True)
     birthday = models.DateField()
@@ -85,10 +85,10 @@ class pet(models.Model):
         return pet
     
     def update_pet(cls, pet_data):
-        pet.name = pet_data.get("name", pet.name)
-        pet.breed = pet_data.get("breed", pet.breed)
-        pet.birthday = pet_data.get("birthday", pet.birthday)
-        pet.save()
+        Pet.name = pet_data.get("name", Pet.name)
+        Pet.breed = pet_data.get("breed", Pet.breed)
+        Pet.birthday = pet_data.get("birthday", Pet.birthday)
+        Pet.save()
 
         
 
