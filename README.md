@@ -1,12 +1,15 @@
 # Vetsoft
 
-Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y Calidad de Software. UTN-FRLP
+Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y Calidad de Software. UTN-FRLP 
 
-## Integrantes
+## Integrantes del Grupo 
+
+Grupo 13:
 
 - Facundo Larrauri
 - Virginia Bruno
 - María del Pilar Acosta
+- Lucas Martinez
 
 ## Dependencias
 
