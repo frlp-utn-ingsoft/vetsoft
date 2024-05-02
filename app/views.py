@@ -80,3 +80,39 @@ def pets_delete(request):
     pet.delete()
 
     return redirect(reverse("pets_repo"))
+def vet_repository(request):
+    vets = Vet.objects.all()
+    return render(request, "vet/repository.html", {"vets": vets})
+
+def vets_form(request, id=None):
+    if request.method == "POST":
+        vet_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if vet_id == "":
+            saved, errors = Vet.save_vet(request.POST)
+        else:
+            vet = get_object_or_404(Vet, pk=vet_id)
+            print(vet)
+            vet.update_vet(request.POST)
+
+        if saved:
+            return redirect(reverse("vets_repo"))
+
+        return render(
+            request, "vets/form.html", {"errors": errors, "vet": request.POST}
+        )
+
+    vet = None
+    if id is not None:
+        vet = get_object_or_404(Vet, pk=id)
+
+    return render(request, "vets/form.html", {"vet": vet})
+
+def vets_delete(request):
+    vet_id = request.POST.get("vet_id")
+    vet = get_object_or_404(Vet, pk=int(vet_id))
+    vet.delete()
+
+    return redirect(reverse("vets_repo"))
