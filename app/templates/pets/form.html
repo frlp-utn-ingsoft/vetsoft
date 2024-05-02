@@ -66,6 +66,20 @@
                     <div class="invalid-feedback">{{ errors.birthday }}</div>
                     {% endif %}
                 </div>
+                <div>
+                    <label for="client" class="form-label">Dueño</label>
+                    <select
+                        id="client"
+                        name="client"
+                        class="form-select"
+                        required
+                    >
+                        {% for client in clients %}
+                        <option value="{{ client.id}}">{{ client.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                </div>
                 <button class="btn btn-primary">Guardar</button>
             </form>
         </div>
