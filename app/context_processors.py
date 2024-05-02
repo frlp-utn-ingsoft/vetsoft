@@ -6,6 +6,7 @@ links = [
     {"label": "Proveedor", "href": reverse("providers_repo"), "icon": "bi bi-people"},
     {"label": "Productos", "href": reverse("products_repo"), "icon": "bi bi-box"},
     {"label": "Veterinario", "href": reverse("vets_repo"), "icon": "bi bi-person-vcard-fill"},
+    {"label": "Medicamentos", "href": reverse("medicines_repo"), "icon": "bi bi-capsule-pill"}, # Nuevo enlace para medicamentos
 ]
 
 
