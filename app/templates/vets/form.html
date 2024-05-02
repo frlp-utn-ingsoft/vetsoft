@@ -13,7 +13,7 @@
             <form class="vstack gap-3 {% if errors %}was-validated{% endif %}"
                 aria-label="Formulario de creacion de veterinario/a"
                 method="POST"
-                action="{% url 'vets_form' %}"
+                action="{% url 'vet_form' %}"
                 novalidate>
 
                 {% csrf_token %}

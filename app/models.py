@@ -115,7 +115,7 @@ def validate_vet(data):
 
         if email == "":
             errors["email"] = "Por favor ingrese un email del veterinario/a"
-         elif email.count("@") == 0:
+        elif email.count("@") == 0:
             errors["email"] = "Por favor ingrese un email válido del veterinario/a"
         
         if phone == "":
@@ -143,7 +143,6 @@ class Vet(models.Model):
             email=vet_data.get("email"),
             phone=vet_data.get("phone"),
             )
-        
         return True, None
     
     def update_vet(self, vet_data):
