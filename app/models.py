@@ -104,3 +104,48 @@ class Pet(models.Model):
         self.save()
 
         return True, None
+
+class Vet(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.name
+    
+    @staticmethod
+    def get_required_fields():
+        return {
+            "name": "nombre",
+            "email": "correo electronico", 
+            "phone": "telefono"
+        }
+
+    @classmethod
+    def save_vet(cls, vet_data):
+        errors = validate_fields(vet_data, Vet.get_required_fields())
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
+        Vet.objects.create(
+            name=vet_data.get("name"),
+            email=vet_data.get("email"),
+            phone=vet_data.get("phone"),
+        )
+
+        return True, None
+    
+    def update_vet(self, vet_data):
+        errors = validate_fields(vet_data, Vet.get_required_fields())
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
+        self.name = vet_data.get("name", "") or self.name
+        self.email = vet_data.get("email", "") or self.email
+        self.phone = vet_data.get("phone", "") or self.phone
+
+        self.save()
+
+        return True, None
