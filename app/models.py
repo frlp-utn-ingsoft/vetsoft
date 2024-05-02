@@ -184,7 +184,7 @@ class Product(models.Model):
     name = models.CharField(max_length=50)
     type = models.CharField(max_length=50)
     price = models.FloatField()
-    provider = models.ForeignKey("Provider", on_delete=models.PROTECT ,related_name="products", null=True, blank=True)
+    provider = models.ForeignKey("Provider", on_delete=models.CASCADE)
 
 
     def __str__(self):
