@@ -66,6 +66,15 @@
                     <div class="invalid-feedback">{{ errors.price }}</div>
                     {% endif %}
                 </div>
+                <div>
+                    <label for="provider" class="form-label">Proveedor</label>
+                    <select name="provider" id="provider" class="form-select">
+                        {% for provider in providers %}
+                        <option value="{{ provider.id }}">{{ provider.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
                 <button class="btn btn-primary">Guardar</button>
             </form>
         </div>
