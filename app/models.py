@@ -104,3 +104,48 @@ class Pet(models.Model):
         self.save()
 
         return True, None
+
+class Medicine(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=50)
+    dose = models.IntField
+
+    def __str__(self):
+        return self.name
+    
+    @staticmethod
+    def get_required_fields():
+        return {
+            "name": "nombre",
+            "description": "descripción", 
+            "dose": "dosis"
+        }
+
+    @classmethod
+    def save_medicine(cls, medicine_data):
+        errors = validate_fields(medicine_data, Medicine.get_required_fields())
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
+        Medicine.objects.create(
+            name=medicine_data.get("name"),
+            description=medicine_data.get("description"),
+            dose=medicine_data.get("dose"),
+        )
+
+        return True, None
+    
+    def update_medicine(self, medicine_data):
+        errors = validate_fields(medicine_data, Medicine.get_required_fields())
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
+        self.name = medicine_data.get("name", "") or self.name
+        self.description = medicine_data.get("breed", "") or self.breed
+        self.dose = medicine_data.get("birthday", "") or self.birthday
+
+        self.save()
+
+        return True, None
