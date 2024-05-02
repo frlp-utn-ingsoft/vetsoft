@@ -127,6 +127,7 @@ def products_repository(request):
     return render(request, "products/repository.html", {"products": products})
 
 def products_form(request, id=None):
+    providers = Provider.objects.all()
     if request.method == "POST":
         product_id = request.POST.get("id", "")
         errors = {}
@@ -134,22 +135,35 @@ def products_form(request, id=None):
 
         if product_id == "":
             saved, errors = Product.save_product(request.POST)
+            # Obtener el ID del proveedor seleccionado del formulario
+            provider_id = request.POST.get("provider", "")
+            # Asociar el proveedor seleccionado con el producto creado
+            if provider_id:
+                product = Product.objects.latest('id')  # Obtener el último producto creado
+                product.provider_id = provider_id
+                product.save()
         else:
             product = get_object_or_404(Product, pk=product_id)
             product.update_product(request.POST)
+            # Obtener el ID del proveedor seleccionado del formulario
+            provider_id = request.POST.get("provider", "")
+            # Asociar el proveedor seleccionado con el producto actualizado
+            if provider_id:
+                product.provider_id = provider_id
+                product.save()
+        
         if saved:
             return redirect(reverse("products_repo"))
         
-
         return render(
-            request, "products/form.html", {"errors": errors, "product": request.POST}
+            request, "products/form.html", {"errors": errors, "product": request.POST, "providers": providers}
         )
 
     product = None
     if id is not None:
         product = get_object_or_404(Product, pk=id)
 
-    return render(request, "products/form.html", {"product": product})
+    return render(request, "products/form.html", {"product": product, "providers": providers})
 
 def products_delete(request):
     product_id = request.POST.get("product_id")
