@@ -147,38 +147,12 @@ class Product(models.Model):
     type = models.CharField(max_length=100)
     price = models.FloatField()
 
-def validate_vet(data):
-        errors = {}
-        name = data.get("name", "")
-        email = data.get("email", "")
-        phone = data.get("phone", "")
-
-        if name == "":
-            errors["name"] = "Por favor, ingrese el nombre del veterinario/a"
-
-        if email == "":
-            errors["email"] = "Por favor ingrese un email del veterinario/a"
-        elif email.count("@") == 0:
-            errors["email"] = "Por favor ingrese un email válido del veterinario/a"
-        
-        if phone == "":
-            errors["phone"] = "Por favor, ingrese el telefono del veterinario/a"
-
-        return errors
-
-class Vet(models.Model):
-    name = models.CharField(max_length=100)
-    email = models.EmailField()
-    phone = models.CharField(max_length=15)
-
     def __str__(self):
         return self.name
         
     @classmethod
     def save_product(cls, product_data):
         errors = validate_products(product_data)
-    def save_vet(cls, vet_data):
-        errors = validate_vet(vet_data)
 
         if len(errors.keys()) > 0:
             return False, errors
@@ -227,13 +201,49 @@ class Pet(models.Model):
         self.birthday = pet_data.get("birthday", "") or self.birthday
 
         self.save()
+
+def validate_vet(data):
+        errors = {}
+        name = data.get("name", "")
+        email = data.get("email", "")
+        phone = data.get("phone", "")
+
+        if name == "":
+            errors["name"] = "Por favor, ingrese el nombre del veterinario/a"
+
+        if email == "":
+            errors["email"] = "Por favor ingrese un email del veterinario/a"
+        elif email.count("@") == 0:
+            errors["email"] = "Por favor ingrese un email válido del veterinario/a"
+        
+        if phone == "":
+            errors["phone"] = "Por favor, ingrese el telefono del veterinario/a"
+
+        return errors
+
+class Vet(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.name
+    
+    @classmethod
+    def save_vet(cls, vet_data):
+        errors = validate_vet(vet_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
         Vet.objects.create(
             name=vet_data.get("name"),
             email=vet_data.get("email"),
             phone=vet_data.get("phone"),
             )
+
         return True, None
-    
+
     def update_vet(self, vet_data):
         self.name = vet_data.get("name", "") or self.name
         self.email = vet_data.get("email", "") or self.email
