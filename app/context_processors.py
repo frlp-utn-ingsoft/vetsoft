@@ -6,6 +6,7 @@ links = [
     {"label": "Animales", "href": reverse("pets_repo"), "icon": "fas fa-dog"},
     {"label": "Medicamentes", "href": reverse("medicines_repo"), "icon": "fas fa-pills"},
     {"label": "Veterinarios", "href": reverse("vets_repo"), "icon": "fas fa-user-md"},
+    {"label": "Productos", "href": reverse("products_repo"), "icon": "fas fa-paw"},
 ]
 
 def navbar(request):
@@ -27,5 +28,6 @@ def home_items(request):
         {"label": "Animales", "href": reverse("pets_repo"), "icon": "fas fa-dog"},
         {"label": "Medicamentos", "href": reverse("medicines_repo"), "icon": "fas fa-pills"},
         {"label": "Veterinarios", "href": reverse("vets_repo"), "icon": "fas fa-user-md"},
+        {"label": "Productos", "href": reverse("products_repo"), "icon": "fas fa-paw"},
     ]
     return {"home_items": items}
