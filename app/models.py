@@ -22,6 +22,34 @@ def validate_client(data):
 
     return errors
 
+def validate_product(data):
+    errors = {}
+
+    name = data.get("name", "")
+    type = data.get("type", "")
+    price = data.get("price", "")
+
+    if name == "":
+        errors["name"] = "Por favor ingrese un nombre"
+
+    if type == "":
+        errors["type"] = "Por favor ingrese un tipo"
+
+    if price == "":
+        errors["price"] = "Por favor ingrese un precio"
+    try:
+        float_price = float(price)
+        if float_price <= 0:
+            errors["price"] = "Por favor ingrese un precio mayor que 0"
+        integer_part, decimal_part = str(float_price).split(".")
+        if len(decimal_part) > 2:
+            errors["price"] = "Por favor ingrese un precio con maximo 2 decimales"
+    except ValueError:
+        errors["price"] = "Por favor ingrese un precio valido"
+
+    return errors
+                
+
 
 class Client(models.Model):
     name = models.CharField(max_length=100)
@@ -56,6 +84,64 @@ class Client(models.Model):
 
         self.save()
 
+class Product(models.Model):
+    name = models.CharField(max_length=100)
+    type = models.CharField(max_length=50)
+    price = models.FloatField()
+
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def save_product(cls, product_data):
+        errors = validate_product(product_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
+        Product.objects.create(
+            name=product_data.get("name"),
+            type=product_data.get("type"),
+            price=product_data.get("price"),
+        )
+        return True, None
+    
+    def update_product(self, product_data):
+        self.name = product_data.get("name", "") or self.name
+        self.type = product_data.get("type", "") or self.type
+        try:
+            self.price = float(product_data.get("price", "")) or self.price
+        except ValueError:
+            pass
+
+        self.save()
+
+class Medicine(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=500)
+    dose = models.IntegerField()
+#    pets = models.ManyToManyField('Pet', related_name='medicines')
+
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def save_medicine(cls, medicine_data):
+        Medicine.objects.create(
+            name=medicine_data.get("name"),
+            description=medicine_data.get("description"),
+            dose=medicine_data.get("dose"),
+        )
+    
+        return True, None
+    
+    def update_medicine(self, medicine_data):
+        self.name =medicine_data.get("name", "") or self.name
+        self.description = medicine_data.get("description", "") or self.description
+        self.dose = medicine_data.get("dose", "") or self.dose
+
+        self.save()
+
 class Pet(models.Model):
     name=models.CharField(max_length=100)
     breed=models.CharField(max_length=100)
@@ -82,6 +168,4 @@ class Pet(models.Model):
         self.breed = pet_data.get("breed", "") or self.breed
         self.birthday = pet_data.get("birthday", "") or self.birthday
 
-        self.save()
-
-    
+        self.save()    
