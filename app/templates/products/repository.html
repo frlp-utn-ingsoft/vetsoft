@@ -17,6 +17,7 @@
                 <th>Nombre</th>
                 <th>Tipo</th>
                 <th>Precio</th>
+                <th>Proveedor</th>
                 <th></th>
             </tr>
         </thead>
@@ -27,6 +28,7 @@
                     <td>{{product.name}}</td>
                     <td>{{product.type}}</td>
                     <td>{{product.price}}</td>
+                    <td>{{product.provider.name}}</td>
                     <td>
                         <a class="btn btn-outline-primary"
                            href="{% url 'products_edit' id=product.id %}"

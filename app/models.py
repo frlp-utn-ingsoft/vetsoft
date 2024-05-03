@@ -43,6 +43,7 @@ def validate_product(data):
     name = data.get("name", "")
     type = data.get("type", "")
     price = data.get("price", "")
+    provider = data.get("provider", "")
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
@@ -61,6 +62,9 @@ def validate_product(data):
             errors["price"] = "Por favor ingrese un precio con maximo 2 decimales"
     except ValueError:
         errors["price"] = "Por favor ingrese un precio valido"
+
+    if not provider:
+        errors["provider"] = "Por favor seleccione un proveedor"
 
     return errors
                 
