@@ -22,14 +22,14 @@
 
                 {% csrf_token %}
 
-                <input type="hidden" value="{{ prod.id }}" name="id" />
+                <input type="hidden" value="{{ product.id }}" name="id" />
 
                 <div>
                     <label for="name" class="form-label">Nombre</label>
                     <input type="text"
                         id="name"
                         name="name"
-                        value="{{prod.name}}"
+                        value="{{product.name}}"
                         class="form-control"
                         required/>
 
@@ -45,7 +45,7 @@
                         id="type"
                         name="type"
                         class="form-control"
-                        value="{{prod.type}}"
+                        value="{{product.type}}"
                         required/>
 
                     {% if errors.type %}
@@ -63,7 +63,7 @@
                         id="price"
                         name="price"
                         class="form-control"
-                        value="{{ prod.price }}"
+                        value="{{ product.price }}"
                         required/>
 
                     {% if errors.price %}
