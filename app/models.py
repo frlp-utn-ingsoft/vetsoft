@@ -102,6 +102,55 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Medicine(models.Model):
+    name = models.CharField(max_length=75)
+    description = models.CharField(max_length=255)
+    dose = models.IntegerField()
+
+    @classmethod
+    def save_medicine(cls, medicine_data: dict) -> tuple[bool, dict | None]:
+        errors = cls.validate_medicine(medicine_data)
+
+        if errors:
+            return False, errors
+
+        Medicine.objects.create(
+            name=medicine_data.get("name"),
+            description=medicine_data.get("description"),
+            dose=medicine_data.get("dose"),
+        )
+        return True, None
+
+    @classmethod
+    def validate_medicine(cls, data: dict) -> dict | None:
+        errors = {
+            "name": "Por favor ingrese un nombre",
+            "description": "Por favor ingrese una descripción",
+            "dose": "Por favor ingrese una dosis",
+        }
+        for key in list(errors.keys()):
+            if data.get(key):
+                errors.pop(key)
+        return errors or None
+
+    def update_medicine(self, medicine_data: dict) -> tuple[bool, dict | None]:
+        errors = self.validate_medicine(medicine_data)
+
+        if errors:
+            return False, errors
+
+        self.name = medicine_data.get("name", self.name)
+        self.description = medicine_data.get("description", self.description)
+        self.dose = medicine_data.get("dose", self.dose)
+        self.save()
+        return True, None
+
+    def __str__(self):
+        return self.name
+
+
 #VETS
 def validate_vet(data):
     errors = {}
