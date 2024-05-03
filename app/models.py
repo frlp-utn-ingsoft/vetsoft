@@ -128,7 +128,6 @@ class Pet(models.Model):
     birthday = models.DateField()
     client = models.ForeignKey("Client", on_delete=models.CASCADE, null=True, blank=True)
     medicines = models.ManyToManyField(Medicine)
-
     def __str__(self):
         return self.name
     
@@ -284,6 +283,7 @@ class Vet(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(max_length=254)
     phone = models.IntegerField()
+    pets = models.ManyToManyField(Pet)
 
     def __str__(self):
         return self.name
