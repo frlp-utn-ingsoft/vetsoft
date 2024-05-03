@@ -26,6 +26,7 @@
                         <td>{{pet.name}}</td>
                         <td>{{pet.breed}}</td>
                         <td>{{pet.birthday}}</td>
+                        <td>{{pet.client.name}}</td>
                         <td>
                             <a class="btn btn-outline-primary"
                                href="{% url 'pets_edit' id=pet.id %}"
@@ -42,6 +43,14 @@
                     </tr>
                     {% endfor %}
                 </tbody>
+                <div>
+                    <lab for="name" class="form-label">Cliente</lab>
+                    <select name="client" class="form-control">
+                        {% for client in clients %}
+                        <option value="{{client.id}}">{{client.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                 <div>
                     <label for="name" class="form-label">Nombre</label>
                     <input type="text"

@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import get_object_or_404
 
 
 def validate_client(data):
@@ -59,16 +60,19 @@ class Pet(models.Model):
     name=models.CharField(max_length=100)
     breed=models.CharField(max_length=100)
     birthday=models.DateField(verbose_name="Fecha de Cumpleaños")
+    client = models.ForeignKey(Client,on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name
     
     @classmethod
     def save_pet(cls,pet_data):
+        client2=Client.objects.get(id=pet_data.get("client"))
         Pet.objects.create(
             name = pet_data.get("name"),
             breed= pet_data.get("breed"),
             birthday = pet_data.get("birthday"),
+            client = client2
         )
 
         return True, None

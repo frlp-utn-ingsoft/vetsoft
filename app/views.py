@@ -47,7 +47,8 @@ def clients_delete(request):
 
 def pets_repository(request):
     pets=Pet.objects.all()
-    return render(request,"pets/repository.html", {"pets":pets})
+    vacio=bool(Client.objects.all())
+    return render(request,"pets/repository.html", {"pets":pets, "vacio":vacio})
 
 def pets_form(request, id=None):
     clients = Client.objects.all()
