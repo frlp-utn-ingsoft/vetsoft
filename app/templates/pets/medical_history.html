@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="container">
+    <h1>Nuevo Registro Médico para {{ pet.name }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group mb-4">
+            <label for="pet_name" class="mb-2">Nombre:</label>
+            <input type="text" id="pet_name" name="pet_name" value="{{ pet.name }}" class="form-control" disabled>
+        </div>
+        <div class="form-group mb-4">
+            <label for="vet" class="mb-2">Veterinario:</label>
+            <select id="vet" name="vet" class="form-control">
+                {% if pet.vet_set.all %}
+                    {% for vet in pet.vet_set.all %}
+                        <option value="{{ vet.id }}">{{ vet.name }}</option>
+                    {% endfor %}
+                {% else %}
+                    <option value="" disabled selected>No hay veterinarios asociados</option>
+                {% endif %}
+            </select>
+        </div>
+        <div class="form-group mb-4">
+            <label for="medicine" class="mb-2">Medicamento:</label>
+            <select id="medicine" name="medicine" class="form-control">
+                {% if pet.medicines.all %}
+                    {% for medicine in pet.medicines.all %}
+                        <option value="{{ medicine.id }}">{{ medicine.name }}</option>
+                    {% endfor %}
+                {% else %}
+                    <option value="" disabled selected>No hay medicinas asociadas</option>
+                {% endif %}
+            </select>
+        </div>
+        <div class="form-group">
+            <div class="d-inline-flex gap-2">  
+                </form>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
