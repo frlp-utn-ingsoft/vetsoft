@@ -69,8 +69,6 @@
                 <div>
                     <label for="provider" class="form-label">Proveedor</label>
                     <select name="provider" id="provider" class="form-select">
-                        # Si se elige esta primera opción queda vacío el campo proveedor
-                        <option value="">Seleccione un proveedor</option>
                         {% for provider in providers %}
                         <option value="{{ provider.id }}">{{ provider.name }}</option>
                         {% endfor %}

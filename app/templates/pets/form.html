@@ -74,8 +74,6 @@
                         class="form-select"
                         required
                     >   
-                    # Si se elige esta primera opción queda vacío el campo dueño
-                        <option value="">Seleccione un dueño</option>
                         {% for client in clients %}
                         <option value="{{ client.id}}">{{ client.name }}</option>
                         {% endfor %}
