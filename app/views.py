@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.views.generic import TemplateView
 from django.views import View
-from .models import Client, Medicine, Product, Vet, Provider
+from .models import Client, Medicine, Product, Vet, Provider, Pet
 
 def home(request):
     return render(request, "home.html")
@@ -162,6 +162,8 @@ def vets_delete(request):
 
     return redirect(reverse("vets_repo"))
 ####################################################################################################
+
+########################################### PROVEEDORES ############################################
 def providers_repository(request):
     providers = Provider.objects.all()
     return render(request, "providers/repository.html", {"providers": providers})
@@ -197,3 +199,43 @@ def providers_delete(request):
     provider.delete()
 
     return redirect(reverse("providers_repo"))
+####################################################################################################
+
+############################################### PETS ###############################################
+def pets_repository(request):
+    pets = Pet.objects.all()
+    return render(request, "pets/repository.html", {"pets": pets})
+
+def pets_form(request, id=None):
+    if request.method == "POST":
+        pet_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if pet_id == "":
+            saved, errors = Pet.save_pet(request.POST)
+        else:
+            pet = get_object_or_404(Pet, pk=pet_id)
+            pet.update_pet(request.POST)
+
+        if saved:
+            return redirect(reverse("pets_repo"))
+
+        return render(
+            request, "pets/form.html", {"errors": errors, "pet": request.POST}
+        )
+    
+    pet = None
+    if id is not None:
+        pet = get_object_or_404(Pet, pk=id)
+
+    return render(request, "pets/form.html", {"pet": pet})
+
+
+def pets_delete(request):
+    pet_id = request.POST.get("pet_id")
+    pet = get_object_or_404(Pet, pk=int(pet_id))
+    pet.delete()
+
+    return redirect(reverse("pets_repo"))
+####################################################################################################

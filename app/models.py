@@ -261,3 +261,33 @@ def validate_provider(data):
         errors["address"] = "Por favor ingrese una dirección"
 
     return errors
+
+class Pet(models.Model):
+    name = models.CharField(max_length=100)
+    breed = models.CharField(max_length=50, blank=True)
+    birthday = models.DateField()
+
+    def __str__(self):
+        return self.name
+    
+    @classmethod
+    def save_pet(cls, pet_data):
+        errors = validate_pet(pet_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+        
+        Pet.objects.create(
+            name=pet_data.get("name"),
+            breed=pet_data.get("breed"),
+            birthday=pet_data.get("birthday"),
+        )
+
+        return True, None
+    
+    def update_pet(self, pet_data):
+        self.name = pet_data.get("name", "") or self.name
+        self.breed = pet_data.get("breed", "") or self.breed
+        self.birthday = pet_data.get("birthday", "") or self.birthday
+
+        self.save()

@@ -34,4 +34,10 @@ urlpatterns = [
     path("proveedores/nuevo/", view=views.providers_form, name="providers_form"),
     path("proveedores/editar/<int:id>/", view=views.providers_form, name="providers_edit"),
     path("proveedores/eliminar/", view=views.providers_delete, name="providers_delete"),
+    
+    #MASCOTAS
+    path("mascotas/", view=views.pets_repository, name="pets_repo"),
+    path("mascotas/nueva/", view=views.pets_form, name="pets_form"),
+    path("mascotas/editar/<int:id>/", view=views.pets_form, name="pets_edit"),
+    path("mascotas/eliminar/", view=views.pets_delete, name="pets_delete"),
 ]
