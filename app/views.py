@@ -88,6 +88,16 @@ def pets_repository(request):
     pets = Pet.objects.all()
     return render(request, "pets/repository.html", {"pets": pets})
 
+def pets_history(request, id):
+    # Prefetch_related debe ser usado en un QuerySet
+    # El uso correcto es obtener el objeto Pet con el QuerySet que tiene prefetch_related
+    pet = get_object_or_404(Pet.objects.prefetch_related("medicines", "vet_set"), id=id)
+
+    context = {
+        "pet": pet,
+    }
+
+    return render(request, "pets/history.html", context)
 
 def pets_form(request, id=None):
     clients = Client.objects.all()
