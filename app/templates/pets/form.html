@@ -28,7 +28,7 @@
                         <td>{{pet.birthday}}</td>
                         <td>
                             <a class="btn btn-outline-primary"
-                               href="{% url 'pets_edit' id=pet.id %}"
+                                href="{% url 'pets_edit' id=pet.id %}"
                             >Editar</a>
                             <form method="POST"
                                 action="{% url 'pets_delete' %}"

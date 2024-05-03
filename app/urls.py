@@ -30,4 +30,8 @@ urlpatterns = [
     path("mascotas/nuevo/", view=views.pets_form, name="pets_form"),
     path("mascota/editar/<int:id>/", view=views.pets_form, name="pets_edit"),
     path("mascota/eliminar", view=views.pets_delete, name="pets_delete"),
+    path("mascotas/agregar-veterinario/<int:id>/", view=views.pets_add_vet, name="pets_add_vet"),
+    path("mascotas/seleccionar-veterinario/", views.select_vets_to_delete, name='select_vets_to_delete'),
+    path("mascotas/eliminar-veterinario/", views.delete_selected_vets, name='delete_selected_vets'),
+
 ]

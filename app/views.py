@@ -8,7 +8,7 @@ from .models import Vet
 def home(request):
     return render(request, "home.html")
 
-
+#CLIENTE
 def clients_repository(request):
     clients = Client.objects.all()
     return render(request, "clients/repository.html", {"clients": clients})
@@ -47,12 +47,11 @@ def clients_delete(request):
 
     return redirect(reverse("clients_repo"))
 
-#___________________________________________________________________________________________________________
+#VETERINARIO
 
 def vets_repository(request):
     vets = Vet.objects.all()
     return render(request, "vets/repository.html", {"vets": vets})
-
 
 def vets_form(request, id=None):
     if request.method == "POST":
@@ -86,6 +85,9 @@ def vets_delete(request):
     vet.delete()
 
     return redirect(reverse("vets_repo"))
+
+#PRODUCTO
+
 def clients_add_product(request, id=None):
     client = get_object_or_404(Client, pk=id)
     products = Product.objects.all() 
@@ -149,6 +151,7 @@ def products_delete(request):
     product.delete()
     return redirect(reverse("products_repo"))
 
+#MEDICINA
 
 def medicine_repository(request):
     medicine = Medicine.objects.all()
@@ -189,7 +192,11 @@ def medicine_delete(request):
     medicine.delete()
 
     return redirect(reverse("medicine_repo"))
+
+#MASCOTA
+
 def pets_repository(request):
+    vets = Vet.objects.all()
     pets=Pet.objects.all()
     return render(request,"pets/repository.html", {"pets":pets})
 
@@ -224,3 +231,31 @@ def pets_delete(request):
     pet.delete()
 
     return redirect(reverse("pets_repo"))
+
+def pets_add_vet(request, id=None):
+    pet = get_object_or_404(Pet, pk=id)
+    vets = Vet.objects.all() 
+    if request.method == "POST":
+        vet_id = request.POST.get("vet_id")
+        vet = get_object_or_404(Vet, pk=vet_id)
+        pet.vets.add(vet)  
+        return redirect(reverse("pets_repo"))
+    if not vets:
+        messages.error(request, "No hay veterinarios disponibles")
+        return redirect(reverse("pets_repo"))
+
+    return render(request, "pets/add_vet.html", {"pet": pet, "vets": vets})
+
+def select_vets_to_delete(request):
+    pet_id = request.GET.get('id')
+    pet = get_object_or_404(Pet, pk=pet_id)
+    vets = pet.vets.all()
+    return render(request, 'pets/select_vets.html', {'vets': vets, 'pet_id': pet_id})
+
+def delete_selected_vets(request):
+    if request.method == 'POST':
+        vett_ids = request.POST.getlist('vets[]')
+        pet_id = request.POST.get('pet_id')
+        pet = get_object_or_404(Pet, pk=pet_id)
+        pet.vets.remove(*vett_ids)
+    return redirect('pets_repo')

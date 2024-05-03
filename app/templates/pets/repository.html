@@ -17,7 +17,7 @@
                 <th>Nombre</th>
                 <th>Raza</th>
                 <th>Fecha de Cumpleaños</th>
-                <th></th>
+                <th>Veterinario</th>
             </tr>
         </thead>
 
@@ -28,8 +28,15 @@
                 <td>{{pet.breed}}</td>
                 <td>{{pet.birthday}}</td>
                 <td>
+                    {% for vets in pet.vets.all %}
+                        {{ vets.name }}{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        Sin Veterinarios
+                    {% endfor %}
+                </td>
+                <td>
                     <a class="btn btn-outline-primary"
-                       href="{% url 'pets_edit' id=pet.id %}"
+                        href="{% url 'pets_edit' id=pet.id %}"
                     >Editar</a>
                     <form method="POST"
                         action="{% url 'pets_delete' %}"
@@ -39,11 +46,15 @@
                         <input type="hidden" name="pet_id" value="{{ pet.id }}" />
                         <button class="btn btn-outline-danger">Eliminar</button>
                     </form>
+                    <a class="btn btn-outline-primary"
+                        href="{% url 'pets_add_vet' id=pet.id %}"
+                    >Agregar Veterinario</a>
+                    <a class="btn btn-outline-primary"
+                        href="{% url 'select_vets_to_delete' %}?id={{ pet.id }}"
+                    >Eliminar Veterinario</a>
                 </td>
             </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="5" class="text-center">
+            {% empty %}san="5" class="text-center">
                         No existen Mascotas
                     </td>
                 </tr>
