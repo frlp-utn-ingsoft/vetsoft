@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.contrib import messages
 from .models import Client, Product
 from .models import Pet
 from .models import Medicine
@@ -45,14 +46,19 @@ def clients_delete(request):
 
     return redirect(reverse("clients_repo"))
 
-def clients_add_product(request):
-    client_id = request.POST.get("client_id")
-    product_id = request.POST.get("product_id")
-    client = get_object_or_404(Client, pk=int(client_id))
-    product = get_object_or_404(Product, pk=int(product_id))
-    client.products.add(product)
+def clients_add_product(request, id=None):
+    client = get_object_or_404(Client, pk=id)
+    products = Product.objects.all() 
+    if request.method == "POST":
+        product_id = request.POST.get("product_id")
+        product = get_object_or_404(Product, pk=product_id)
+        client.products.add(product)  
+        return redirect(reverse("clients_repo"))
+    if not products:
+        messages.error(request, "No hay productos disponibles")
+        return redirect(reverse("clients_repo"))
 
-    return redirect(reverse("clients_repo"))
+    return render(request, "clients/add_product.html", {"client": client, "products": products})
 
 def products_repository(request):
     products = Product.objects.all()
