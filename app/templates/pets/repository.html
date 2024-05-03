@@ -5,7 +5,7 @@
     <h1 class="mb-4">Mascotas</h1>
 
     <div class="mb-2">
-        {% if vacio %}
+        {% if vacioC %}
         <a href="{% url 'pets_form' %}" class="btn btn-primary">
             <i class="bi bi-plus"></i>
             Nueva Mascota
@@ -22,15 +22,16 @@
         </a>
     </div>
 
-    <table class="table">
+    <table class="table" >
         <thead>
             <tr>
                 <th>Nombre</th>
                 <th>Raza</th>
                 <th>Fecha de Cumpleaños</th>
                 <th>Cliente</th>
-                <td>Medicinas</td>
-                <th></th>
+                <th>Medicinas</th>
+                <th colspan="6"></th>
+                
             </tr>
         </thead>
 
@@ -41,6 +42,7 @@
                 <td>{{pet.breed}}</td>
                 <td>{{pet.birthday}}</td>
                 <td>{{pet.client.name}}</td>
+                
                 <td>
                     {% for medicine in pet.medicines.all %}
                         {{medicine.name}} ,
@@ -48,6 +50,7 @@
                         Sin Medicinas
                     {% endfor %}
                 </td>
+                
                 <td>
                     <a class="btn btn-outline-primary"
                        href="{% url 'pets_edit' id=pet.id %}"
@@ -60,17 +63,40 @@
                         <input type="hidden" name="pet_id" value="{{ pet.id }}" />
                         <button class="btn btn-outline-danger">Eliminar</button>
                     </form>
-                    <a class="btn btn-outline-primary"
-                           href="{% url 'pets_add_medicine' id=pet.id %}"
-                        >Agregar medicina</a>
-                    <a class="btn btn-outline-primary"
+                    
+                </td>
+                <td>
+                    {% if vacioM %}
+                        <a class="btn btn-outline-primary"
+                            href="{% url 'pets_add_medicine' id=pet.id %}"
+                            >Agregar medicina</a>
+                    {% else %}
+                        <button class="btn btn-outline-primary" onclick="alert('No hay medicinas cargadas')">
+                            Agregar Medicina
+                        </button>
+                    {% endif %}
+                    <form method="POST">
+
+                        <a class="btn btn-outline-danger"
                         href="{% url 'select_medicines_to_delete' %}?id={{ pet.id }}"
-                     >Eliminar Medicina</a>
+                        >Eliminar Medicina</a>
+                    </form>
+                </td>
+                <td>
+                    <a class="btn btn-outline-primary"
+                            href="{% url 'pets_add_vets' id=pet.id %}"
+                        >Agregar Veterinario</a>
+                    <form method="POST">
+
+                        <a class="btn btn-outline-danger"
+                        href="{% url 'select_vets_to_delete' %}?id={{ pet.id }}"
+                        >Eliminar Veterinario</a>
+                    </form>
                 </td>
             </tr>
             {% empty %}
                 <tr>
-                    <td colspan="5" class="text-center">
+                    <td colspan="6" class="text-center">
                         No existen Mascotas
                     </td>
                 </tr>
