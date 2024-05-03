@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="container">
+    <h1 class="mb-4">Productos</h1>
+
+    <div class="mb-2">
+        <a href="{% url 'prod_form' %}" class="btn btn-primary">
+            <i class="bi bi-plus"></i>
+            Nuevo Productos
+        </a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Precio</th>
+                <th />
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for prod in products %}
+            <tr>
+                    <td>{{prod.name}}</td>
+                    <td>{{prod.type}}</td>
+                    <td>{{prod.price}}</td>
+                    <td class="d-flex gap-1">
+                        <a class="btn btn-outline-primary"
+                           href="{% url 'prod_edit' id=prod.id %}"
+                        >Editar</a>
+                        <form method="POST"
+                            action="{% url 'prod_delete' %}"
+                            aria-label="Formulario de eliminación de productos">
+                            {% csrf_token %}
+
+                            <input type="hidden" name="prod_id" value="{{ prod.id }}" />
+                            <button class="btn btn-outline-danger">Eliminar</button>
+                        </form>
+                    </td>
+            </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">
+                        No existen productos
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
