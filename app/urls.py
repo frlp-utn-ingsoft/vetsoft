@@ -7,10 +7,19 @@ urlpatterns = [
     path("clientes/nuevo/", view=views.clients_form, name="clients_form"),
     path("clientes/editar/<int:id>/", view=views.clients_form, name="clients_edit"),
     path("clientes/eliminar/", view=views.clients_delete, name="clients_delete"),
+    path("clientes/agregar-producto/<int:id>/", view=views.clients_add_product, name="clients_add_product"),
+    path("clientes/seleccionar-productos/", views.select_products_to_delete, name='select_products_to_delete'),
+    path("clientes/eliminar-productos/", views.delete_selected_products, name='delete_selected_products'),
+
     path("productos/", view=views.products_repository, name="products_repo"),
     path("productos/nuevo/", view=views.product_form, name="products_form"),
     path("productos/editar/<int:id>/", view=views.product_form, name="products_edit"),
     path("productos/eliminar/", view=views.products_delete, name="products_delete"),
+    
+    path("vets/", view=views.vets_repository, name="vets_repo"),
+    path("vets/nuevo/", view=views.vets_form, name="vets_form"),
+    path("vets/editar/<int:id>/", view=views.vets_form, name="vets_edit"),
+    path("vets/eliminar/", view=views.vets_delete, name="vets_delete"),
     
     path("medicine/", view=views.medicine_repository, name="medicine_repo"),
     path("medicine/nuevo/", view=views.medicine_form, name="medicine_form"),

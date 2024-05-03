@@ -2,12 +2,12 @@
 
 {% block main %}
 <div class="container">
-    <h1 class="mb-4">Productos</h1>
+    <h1 class="mb-4">Veterinarios</h1>
 
     <div class="mb-2">
-        <a href="{% url 'products_form' %}" class="btn btn-primary">
+        <a href="{% url 'vets_form' %}" class="btn btn-primary">
             <i class="bi bi-plus"></i>
-            Nuevo Producto
+            Nuevo Veterinario
         </a>
     </div>
 
@@ -15,28 +15,28 @@
         <thead>
             <tr>
                 <th>Nombre</th>
-                <th>Tipo</th>
-                <th>Precio</th>
+                <th>Teléfono</th>
+                <th>Email</th>
                 <th></th>
             </tr>
         </thead>
 
         <tbody>
-            {% for product in products%}
+            {% for vet in vets %}
             <tr>
-                    <td>{{product.name}}</td>
-                    <td>{{product.type}}</td>
-                    <td>{{product.price}}</td>
+                    <td>{{vet.name}}</td>
+                    <td>{{vet.phone}}</td>
+                    <td>{{vet.email}}</td>
                     <td>
                         <a class="btn btn-outline-primary"
-                           href="{% url 'products_edit' id=product.id %}"
+                            href="{% url 'vets_edit' id=vet.id %}"
                         >Editar</a>
                         <form method="POST"
-                            action="{% url 'products_delete' %}"
-                            aria-label="Formulario de eliminación de producto">
+                            action="{% url 'vets_delete' %}"
+                            aria-label="Formulario de eliminación de veterinario">
                             {% csrf_token %}
 
-                            <input type="hidden" name="product_id" value="{{ product.id }}" />
+                            <input type="hidden" name="vet_id" value="{{ vet.id }}" />
                             <button class="btn btn-outline-danger">Eliminar</button>
                         </form>
                     </td>
@@ -44,7 +44,7 @@
             {% empty %}
                 <tr>
                     <td colspan="5" class="text-center">
-                        No existen productos
+                        No existen veterinarios
                     </td>
                 </tr>
             {% endfor %}

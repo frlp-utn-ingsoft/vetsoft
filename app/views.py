@@ -1,9 +1,11 @@
 from datetime import date
 from pyexpat.errors import messages
 from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.contrib import messages
 from .models import Client, Product
 from .models import Pet
 from .models import Medicine
+from .models import Vet
 from django.db import models
 
 def home(request):
@@ -47,6 +49,73 @@ def clients_delete(request):
     client.delete()
 
     return redirect(reverse("clients_repo"))
+
+#___________________________________________________________________________________________________________
+
+def vets_repository(request):
+    vets = Vet.objects.all()
+    return render(request, "vets/repository.html", {"vets": vets})
+
+
+def vets_form(request, id=None):
+    if request.method == "POST":
+        vet_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if vet_id == "":
+            saved, errors = Vet.save_vet(request.POST)
+        else:
+            vet = get_object_or_404(Vet, pk=vet_id)
+            vet.update_vet(request.POST)
+
+        if saved:
+            return redirect(reverse("vets_repo"))
+
+        return render(
+            request, "vets/form.html", {"errors": errors, "vet": request.POST}
+        )
+
+    vet = None
+    if id is not None:
+        vet = get_object_or_404(Vet, pk=id)
+
+    return render(request, "vets/form.html", {"vet": vet})
+
+
+def vets_delete(request):
+    vet_id = request.POST.get("vet_id")
+    vet = get_object_or_404(Vet, pk=int(vet_id))
+    vet.delete()
+
+    return redirect(reverse("vets_repo"))
+def clients_add_product(request, id=None):
+    client = get_object_or_404(Client, pk=id)
+    products = Product.objects.all() 
+    if request.method == "POST":
+        product_id = request.POST.get("product_id")
+        product = get_object_or_404(Product, pk=product_id)
+        client.products.add(product)  
+        return redirect(reverse("clients_repo"))
+    if not products:
+        messages.error(request, "No hay productos disponibles")
+        return redirect(reverse("clients_repo"))
+
+    return render(request, "clients/add_product.html", {"client": client, "products": products})
+
+def select_products_to_delete(request):
+    client_id = request.GET.get('id')
+    client = get_object_or_404(Client, pk=client_id)
+    products = client.products.all()
+    return render(request, 'clients/select_products.html', {'products': products, 'client_id': client_id})
+
+def delete_selected_products(request):
+    if request.method == 'POST':
+        product_ids = request.POST.getlist('products[]')
+        client_id = request.POST.get('client_id')
+        client = get_object_or_404(Client, pk=client_id)
+        client.products.remove(*product_ids)
+    return redirect('clients_repo')
 
 def products_repository(request):
     products = Product.objects.all()

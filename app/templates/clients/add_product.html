@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+            <h1 class="mt-4 mb-4">Agregar Producto</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+            <form method="POST" action="{% url 'clients_add_product' id=client.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="client_id" value="{{ client.id }}" />
+                <div class="form-group">
+                    <label for="product">Producto:</label>
+                    <select name="product_id" id="product" class="form-control">
+                        {% for product in products %}
+                            <option value="{{ product.id }}">{{ product.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 1vh">Agregar Producto</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
