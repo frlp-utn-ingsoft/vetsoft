@@ -105,12 +105,14 @@ class Product(models.Model):
 
         if len(errors.keys()) > 0:
             return False, errors
+        provider_id = product_data.get("provider")
+        provider_instance = Provider.objects.get(id=provider_id)
 
         Product.objects.create(
             name=product_data.get("name"),
             type=product_data.get("type"),
             price=product_data.get("price"),
-            provider = product_data.get("provider"),
+            provider = provider_instance,
         )
         return True, None
     
