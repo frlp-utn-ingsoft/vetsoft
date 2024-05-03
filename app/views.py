@@ -2,10 +2,16 @@ from django.shortcuts import render, redirect, reverse, get_object_or_404
 from .models import Client, Product
 from .models import Vet
 from .models import Provider
-from .models import Medicine #Importa el modelo de Medicine
+from .models import Medicine  # Importa el modelo de Medicine
+from .models import Pet
+
 
 def home(request):
     return render(request, "home.html")
+
+########################### SEPARADOR ###################################
+# views de clientes
+#########################################################################
 
 
 def clients_repository(request):
@@ -29,7 +35,8 @@ def clients_form(request, id=None):
             return redirect(reverse("clients_repo"))
 
         return render(
-            request, "clients/form.html", {"errors": errors, "client": request.POST}
+            request, "clients/form.html", {"errors": errors,
+                                           "client": request.POST}
         )
 
     client = None
@@ -46,6 +53,72 @@ def clients_delete(request):
 
     return redirect(reverse("clients_repo"))
 
+########################### SEPARADOR ###################################
+# creo las vistas para la lista de mascotas
+#########################################################################
+
+
+def pets_repository(request):
+    pets = Pet.objects.all()
+    return render(request, "pets/repository.html", {"pets": pets})
+
+
+# def pets_form(request):
+#     if request.method == 'POST':
+#         name = request.POST.get('name')
+#         breed = request.POST.get('breed')
+#         birthday = request.POST.get('birthday')
+#         owner_id = request.POST.get('owner')
+#         owner = Client.objects.get(id=owner_id)
+
+#         Pet.objects.create(name=name, breed=breed,
+#                            birthday=birthday, owner=owner)
+
+#         # Asume que tienes una vista llamada 'pets_list'
+#         return redirect('pets_repo')
+#     else:
+#         clients = Client.objects.all()
+#         return render(request, 'pets/form.html', {'clients': clients})
+
+def pets_form(request, id=None):
+    if id:
+        pet = get_object_or_404(Pet, id=id)
+    else:
+        pet = None
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        breed = request.POST.get('breed')
+        birthday = request.POST.get('birthday')
+        owner_id = request.POST.get('owner')
+        owner = Client.objects.get(id=owner_id)
+
+        pet_data = {
+            'name': name,
+            'breed': breed,
+            'birthday': birthday,
+            'owner': owner,
+        }
+
+        if pet:
+            pet.update_pet(pet_data)
+        else:
+            Pet.save_pet(pet_data, owner)
+
+        # Asume que tienes una vista llamada 'pets_list'
+        return redirect('pets_repo')
+    else:
+        clients = Client.objects.all()
+        return render(request, 'pets/form.html', {'clients': clients, 'pet': pet})
+
+
+def pets_delete(request):
+    pet_id = request.POST.get("pet_id")
+    pet = get_object_or_404(Pet, pk=int(pet_id))
+    pet.delete()
+
+    return redirect(reverse("pets_repo"))
+
 
 # Vista para mostrar todos los medicamentos en el repositorio
 def medicines_repository(request):
@@ -53,6 +126,8 @@ def medicines_repository(request):
     return render(request, "medicines/repository.html", {"medicines": medicines})
 
 # Vista para el formulario de creación/edición de medicamentos
+
+
 def medicines_form(request, id=None):
     if request.method == "POST":
         medicine_id = request.POST.get("id", "")
@@ -73,7 +148,8 @@ def medicines_form(request, id=None):
 
         # Renderiza el formulario con errores si no se pudo guardar
         return render(
-            request, "medicines/form.html", {"errors": errors, "medicine": request.POST}
+            request, "medicines/form.html", {"errors": errors,
+                                             "medicine": request.POST}
         )
 
     # Obtiene el medicamento si se está editando
@@ -85,6 +161,8 @@ def medicines_form(request, id=None):
     return render(request, "medicines/form.html", {"medicine": medicine})
 
 # Vista para eliminar un medicamento
+
+
 def medicines_delete(request):
     medicine_id = request.POST.get("medicine_id")
     medicine = get_object_or_404(Medicine, pk=int(medicine_id))
@@ -93,9 +171,11 @@ def medicines_delete(request):
     # Redirige a la página del repositorio de medicamentos
     return redirect(reverse("medicines_repo"))
 
+
 def providers_repository(request):
     providers = Provider.objects.all()
     return render(request, "providers/repository.html", {"providers": providers})
+
 
 def providers_form(request, id=None):
     if request.method == "POST":
@@ -113,7 +193,8 @@ def providers_form(request, id=None):
             return redirect(reverse("providers_repo"))
 
         return render(
-            request, "providers/form.html", {"errors": errors, "provider": request.POST}
+            request, "providers/form.html", {"errors": errors,
+                                             "provider": request.POST}
         )
 
     provider = None
@@ -130,9 +211,11 @@ def providers_delete(request):
 
     return redirect(reverse("providers_repo"))
 
+
 def providers_repository(request):
     providers = Provider.objects.all()
     return render(request, "providers/repository.html", {"providers": providers})
+
 
 def providers_form(request, id=None):
     if request.method == "POST":
@@ -150,7 +233,8 @@ def providers_form(request, id=None):
             return redirect(reverse("providers_repo"))
 
         return render(
-            request, "providers/form.html", {"errors": errors, "provider": request.POST}
+            request, "providers/form.html", {"errors": errors,
+                                             "provider": request.POST}
         )
 
     provider = None
@@ -166,7 +250,6 @@ def providers_delete(request):
     provider.delete()
 
     return redirect(reverse("providers_repo"))
-
 
 
 def products_repository(request):
@@ -190,7 +273,8 @@ def products_form(request, id=None):
             return redirect(reverse("products_repo"))
 
         return render(
-            request, "products/form.html", {"errors": errors, "product": request.POST}
+            request, "products/form.html", {"errors": errors,
+                                            "product": request.POST}
         )
 
     product = None
@@ -198,6 +282,7 @@ def products_form(request, id=None):
         product = get_object_or_404(Product, pk=id)
 
     return render(request, "products/form.html", {"product": product})
+
 
 def products_delete(request):
     product_id = request.POST.get("product_id")
@@ -207,10 +292,11 @@ def products_delete(request):
     return redirect(reverse("products_repo"))
 
 
-#Funciones de Vet
+# Funciones de Vet
 def vets_repository(request):
     vets = Vet.objects.all()
     return render(request, "vets/repository.html", {"vets": vets})
+
 
 def vets_form(request, id=None):
     if request.method == "POST":
@@ -228,7 +314,8 @@ def vets_form(request, id=None):
             return redirect(reverse("vets_repo"))
 
         return render(
-            request, "vets/form.html", {"vet_errors": errors, "vet": request.POST}
+            request, "vets/form.html", {"vet_errors": errors,
+                                        "vet": request.POST}
         )
 
     vet = None
@@ -236,6 +323,7 @@ def vets_form(request, id=None):
         vet = get_object_or_404(Vet, pk=id)
 
     return render(request, "vets/form.html", {"vet": vet})
+
 
 def vets_delete(request):
     vet_id = request.POST.get("vet_id")

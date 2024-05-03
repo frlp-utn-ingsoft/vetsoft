@@ -1,11 +1,11 @@
 {% extends 'base.html' %} {% block main %}
 <div class="container">
-    <h1 class="mb-4">Clientes</h1>
+    <h1 class="mb-4">Mascotas</h1>
 
     <div class="mb-2">
-        <a href="{% url 'clients_form' %}" class="btn btn-primary">
+        <a href="{% url 'pets_form' %}" class="btn btn-primary">
             <i class="bi bi-plus"></i>
-            Nuevo Cliente
+            Nueva Mascota
         </a>
     </div>
 
@@ -13,37 +13,37 @@
         <thead>
             <tr>
                 <th>Nombre</th>
-                <th>Teléfono</th>
-                <th>Email</th>
-                <th>Dirección</th>
-                <th></th>
+                <th>Raza</th>
+                <th>Fecha Nacimiento</th>
+                <th>Dueño</th>
+                <th>Acciones</th>
             </tr>
         </thead>
 
         <tbody>
-            {% for client in clients %}
+            {% for pet in pets %}
             <tr>
-                <td>{{client.name}}</td>
-                <td>{{client.phone}}</td>
-                <td>{{client.email}}</td>
-                <td>{{client.address}}</td>
+                <td>{{pet.name}}</td>
+                <td>{{pet.breed}}</td>
+                <td>{{pet.birthday}}</td>
+                <td>{{pet.owner}}</td>
                 <td>
                     <a
                         class="btn btn-outline-primary"
-                        href="{% url 'clients_edit' id=client.id %}"
+                        href="{% url 'pets_edit' id=pet.id %}"
                         >Editar</a
                     >
                     <form
                         method="POST"
-                        action="{% url 'clients_delete' %}"
-                        aria-label="Formulario de eliminación de Cliente"
+                        action="{% url 'pets_delete' %}"
+                        aria-label="Formulario de eliminación de Mascota"
                     >
                         {% csrf_token %}
 
                         <input
                             type="hidden"
-                            name="client_id"
-                            value="{{ client.id }}"
+                            name="pet_id"
+                            value="{{ pet.id }}"
                         />
                         <button class="btn btn-outline-danger">Eliminar</button>
                     </form>
@@ -51,11 +51,10 @@
             </tr>
             {% empty %}
             <tr>
-                <td colspan="5" class="text-center">No existen clientes</td>
+                <td colspan="5" class="text-center">No existen Mascotas</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-
 </div>
 {% endblock %}
