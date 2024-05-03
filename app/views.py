@@ -2,7 +2,7 @@ from datetime import date
 from pyexpat.errors import messages
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import messages
-from .models import Client, Product
+from .models import Client, Product, Provider
 from .models import Pet
 from .models import Medicine
 from .models import Vet
@@ -10,6 +10,42 @@ from .models import Vet
 def home(request):
     return render(request, "home.html")
 
+def providers_repository(request):
+    providers = Provider.objects.all()
+    return render(request, "providers/repository.html", {"providers": providers})
+
+
+def providers_form(request, id=None):
+    if request.method == "POST":
+        provider_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if provider_id == "":
+            saved, errors = Provider.save_provider(request.POST)
+        else:
+            provider = get_object_or_404(Provider, pk=provider_id)
+            provider.update_provider(request.POST)
+
+        if saved:
+            return redirect(reverse("providers_repo"))
+
+        return render(
+            request, "providers/form.html", {"errors": errors, "provider": request.POST}
+        )
+
+    provider = None
+    if id is not None:
+        provider = get_object_or_404(Provider, pk=id)
+
+    return render(request, "providers/form.html", {"provider": provider})
+
+def providers_delete(request):
+    provider_id = request.POST.get("provider_id")
+    provider = get_object_or_404(Provider, pk=int(provider_id))
+    provider.delete()
+
+    return redirect(reverse("providers_repo"))
 
 def clients_repository(request):
     clients = Client.objects.all()
@@ -121,6 +157,7 @@ def products_repository(request):
     return render(request, "products/repository.html", {"products": products})
 
 def product_form(request, id=None):
+    providers = Provider.objects.all()
     if request.method == "POST":
         product_id = request.POST.get("id", "")
         errors = {}
@@ -136,14 +173,14 @@ def product_form(request, id=None):
             return redirect(reverse("products_repo"))
 
         return render(
-            request, "products/form.html", {"errors": errors, "product": request.POST}
+            request, "products/form.html", {"errors": errors, "product": request.POST, "providers": providers}
         )
 
     product = None
     if id is not None:
         product = get_object_or_404(Product, pk=id)
 
-    return render(request, "products/form.html", {"product": product})
+    return render(request, "products/form.html", {"product": product, "providers": providers})
 
 def products_delete(request):
     product_id = request.POST.get("product_id")

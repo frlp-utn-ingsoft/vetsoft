@@ -11,6 +11,11 @@ urlpatterns = [
     path("clientes/seleccionar-productos/", views.select_products_to_delete, name='select_products_to_delete'),
     path("clientes/eliminar-productos/", views.delete_selected_products, name='delete_selected_products'),
 
+    path("proveedores/", view=views.providers_repository, name="providers_repo"),
+    path("proveedores/nuevo/", view=views.providers_form, name="providers_form"),
+    path("proveedores/editar/<int:id>/", view=views.providers_form, name="providers_edit"),
+    path("proveedores/eliminar/", view=views.providers_delete, name="providers_delete"),
+
     path("productos/", view=views.products_repository, name="products_repo"),
     path("productos/nuevo/", view=views.product_form, name="products_form"),
     path("productos/editar/<int:id>/", view=views.product_form, name="products_edit"),

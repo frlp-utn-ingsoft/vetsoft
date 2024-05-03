@@ -36,7 +36,7 @@
                     {% endif %}
                 </div>
                 <div>
-                    <label for="type" class="form-label">Tipo</label>
+                    <label for="email" class="form-label">Tipo</label>
                     <input type="text"
                         id="type"
                         name="type"
@@ -60,6 +60,21 @@
                         required/>
                     <div style="color: #ea868f; font-size: 0.875rem; margin-top: 0.25rem;"> {{errors.price}} </div>
                     
+                </div>
+                <div>
+                    <label for="provider" class="form-label">Proveedor</label>
+                    <select id="provider" name="provider" class="form-select" required>
+                        <option value="" disabled selected>Seleccione un proveedor</option>
+                        {% for provider in providers %}
+                            <option value="{{ provider.id }}">{{ provider.name }}</option>
+                        {% endfor %}
+                    </select>
+                
+                    {% if errors.provider %}
+                        <div class="invalid-feedback">
+                            {{ errors.provider }}
+                        </div>
+                    {% endif %}
                 </div>
                 <button class="btn btn-primary">Guardar</button>
             </form>
