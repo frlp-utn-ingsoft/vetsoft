@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.views.generic import TemplateView
 from django.views import View
-from .models import Client, Product, Vet
+from .models import Client, Medicine, Product, Vet
 
 def home(request):
     return render(request, "home.html")
@@ -82,6 +82,45 @@ class ProductDeleteView(View):
         product = get_object_or_404(Product, pk=int(product_id))
         product.delete()
         return redirect(reverse("products_repo"))
+####################################################################################################
+
+############################################ MEDICINAS #############################################
+
+class MedicineRepositoryView(TemplateView):
+    template_name = "medicines/repository.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["medicines"] = Medicine.objects.all()
+        return context
+
+class MedicineFormView(View):
+    template_name = "medicines/form.html"
+
+    def get(self, request, id=None):
+        context = {}
+        if id is not None:
+            context["medicine"] = get_object_or_404(Medicine, pk=id)
+        return render(request, self.template_name, context)
+
+    def post(self, request, id=None):
+        medicine_id = request.POST.get("id", "")
+        if medicine_id == "":
+            saved, errors = Medicine.save_medicine(request.POST)
+        else:
+            medicine = get_object_or_404(Medicine, pk=medicine_id)
+            saved, errors = medicine.update_medicine(request.POST)
+
+        if saved:
+            return redirect(reverse("medicines_repo"))
+        return render(request, self.template_name, {"errors": errors, "medicine": request.POST})
+
+class MedicineDeleteView(View):
+    def post(self, request):
+        medicine_id = request.POST.get("medicine_id")
+        medicine = get_object_or_404(Medicine, pk=int(medicine_id))
+        medicine.delete()
+        return redirect(reverse("medicines_repo"))
 ####################################################################################################
 
 ############################################# VETS #############################################
