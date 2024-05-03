@@ -1,8 +1,11 @@
+from datetime import date
+from pyexpat.errors import messages
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import messages
 from .models import Client, Product, Provider
 from .models import Pet
 from .models import Medicine
+from .models import Vet
 
 def home(request):
     return render(request, "home.html")
@@ -82,6 +85,45 @@ def clients_delete(request):
 
     return redirect(reverse("clients_repo"))
 
+#___________________________________________________________________________________________________________
+
+def vets_repository(request):
+    vets = Vet.objects.all()
+    return render(request, "vets/repository.html", {"vets": vets})
+
+
+def vets_form(request, id=None):
+    if request.method == "POST":
+        vet_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if vet_id == "":
+            saved, errors = Vet.save_vet(request.POST)
+        else:
+            vet = get_object_or_404(Vet, pk=vet_id)
+            vet.update_vet(request.POST)
+
+        if saved:
+            return redirect(reverse("vets_repo"))
+
+        return render(
+            request, "vets/form.html", {"errors": errors, "vet": request.POST}
+        )
+
+    vet = None
+    if id is not None:
+        vet = get_object_or_404(Vet, pk=id)
+
+    return render(request, "vets/form.html", {"vet": vet})
+
+
+def vets_delete(request):
+    vet_id = request.POST.get("vet_id")
+    vet = get_object_or_404(Vet, pk=int(vet_id))
+    vet.delete()
+
+    return redirect(reverse("vets_repo"))
 def clients_add_product(request, id=None):
     client = get_object_or_404(Client, pk=id)
     products = Product.objects.all() 
@@ -165,7 +207,7 @@ def medicine_form(request, id=None):
             saved, errors = Medicine.save_medicine(request.POST)
         else:
             medicine = get_object_or_404(Medicine, pk=medicine_id)
-            medicine.update_client(request.POST)
+            medicine.update_medicine(request.POST)
 
         if saved:
             return redirect(reverse("medicine_repo"))
@@ -176,7 +218,7 @@ def medicine_form(request, id=None):
 
     medicine = None
     if id is not None:
-        medicine = get_object_or_404(Client, pk=id)
+        medicine = get_object_or_404(Medicine, pk=id)
 
     return render(request, "medicine/form.html", {"medicine": medicine})
 
@@ -186,12 +228,47 @@ def medicine_delete(request):
     medicine.delete()
 
     return redirect(reverse("medicine_repo"))
+
+def pets_add_medicine(request, id=None):
+    pet = get_object_or_404(Pet, pk=id)
+    medicines = Medicine.objects.all()
+    if request.method == "POST":
+        medicine_id = request.POST.get("medicine_id")
+        medicine = get_object_or_404(Medicine, pk=medicine_id)
+        pet.medicines.add(medicine)
+        return redirect(reverse("pets_repo"))
+    if not medicines:
+        messages.error(request, "No hay medicinas disponibles")
+        return redirect(reverse("pets_repo"))
+
+    return render(request, "pets/add_medicine.html", {"pet": pet, "medicines": medicines},)
+
+def pets_add_vets(request, id=None):
+    pet = get_object_or_404(Pet, pk=id)
+    medicines = Medicine.objects.all()
+    if request.method == "POST":
+        medicine_id = request.POST.get("medicine_id")
+        medicine = get_object_or_404(Medicine, pk=medicine_id)
+        pet.medicines.add(medicine)
+        return redirect(reverse("pets_repo"))
+    if not medicines:
+        messages.error(request, "No hay medicinas disponibles")
+        return redirect(reverse("pets_repo"))
+
+    return render(request, "pets/add_medicine.html", {"pet": pet, "medicines": medicines},)
+
+
 def pets_repository(request):
     pets=Pet.objects.all()
-    return render(request,"pets/repository.html", {"pets":pets})
+    vacioC=bool(Client.objects.all())
+    vacioM = bool(Medicine.objects.all())
+    #vacioV 
+    return render(request,"pets/repository.html", {"pets":pets, "vacioC":vacioC,"vacioM":vacioM })
 
 def pets_form(request, id=None):
     clients = Client.objects.all()
+    fecha_actual = date.today().isoformat()
+
     if request.method == "POST":
         pet_id = request.POST.get("id", "")
         errors = {}
@@ -207,13 +284,13 @@ def pets_form(request, id=None):
             return redirect(reverse("pets_repo"))
 
         return render(
-            request, "pets/form.html", {"errors": errors, "pet": request.POST, "clients":clients},
+            request, "pets/form.html", {"errors": errors, "pet": request.POST, "clients":clients, "fecha_actual":fecha_actual},
         )
     pet = None
     if id is not None:
         pet = get_object_or_404(Pet, pk=id)
 
-    return render(request, "pets/form.html", {"pet": pet, "clients":clients})
+    return render(request, "pets/form.html", {"pet": pet, "clients":clients, "fecha_actual":fecha_actual})
 
 def pets_delete(request):
     pet_id = request.POST.get("pet_id")
@@ -221,3 +298,32 @@ def pets_delete(request):
     pet.delete()
 
     return redirect(reverse("pets_repo"))
+
+def select_medicines_to_delete(request):
+    pet_id = request.GET.get('id')
+    pet = get_object_or_404(Pet, pk=pet_id)
+    medicines = pet.medicines.all()
+    return render(request, 'pets/select_medicines.html', {'medicines': medicines, 'pet_id': pet_id})
+
+def delete_selected_medicines(request):
+    if request.method == 'POST':
+        medicine_ids = request.POST.getlist('medicines[]')
+        pet_id = request.POST.get('pet_id')
+        pet = get_object_or_404(Pet, pk=pet_id)
+        pet.medicines.remove(*medicine_ids)
+    return redirect('pets_repo')
+
+def select_vets_to_delete(request):
+    pet_id = request.GET.get('id')
+    pet = get_object_or_404(Pet, pk=pet_id)
+    medicines = pet.medicines.all()
+    return render(request, 'pets/select_medicines.html', {'medicines': medicines, 'pet_id': pet_id})
+
+
+def delete_selected_vets(request):
+    if request.method == 'POST':
+        medicine_ids = request.POST.getlist('medicines[]')
+        pet_id = request.POST.get('pet_id')
+        pet = get_object_or_404(Pet, pk=pet_id)
+        pet.medicines.remove(*medicine_ids)
+    return redirect('pets_repo')

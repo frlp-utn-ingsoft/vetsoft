@@ -4,28 +4,28 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-6 offset-lg-3">
-            <h1>Nueva Medicina</h1>
+            <h1>Nuevo Veterinario</h1>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-6 offset-lg-3">
             <form class="vstack gap-3 {% if errors %}was-validated{% endif %}"
-                aria-label="Formulario de creacion de Medicina"
+                aria-label="Formulario de creacion de veterinario"
                 method="POST"
-                action="{% url 'medicine_form' %}"
+                action="{% url 'vets_form' %}"
                 novalidate>
 
                 {% csrf_token %}
 
-                <input type="hidden" value="{{ medicine.id }}" name="id" />
+                <input type="hidden" value="{{ vet.id }}" name="id" />
 
                 <div>
                     <label for="name" class="form-label">Nombre</label>
                     <input type="text"
                         id="name"
                         name="name"
-                        value="{{medicine.name}}"
+                        value="{{vet.name}}"
                         class="form-control"
                         required/>
 
@@ -36,32 +36,32 @@
                     {% endif %}
                 </div>
                 <div>
-                    <label for="description" class="form-label">Descripcion</label>
+                    <label for="phone" class="form-label">Teléfono</label>
                     <input type="text"
-                        id="description"
-                        name="description"
+                        id="phone"
+                        name="phone"
                         class="form-control"
-                        value="{{medicine.description}}"
+                        value="{{vet.phone}}"
                         required/>
 
-                    {% if errors.breed %}
+                    {% if errors.phone %}
                         <div class="invalid-feedback">
-                            {{ errors.description }}
+                            {{ errors.phone }}
                         </div>
                     {% endif %}
                 </div>
                 <div>
-                    <label for="dose" class="form-label">Dosis</label>
-                    <input type="number"
-                        id="dose"
-                        name="dose"
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email"
+                        id="email"
+                        name="email"
                         class="form-control"
-                        value="{{ medicine.dose }}"
+                        value="{{ vet.email }}"
                         required/>
 
-                    {% if errors.birthday %}
+                    {% if errors.email %}
                         <div class="invalid-feedback">
-                            {{ errors.dose }}
+                            {{ errors.email }}
                         </div>
                     {% endif %}
                 </div>

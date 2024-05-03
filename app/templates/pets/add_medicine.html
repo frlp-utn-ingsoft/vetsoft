@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="row">
+    <div class="col-lg-6 offset-lg-3">
+
+        <form method="POST" action="{% url 'pets_add_medicine' id=pet.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="pet_id" value="{{ pet.id }}" />
+            <div class="form-group">
+                <label for="medicine">Medicinas</label>
+                <select name="medicine_id" id="medicine" class="form-control">
+                    {% for medicine in medicines %}
+                    <option value="{{ medicine.id }}">{{ medicine.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="margin-top: 1vh">Agregar Medicina</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
