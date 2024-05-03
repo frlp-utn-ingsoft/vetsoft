@@ -26,16 +26,16 @@
                 <td>{{ product.name }}</td>
                 <td>{{ product.type }}</td>
                 <td>{{ product.price }}</td>
-                <td>
+                <td class="d-flex gap-2">
                     <a class="btn btn-outline-primary"
                        href="{% url 'products_edit' id=product.id %}"
-                    >Editar</a>
+                    ><i class="bi bi-pencil-square"></i></a>
                     <form method="POST"
                           action="{% url 'products_delete' %}"
                           aria-label="Formulario de eliminación de producto">
                         {% csrf_token %}
                         <input type="hidden" name="product_id" value="{{ product.id }}" />
-                        <button class="btn btn-outline-danger">Eliminar</button>
+                        <button class="btn btn-outline-danger"><i class="bi bi-trash"></i></button>
                     </form>
                 </td>
             </tr>
