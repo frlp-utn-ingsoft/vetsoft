@@ -115,11 +115,37 @@ class Client(models.Model):
 
         self.save()
 
+def validate_medicine(data):
+    errors = {}
+
+    name = data.get("name", "")
+    description = data.get("description", "")
+    dose = data.get("dose", "")
+
+    if name == "":
+        errors["name"] = "Por favor ingrese un nombre"
+
+    if description == "":
+        errors["description"] = "Por favor ingrese una descripcion"
+
+    if dose == "":
+        errors["dose"] = "Por favor ingrese una dosis"
+    try:
+        float_dose = float(dose)
+        if float_dose <= 0:
+            errors["dose"] = "Por favor ingrese una dosis mayor que 0"
+        integer_part, decimal_part = str(float_dose).split(".")
+        if len(decimal_part) > 2:
+            errors["dose"] = "Por favor ingrese una dosis con maximo 2 decimales"
+    except ValueError:
+        errors["dose"] = "Por favor ingrese una dosis valida"
+
+    return errors
 
 class Medicine(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
-    dose = models.IntegerField()
+    dose = models.FloatField()
 #    pets = models.ManyToManyField('Pet', related_name='medicines')
 
     def __str__(self):
@@ -127,6 +153,11 @@ class Medicine(models.Model):
 
     @classmethod
     def save_medicine(cls, medicine_data):
+        errors = validate_medicine(medicine_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+        
         Medicine.objects.create(
             name=medicine_data.get("name"),
             description=medicine_data.get("description"),

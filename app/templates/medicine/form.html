@@ -18,6 +18,8 @@
 
                 {% csrf_token %}
 
+                <input type="hidden" value="{{ medicine.id }}" name="id" />
+
                 <div>
                     <label for="name" class="form-label">Nombre</label>
                     <input type="text"
@@ -42,7 +44,7 @@
                         value="{{medicine.description}}"
                         required/>
 
-                    {% if errors.breed %}
+                    {% if errors.description %}
                         <div class="invalid-feedback">
                             {{ errors.description }}
                         </div>
@@ -57,7 +59,7 @@
                         value="{{ medicine.dose }}"
                         required/>
 
-                    {% if errors.birthday %}
+                    {% if errors.dose %}
                         <div class="invalid-feedback">
                             {{ errors.dose }}
                         </div>

@@ -128,7 +128,7 @@ def medicine_form(request, id=None):
             saved, errors = Medicine.save_medicine(request.POST)
         else:
             medicine = get_object_or_404(Medicine, pk=medicine_id)
-            medicine.update_client(request.POST)
+            medicine.update_medicine(request.POST)
 
         if saved:
             return redirect(reverse("medicine_repo"))
@@ -139,7 +139,7 @@ def medicine_form(request, id=None):
 
     medicine = None
     if id is not None:
-        medicine = get_object_or_404(Client, pk=id)
+        medicine = get_object_or_404(Medicine, pk=id)
 
     return render(request, "medicine/form.html", {"medicine": medicine})
 
