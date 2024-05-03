@@ -140,6 +140,21 @@ def pets_form(request, id=None):
 
     return render(request, "pets/form.html", {"pet": pet, "clients": clients})
 
+
+def pets_medical_history(request, id):
+    if request.method == 'POST':
+        # Procesar los datos del formulario
+        vet_id = request.POST.get('vet')
+        medicine_id = request.POST.get('medicine')
+        
+        # Redirigir a la página de historial con el ID de la mascota
+        return redirect('pets_history', id=id)
+    else:
+        # Si es una solicitud GET, renderizar el formulario como de costumbre
+        pet = Pet.objects.get(id=id)
+        return render(request, 'pets/medical_history.html', {'pet': pet})
+
+
 def pets_delete(request):
     pet_id = request.POST.get("pet_id")
     pet = get_object_or_404(Pet, pk=int(pet_id))
