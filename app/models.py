@@ -20,12 +20,72 @@ def validate_client(data):
 
     return errors
 
+def validate_product(data):
+    errors = {}
+
+    name = data.get("name", "")
+    type = data.get("type", "")
+    price = data.get("price", "")
+
+    if name == "":
+        errors["name"] = "Por favor ingrese un nombre"
+
+    if type == "":
+        errors["type"] = "Por favor ingrese un tipo"
+
+    if price == "":
+        errors["price"] = "Por favor ingrese un precio"
+    try:
+        float_price = float(price)
+        if float_price <= 0:
+            errors["price"] = "Por favor ingrese un precio mayor que 0"
+        integer_part, decimal_part = str(float_price).split(".")
+        if len(decimal_part) > 2:
+            errors["price"] = "Por favor ingrese un precio con maximo 2 decimales"
+    except ValueError:
+        errors["price"] = "Por favor ingrese un precio valido"
+
+    return errors
+                
+
+class Product(models.Model):
+    name = models.CharField(max_length=100)
+    type = models.CharField(max_length=50)
+    price = models.FloatField()
+
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def save_product(cls, product_data):
+        errors = validate_product(product_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
+        Product.objects.create(
+            name=product_data.get("name"),
+            type=product_data.get("type"),
+            price=product_data.get("price"),
+        )
+        return True, None
+    
+    def update_product(self, product_data):
+        self.name = product_data.get("name", "") or self.name
+        self.type = product_data.get("type", "") or self.type
+        try:
+            self.price = float(product_data.get("price", "")) or self.price
+        except ValueError:
+            pass
+
+        self.save()
 
 class Client(models.Model):
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
     email = models.EmailField()
     address = models.CharField(max_length=100, blank=True)
+    products = models.ManyToManyField(Product)
 
     def str(self):
         return self.name
@@ -53,6 +113,7 @@ class Client(models.Model):
         self.address = client_data.get("address", "") or self.address
 
         self.save()
+
 
 class Medicine(models.Model):
     name = models.CharField(max_length=100)
