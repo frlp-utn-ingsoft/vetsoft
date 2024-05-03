@@ -127,6 +127,7 @@ class Pet(models.Model):
     breed = models.CharField(max_length=50)
     birthday = models.DateField()
     client = models.ForeignKey("Client", on_delete=models.CASCADE, null=True, blank=True)
+    medicines = models.ManyToManyField(Medicine)
 
     def __str__(self):
         return self.name
