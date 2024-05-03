@@ -35,6 +35,9 @@
                             <a class="btn btn-outline-primary"
                             href="{% url 'pets_edit' id=pet.id %}"
                             >Editar</a>
+                            <a class="btn btn-outline-secondary"
+                            href="{% url 'pets_history' id=pet.id %}"
+                            >Ver Historial</a>
                             <form method="POST"
                                 action="{% url 'pets_delete' %}"
                                 aria-label="Formulario de eliminación de mascota">
