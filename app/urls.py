@@ -19,6 +19,7 @@ urlpatterns = [
 
     path("mascotas/", view=views.pets_repository, name="pets_repo"),
     path("mascotas/nuevo/", view=views.pets_form, name="pets_form"),
-    path("mascota/editar/<int:id>/", view=views.pets_form, name="pets_edit"),
-    path("mascota/eliminar", view=views.pets_delete, name="pets_delete"),
+    path("mascotas/editar/<int:id>/", view=views.pets_form, name="pets_edit"),
+    path("mascotas/eliminar", view=views.pets_delete, name="pets_delete"),
+    path("mascotas/agregar-medicina/<int:id>/", view=views.pets_add_medicine, name="pets_add_medicine"),
 ]

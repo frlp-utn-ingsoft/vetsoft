@@ -29,6 +29,7 @@
                 <th>Raza</th>
                 <th>Fecha de Cumpleaños</th>
                 <th>Cliente</th>
+                <td>Medicinas</td>
                 <th></th>
             </tr>
         </thead>
@@ -41,6 +42,13 @@
                 <td>{{pet.birthday}}</td>
                 <td>{{pet.client.name}}</td>
                 <td>
+                    {% for medicine in pet.medicines.all %}
+                        {{medicine.name}} ,
+                    {% empty %}
+                        Sin Medicinas
+                    {% endfor %}
+                </td>
+                <td>
                     <a class="btn btn-outline-primary"
                        href="{% url 'pets_edit' id=pet.id %}"
                     >Editar</a>
@@ -52,6 +60,9 @@
                         <input type="hidden" name="pet_id" value="{{ pet.id }}" />
                         <button class="btn btn-outline-danger">Eliminar</button>
                     </form>
+                    <a class="btn btn-outline-primary"
+                           href="{% url 'pets_add_medicine' id=pet.id %}"
+                        >Agregar medicina</a>
                 </td>
             </tr>
             {% empty %}

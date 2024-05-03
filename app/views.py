@@ -1,3 +1,4 @@
+from pyexpat.errors import messages
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from .models import Client, Product
 from .models import Pet
@@ -121,12 +122,19 @@ def medicine_delete(request):
 
     return redirect(reverse("medicine_repo"))
 
-def pets_add_medicine(request):
-    pet_id = request.POST.get("pet_id")
-    medicine_id = request.POST.get("medicine_id")
-    pet = get_object_or_404(Pet, pk=int(pet_id))
-    medicine = get_object_or_404(Medicine, pk=int(medicine_id))
-    return redirect(reverse("pets_repo"))
+def pets_add_medicine(request, id=None):
+    pet = get_object_or_404(Pet, pk=id)
+    medicines = Medicine.objects.all()
+    if request.method == "POST":
+        medicine_id = request.POST.get("medicine_id")
+        medicine = get_object_or_404(Medicine, pk=medicine_id)
+        pet.medicines.add(medicine)
+        return redirect(reverse("pets_repo"))
+    if not medicines:
+        messages.error(request, "No hay medicinas disponibles")
+        return redirect(reverse("pets_repo"))
+
+    return render(request, "pets/add_medicine.html", {"pet": pet, "medicines": medicines},)
 
 
 def pets_repository(request):
