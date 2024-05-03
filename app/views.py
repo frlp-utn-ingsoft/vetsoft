@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.views.generic import TemplateView
 from django.views import View
-from .models import Client, Medicine, Product, Vet
+from .models import Client, Medicine, Product, Vet, Provider
 
 def home(request):
     return render(request, "home.html")
@@ -162,3 +162,38 @@ def vets_delete(request):
 
     return redirect(reverse("vets_repo"))
 ####################################################################################################
+def providers_repository(request):
+    providers = Provider.objects.all()
+    return render(request, "providers/repository.html", {"providers": providers})
+
+def providers_form(request, id=None):
+    if request.method == "POST":
+        provider_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if provider_id == "":
+            saved, errors = Provider.save_provider(request.POST)
+        else:
+            provider = get_object_or_404(Provider, pk=provider_id)
+            provider.update_provider(request.POST)
+
+        if saved:
+            return redirect(reverse("providers_repo"))
+
+        return render(
+            request, "providers/form.html", {"errors": errors, "provider": request.POST}
+        )
+
+    provider = None
+    if id is not None:
+        provider = get_object_or_404(Provider, pk=id)
+
+    return render(request, "providers/form.html", {"provider": provider})
+
+def providers_delete(request):
+    provider_id = request.POST.get("provider_id")
+    provider = get_object_or_404(Provider, pk=int(provider_id))
+    provider.delete()
+
+    return redirect(reverse("providers_repo"))
