@@ -128,7 +128,7 @@ def vets_form(request, id=None):
 
         if vet_id == "":
             saved, errors = Vet.save_vet(request.POST)
-           
+        
         else:
             vet = get_object_or_404(Vet, pk=vet_id)
             vet.update_vet(request.POST)
@@ -154,7 +154,7 @@ def vets_delete(request):
 
     return redirect(reverse("vets_repo"))
 
-def product_repository(request):
+def products_repository(request):
     products = Product.objects.all()
     return render(request, "products/repository.html", {"products": products})
 
@@ -172,7 +172,7 @@ def products_form(request, id=None):
             product.update_product(request.POST)
 
         if saved:
-            return redirect(reverse("product_repo"))
+            return redirect(reverse("products_repo"))
 
         return render(
             request, "products/form.html", {"errors": errors, "product": request.POST}
@@ -185,7 +185,7 @@ def products_form(request, id=None):
     return render(request, "products/form.html", {"product": product})
 
 
-def product_delete(request):
+def products_delete(request):
     product_id = request.POST.get("product_id")
     product = get_object_or_404(Product, pk=int(product_id))
     product.delete()
