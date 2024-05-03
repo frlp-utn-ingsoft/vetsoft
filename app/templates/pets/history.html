@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="container">
+    <h1 class="mb-4">Historial Médico de {{pet.name}}</h1>
+
+    <div class="mb-2">
+        <a href="{% url 'pets_form' %}" class="btn btn-primary">
+            <i class="bi bi-plus"></i>
+            Nuevo Registro Médico
+        </a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Veterinario</th>
+                <th>Medicamento</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for pet in pets %}
+
+            <tr>
+                <td>{{pet.name}}</td>
+                <!-- Listar veterinarios asociados -->
+                <td>
+                    {% if pet.vet_set.all %}
+                        {% for vet in pet.vet_set.all %}
+                            {{ vet.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        No hay veterinarios asociados
+                    {% endif %}
+                </td>
+                <!-- Listar medicinas asociadas -->
+                <td>
+                    {% if pet.medicines.all %}
+                        {% for medicine in pet.medicines.all %}
+                            {{ medicine.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        No hay medicinas asociadas
+                    {% endif %}
+                </td>
+                    <td>
+                        <div class="d-inline-flex gap-2">  
+                            <a class="btn btn-outline-primary"
+                            href="{% url 'pets_edit' id=pet.id %}"
+                            >Editar</a>
+                            <form method="POST"
+                                action="{% url 'pets_delete' %}"
+                                aria-label="Formulario de eliminación de mascota">
+                                {% csrf_token %}
+                                <input type="hidden" name="pet_id" value="{{ pet.id }}" />
+                                <button class="btn btn-outline-danger">Eliminar</button>
+                            </form>
+                        </div>
+                    </td>
+            </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">
+                        No existen mascotas
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
