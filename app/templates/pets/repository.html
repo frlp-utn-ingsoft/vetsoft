@@ -13,10 +13,10 @@
         <thead>
             <tr>
                 <th>Nombre</th>
-                <th>Especie</th>
                 <th>Raza</th>
+                <th>Fecha Nacimiento</th>
                 <th>Dueño</th>
-                <th></th>
+                <th>Acciones</th>
             </tr>
         </thead>
 
@@ -24,9 +24,9 @@
             {% for pet in pets %}
             <tr>
                 <td>{{pet.name}}</td>
-                <td>{{pet.species}}</td>
                 <td>{{pet.breed}}</td>
-                <td>{{pet.client.name}}</td>
+                <td>{{pet.birthday}}</td>
+                <td>{{pet.owner}}</td>
                 <td>
                     <a
                         class="btn btn-outline-primary"
@@ -36,7 +36,7 @@
                     <form
                         method="POST"
                         action="{% url 'pets_delete' %}"
-                        aria-label="Formulario de eliminación de mascota"
+                        aria-label="Formulario de eliminación de Mascota"
                     >
                         {% csrf_token %}
 
@@ -51,7 +51,7 @@
             </tr>
             {% empty %}
             <tr>
-                <td colspan="5" class="text-center">No existen mascotas</td>
+                <td colspan="5" class="text-center">No existen Mascotas</td>
             </tr>
             {% endfor %}
         </tbody>

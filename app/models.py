@@ -93,7 +93,7 @@ class Pet(models.Model):
         return self.name
 
     @classmethod
-    def save_pet(cls, pet_data):
+    def save_pet(cls, pet_data, owner):
         errors = validate_pet(pet_data)
 
         if len(errors.keys()) > 0:
@@ -103,15 +103,25 @@ class Pet(models.Model):
             name=pet_data.get("name"),
             breed=pet_data.get("breed"),
             birthday=pet_data.get("birthday"),
-            owner=pet_data.get("owner"),
+            owner=owner,
+
         )
 
         return True, None
 
-    def update_pet(self, pet_data):
-        self.name = pet_data.get("name", "") or self.name
-        self.breed = pet_data.get("breed", "") or self.breed
-        self.birthday = pet_data.get("birthday", "") or self.birthday
-        self.owner = pet_data.get("owner", "") or self.owner
+    # def update_pet(self, pet_data):
+    #     self.name = pet_data.get("name", "") or self.name
+    #     self.breed = pet_data.get("breed", "") or self.breed
+    #     self.birthday = pet_data.get("birthday", "") or self.birthday
+    #     self.owner = pet_data.get("owner", "") or self.owner
 
-        self.save()
+    #     self.save()
+
+
+def update_pet(self, pet_data):
+    self.name = pet_data.get("name", None) or self.name
+    self.breed = pet_data.get("breed", None) or self.breed
+    self.birthday = pet_data.get("birthday", None) or self.birthday
+    self.owner = pet_data.get("owner", None) or self.owner
+
+    self.save()
