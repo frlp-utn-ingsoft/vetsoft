@@ -6,7 +6,6 @@ from .models import Client, Product
 from .models import Pet
 from .models import Medicine
 from .models import Vet
-from django.db import models
 
 def home(request):
     return render(request, "home.html")
