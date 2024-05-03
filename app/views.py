@@ -173,3 +173,17 @@ def pets_delete(request):
     pet.delete()
 
     return redirect(reverse("pets_repo"))
+
+def select_medicines_to_delete(request):
+    pet_id = request.GET.get('id')
+    pet = get_object_or_404(Pet, pk=pet_id)
+    medicines = pet.medicines.all()
+    return render(request, 'pets/select_medicines.html', {'medicines': medicines, 'pet_id': pet_id})
+
+def delete_selected_medicines(request):
+    if request.method == 'POST':
+        medicine_ids = request.POST.getlist('medicines[]')
+        pet_id = request.POST.get('pet_id')
+        pet = get_object_or_404(Pet, pk=pet_id)
+        pet.medicines.remove(*medicine_ids)
+    return redirect('pets_repo')

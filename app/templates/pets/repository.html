@@ -63,6 +63,9 @@
                     <a class="btn btn-outline-primary"
                            href="{% url 'pets_add_medicine' id=pet.id %}"
                         >Agregar medicina</a>
+                    <a class="btn btn-outline-primary"
+                        href="{% url 'select_medicines_to_delete' %}?id={{ pet.id }}"
+                     >Eliminar Medicina</a>
                 </td>
             </tr>
             {% empty %}
