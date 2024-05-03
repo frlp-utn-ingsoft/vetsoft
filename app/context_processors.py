@@ -4,6 +4,7 @@ links = [
     {"label": "Home", "href": reverse("home"), "icon": "bi bi-house-door"},
     {"label": "Clientes", "href": reverse("clients_repo"), "icon": "bi bi-people"},
     {"label": "Productos", "href": reverse("products_repo"), "icon": "bi bi-basket"},
+    {"label": "Veterinarias", "href": reverse("vets_repo"), "icon": "bi bi-shop"},
 ]
 
 
