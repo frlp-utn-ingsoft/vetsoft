@@ -45,6 +45,15 @@ def clients_delete(request):
 
     return redirect(reverse("clients_repo"))
 
+def clients_add_product(request):
+    client_id = request.POST.get("client_id")
+    product_id = request.POST.get("product_id")
+    client = get_object_or_404(Client, pk=int(client_id))
+    product = get_object_or_404(Product, pk=int(product_id))
+    client.products.add(product)
+
+    return redirect(reverse("clients_repo"))
+
 def products_repository(request):
     products = Product.objects.all()
     return render(request, "products/repository.html", {"products": products})
