@@ -52,6 +52,9 @@
                         <a class="btn btn-outline-primary"
                            href="{% url 'clients_add_product' id=client.id %}"
                         >Agregar producto</a>
+                        <a class="btn btn-outline-primary"
+                           href="{% url 'select_products_to_delete' %}?id={{ client.id }}"
+                        >Eliminar producto</a>
                     </td>
             </tr>
             {% empty %}

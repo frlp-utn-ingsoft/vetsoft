@@ -8,6 +8,8 @@ urlpatterns = [
     path("clientes/editar/<int:id>/", view=views.clients_form, name="clients_edit"),
     path("clientes/eliminar/", view=views.clients_delete, name="clients_delete"),
     path("clientes/agregar-producto/<int:id>/", view=views.clients_add_product, name="clients_add_product"),
+    path("clientes/seleccionar-productos/", views.select_products_to_delete, name='select_products_to_delete'),
+    path("clientes/eliminar-productos/", views.delete_selected_products, name='delete_selected_products'),
 
     path("productos/", view=views.products_repository, name="products_repo"),
     path("productos/nuevo/", view=views.product_form, name="products_form"),

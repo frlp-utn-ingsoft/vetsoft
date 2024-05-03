@@ -60,6 +60,20 @@ def clients_add_product(request, id=None):
 
     return render(request, "clients/add_product.html", {"client": client, "products": products})
 
+def select_products_to_delete(request):
+    client_id = request.GET.get('id')
+    client = get_object_or_404(Client, pk=client_id)
+    products = client.products.all()
+    return render(request, 'clients/select_products.html', {'products': products, 'client_id': client_id})
+
+def delete_selected_products(request):
+    if request.method == 'POST':
+        product_ids = request.POST.getlist('products[]')
+        client_id = request.POST.get('client_id')
+        client = get_object_or_404(Client, pk=client_id)
+        client.products.remove(*product_ids)
+    return redirect('clients_repo')
+
 def products_repository(request):
     products = Product.objects.all()
     return render(request, "products/repository.html", {"products": products})
