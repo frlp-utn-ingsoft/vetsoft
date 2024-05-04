@@ -2,12 +2,12 @@
 
 {% block main %}
 <div class="container">
-    <h1 class="mb-4">Clientes</h1>
+    <h1 class="mb-4">Medicamentos</h1>
 
     <div class="mb-2">
-        <a href="{% url 'clients_form' %}" class="btn btn-primary">
+        <a href="{% url 'medicines_form' %}" class="btn btn-primary">
             <i class="bi bi-plus"></i>
-            Nuevo Cliente
+            Nuevo Medicamento
         </a>
     </div>
 
@@ -15,32 +15,31 @@
         <thead>
             <tr>
                 <th>Nombre</th>
-                <th>Teléfono</th>
-                <th>Email</th>
-                <th>Dirección</th>
+                <th>Descripción</th>
+                <th>Dosis</th>
                 <th>Acciones</th>
             </tr>
         </thead>
 
         <tbody>
-            {% for client in clients %}
+            {% for medicine in medicines %}
+
             <tr>
-                    <td>{{client.name}}</td>
-                    <td>{{client.phone}}</td>
-                    <td>{{client.email}}</td>
-                    <td>{{client.address}}</td>
+                    <td>{{medicine.name}}</td>
+                    <td>{{medicine.description}}</td>
+                    <td>{{medicine.dose}}</td>
                     <td>
                         <div class="d-inline-flex gap-2">  
-                            <a class="btn btn-outline-primary" 
-                               href="{% url 'clients_edit' id=client.id %}"
+
+                            <a class="btn btn-outline-primary"
+                            href="{% url 'medicines_edit' id=medicine.id %}"
                             >Editar</a>
-                
                             <form method="POST"
-                                  action="{% url 'clients_delete' %}"
-                                  aria-label="Formulario de eliminación de cliente">
+                                action="{% url 'medicines_delete' %}"
+                                aria-label="Formulario de eliminación de medicamento">
                                 {% csrf_token %}
-                
-                                <input type="hidden" name="client_id" value="{{ client.id }}" />
+
+                                <input type="hidden" name="medicine_id" value="{{ medicine.id }}" />
                                 <button class="btn btn-outline-danger">Eliminar</button>
                             </form>
                         </div>
@@ -49,7 +48,7 @@
             {% empty %}
                 <tr>
                     <td colspan="5" class="text-center">
-                        No existen clientes
+                        No existen medicamentos
                     </td>
                 </tr>
             {% endfor %}
