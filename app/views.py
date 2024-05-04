@@ -48,8 +48,9 @@ def providers_delete(request):
     return redirect(reverse("providers_repo"))
 
 def clients_repository(request):
+    vacioP = bool(Product.objects.all())
     clients = Client.objects.all()
-    return render(request, "clients/repository.html", {"clients": clients})
+    return render(request, "clients/repository.html", {"clients": clients, "vacioP":vacioP})
 
 
 def clients_form(request, id=None):
