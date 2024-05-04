@@ -142,18 +142,26 @@ def pets_form(request, id=None):
 
 
 def pets_medical_history(request, id):
+    # Obtener todos los veterinarios y medicamentos disponibles
+    vets = Vet.objects.all()
+    medicines = Medicine.objects.all()
+    
+    # Obtener la mascota correspondiente al ID proporcionado
+    pet = Pet.objects.get(id=id)
+    
     if request.method == 'POST':
-        # Procesar los datos del formulario
+        # Si es una solicitud POST, significa que se está enviando el formulario
+        # Obtener los datos del formulario
         vet_id = request.POST.get('vet')
         medicine_id = request.POST.get('medicine')
         
-        # Redirigir a la página de historial con el ID de la mascota
+        # Realizar cualquier procesamiento adicional aquí, como guardar el registro médico en la base de datos
+        
+        # Redirigir a la página de historial de mascotas con el ID de la mascota
         return redirect('pets_history', id=id)
-    else:
-        # Si es una solicitud GET, renderizar el formulario como de costumbre
-        pet = Pet.objects.get(id=id)
-        return render(request, 'pets/medical_history.html', {'pet': pet})
-
+    
+    # Si es una solicitud GET, simplemente renderizar el formulario con los datos de la mascota y las opciones de veterinarios y medicamentos
+    return render(request, 'pets/medical_history.html', {'pet': pet, 'vets': vets, 'medicines': medicines})
 
 def pets_delete(request):
     pet_id = request.POST.get("pet_id")
