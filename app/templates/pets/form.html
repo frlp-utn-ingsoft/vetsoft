@@ -43,6 +43,19 @@
                     {% endfor %}
                 </tbody>
                 <div>
+                    <lab for="name" class="form-label">Cliente</lab>
+                    <select name="client" class="form-control" required>
+                        {% for client in clients %}
+                        <option value="{{client.id}}">{{client.name}}</option>
+                        {% endfor %}
+                    </select>
+                    {% if errors.client %}
+                        <div class="invalid-feedback">
+                            {{ errors.client.name }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div>
                     <label for="name" class="form-label">Nombre</label>
                     <input type="text"
                         id="name"
@@ -75,6 +88,7 @@
                 <div>
                     <label for="birthday" class="form-label">Cumpleaños</label>
                     <input type="date"
+                        max="{{fecha_actual}}"
                         id="birthday"
                         name="birthday"
                         class="form-control"

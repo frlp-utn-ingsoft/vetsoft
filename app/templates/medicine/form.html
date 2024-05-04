@@ -18,6 +18,8 @@
 
                 {% csrf_token %}
 
+                <input type="hidden" value="{{ medicine.id }}" name="id" />
+
                 <div>
                     <label for="name" class="form-label">Nombre</label>
                     <input type="text"

@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import get_object_or_404
 
 def validate_client(data):
     errors = {}
@@ -96,6 +97,26 @@ def validate_product(data):
     except ValueError:
         errors["price"] = "Por favor ingrese un precio valido"
 
+    return errors
+
+def validate_pet(data):
+    errors = {}
+
+    name = data.get("name", "")
+    cliente = data.get("client", "")
+    breed = data.get("breed", "")
+    birthday = data.get("birthday","")
+
+    if name == "":
+        errors["name"] = "Por favor ingrese un nombre"
+
+    if cliente == "":
+        errors["cliente"] = "Por favor seleccione un cliente"
+
+    if breed == "":
+        errors["breed"] = "Por favor ingrese una raza"
+    if birthday == "":
+        errors["birthday"] = "Por favor ingrese la fecha de cumpleaños"
     return errors
                 
 
@@ -196,6 +217,8 @@ class Pet(models.Model):
     name=models.CharField(max_length=100)
     breed=models.CharField(max_length=100)
     birthday=models.DateField(verbose_name="Fecha de Cumpleaños")
+    client = models.ForeignKey(Client,on_delete=models.CASCADE, null=True)
+    medicines = models.ManyToManyField(Medicine)
     vets = models.ManyToManyField(Vet)
 
     def __str__(self):
@@ -203,10 +226,16 @@ class Pet(models.Model):
     
     @classmethod
     def save_pet(cls,pet_data):
+        errors = validate_pet(pet_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+        client2=Client.objects.get(id=pet_data.get("client"))
         Pet.objects.create(
             name = pet_data.get("name"),
             breed= pet_data.get("breed"),
             birthday = pet_data.get("birthday"),
+            client = client2
         )
 
         return True, None
