@@ -18,8 +18,13 @@ urlpatterns = [
     path("mascotas/nuevo/", view=views.pets_form, name="pets_form"),
     path("mascotas/editar/<int:id>/", view=views.pets_form, name="pets_edit"),
     path("mascotas/eliminar/", view=views.pets_delete, name="pets_delete"),
+    ##pets history
     path("mascotas/historial/<int:id>", view=views.pets_history, name="pets_history"),
-    path("mascotas/historial-medico/<int:id>", view=views.pets_medical_history, name="pets_medical_history"),
+    path("mascotas/historial/<int:id>/nuevo", view=views.pets_form_history, name="pets_form_history"),
+    path("mascotas/historial/<int:id>/editar", view=views.pets_form_history, name="pets_edit_history"),
+    path("mascotas/historial/<int:id>/eliminar/", view=views.pets_delete, name="pets_delete_history"),
+
+
 
 
     ##products
