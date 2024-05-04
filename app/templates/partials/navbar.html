@@ -35,14 +35,6 @@
               </a>
           </li>
           {% endfor %}
-
-          <!-- Agregar la opción de Mascotas -->
-          <li class="nav-item">
-              <a class="nav-link {% if request.path == '/mascotas/' %}active{% endif %}" href="{% url 'pets_repo' %}" data-testid="navbar-Mascotas">
-                <i class="bi bi-paw"></i>
-                  Mascotas
-              </a>
-          </li>
       </ul>
     </div>
   </div>

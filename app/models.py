@@ -262,6 +262,24 @@ def validate_provider(data):
 
     return errors
 
+def validate_pet(data):
+    errors = {}
+
+    name = data.get("name", "")
+    breed = data.get("breed", "")
+    birthday = data.get("birthday", "")
+
+    if name == "":
+        errors["name"] = "Por favor ingrese un nombre"
+
+    if breed == "":
+        errors["breed"] = "Por favor ingrese una raza"
+
+    if birthday == "":
+        errors["birthday"] = "Por favor ingrese una fecha"
+
+    return errors
+
 class Pet(models.Model):
     name = models.CharField(max_length=100)
     breed = models.CharField(max_length=50, blank=True)

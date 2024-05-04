@@ -27,17 +27,17 @@
                     <td>{{pet.name}}</td>
                     <td>{{pet.breed}}</td>
                     <td>{{pet.birthday}}</td>
-                    <td>
+                    <td class="d-flex gap-2">
                         <a class="btn btn-outline-primary"
                            href="{% url 'pets_edit' id=pet.id %}"
-                        >Editar</a>
+                        ><i class="bi bi-pencil-square"></i></a>
                         <form method="POST"
                             action="{% url 'pets_delete' %}"
                             aria-label="Formulario de eliminación de mascota">
                             {% csrf_token %}
 
                             <input type="hidden" name="pet_id" value="{{ pet.id }}" />
-                            <button class="btn btn-outline-danger">Eliminar</button>
+                            <button class="btn btn-outline-danger"><i class="bi bi-trash"></i></button>
                         </form>
                     </td>
             </tr>
