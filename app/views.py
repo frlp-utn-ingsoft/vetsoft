@@ -142,26 +142,39 @@ def pets_form(request, id=None):
 
 
 def pets_medical_history(request, id):
-    # Obtener todos los veterinarios y medicamentos disponibles
+    # Obtener todas las mascotas, veterinarios y medicamentos disponibles
+    pets = Pet.objects.all()
     vets = Vet.objects.all()
     medicines = Medicine.objects.all()
-    
-    # Obtener la mascota correspondiente al ID proporcionado
-    pet = Pet.objects.get(id=id)
-    
+
+    # Obtener la mascota correspondiente al ID proporcionado (si existe)
+    pet = get_object_or_404(Pet, id=id)
+
     if request.method == 'POST':
         # Si es una solicitud POST, significa que se está enviando el formulario
         # Obtener los datos del formulario
-        vet_id = request.POST.get('vet')
-        medicine_id = request.POST.get('medicine')
+        medicine_ids = request.POST.getlist('medicines')  # Obtener una lista de IDs de medicamentos seleccionados
+        vet_ids = request.POST.getlist('vets')  # Obtener una lista de IDs de veterinarios seleccionados
         
-        # Realizar cualquier procesamiento adicional aquí, como guardar el registro médico en la base de datos
+        # Actualizar la relación de muchos a muchos con los medicamentos seleccionados
+        for medicine in medicines:
+            medicine_id = get_object_or_404(Medicine, id=medicine_id)
+            pet.medicines.add(medicine_id)
         
-        # Redirigir a la página de historial de mascotas con el ID de la mascota
-        return redirect('pets_history', id=id)
-    
+        # Actualizar la relación de muchos a muchos con los veterinarios seleccionados
+        for vet_id in vets:
+            vet = get_object_or_404(Vet, id=vet_id)
+            vet.pets.add(pet)
+        
+        # Guardar la mascota en la base de datos
+        pet.save()
+
+        # Redirigir a la página de historial de mascotas
+        return redirect(reverse("pets_history", args=(id,)))
+
+
     # Si es una solicitud GET, simplemente renderizar el formulario con los datos de la mascota y las opciones de veterinarios y medicamentos
-    return render(request, 'pets/medical_history.html', {'pet': pet, 'vets': vets, 'medicines': medicines})
+    return render(request, 'pets/medical_history.html', {'pet': pet, 'pets': pets, 'vets': vets, 'medicines': medicines})
 
 def pets_delete(request):
     pet_id = request.POST.get("pet_id")
