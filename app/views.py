@@ -89,14 +89,11 @@ def pets_repository(request):
     return render(request, "pets/repository.html", {"pets": pets})
 
 def pets_history(request, id):
-    # Prefetch_related debe ser usado en un QuerySet
-    # El uso correcto es obtener el objeto Pet con el QuerySet que tiene prefetch_related
-    pet = get_object_or_404(Pet.objects.prefetch_related("medicines", "vet_set"), id=id)
+    pet = get_object_or_404(Pet.objects.prefetch_related("medicines", "vets"), id=id)  # Usa "Vets" en mayúscula
 
     context = {
         "pet": pet,
     }
-
     return render(request, "pets/history.html", context)
 
 def pets_form(request, id=None):
@@ -141,44 +138,56 @@ def pets_form(request, id=None):
     return render(request, "pets/form.html", {"pet": pet, "clients": clients})
 
 
-def pets_medical_history(request, id):
-    # Obtener la mascota correspondiente al ID proporcionado
-    pet = get_object_or_404(Pet, id=id)
-
-    # Obtener todos los veterinarios y medicamentos disponibles
+def pets_form_history(request, id):
     vets = Vet.objects.all()
     medicines = Medicine.objects.all()
-    pets = Pet.objects.all()
-    
+    pet = get_object_or_404(Pet, id=id)
+
     if request.method == 'POST':
+        pet_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+        
+        if pet_id == "":
+            saved, errors = Pet.save_pet(request.POST)
+            medicine_id = request.POST.get("medicines", "")
+            vet_id = request.POST.get("vet", "")
+            
+            if medicine_id and vet_id:
+                pet.medicines.add(medicine_id)
+                pet.vets.add(vet_id)
+                pet.save()
+        else:
+            pet = get_object_or_404(Pet, pk=pet_id)
+            pet.update_pet(request.POST)
+            
+            medicine_id = request.POST.get("medicines", "")
+            vet_id = request.POST.get("vet", "")
+            
+            if medicine_id and vet_id:
+                pet.medicines.add(medicine_id)
+                pet.vets.add(vet_id)
+                pet.save()
+        
+        if saved:
+            return redirect(reverse("pets_history", args=(id,)))
 
-        # Obtener las listas de IDs seleccionados del formulario
-        medicine_id = request.POST.get("medicines", "")  # Corregido para obtener el campo correcto
-        vet_id = request.POST.get("vet", "") 
-
-        if not vet_id:
-            return render(request, 'error_page.html', {"message": "Falta el ID del veterinario"})
-
-        vet = get_object_or_404(Vet, id=vet_id)
-
-        if medicine_id and vet_id:
-            pet.medicines.add(medicine_id)  # Agregar el medicamento seleccionado a la mascota
-            pet.save()
-  
-            vet.pets.add(pet)  # Agregar la mascota al veterinario
-            vet.save()
-        print(request.POST)  
-
-
-        return redirect(reverse("pets_history", args=(id,)))
-
-    # Renderizar el formulario si es una solicitud GET
-    return render(request, 'pets/medical_history.html', {
+        # Si no se guarda correctamente, debe retornar algo
+        return render(request, 'pets/history.html', {
+            'pet': pet,
+            'vets': vets,
+            'medicines': medicines,
+            'errors': errors,  # Muestra errores si hay
+        })
+    
+    # Manejo para solicitudes GET
+    return render(request, 'pets/form_history.html', {
         'pet': pet,
-        'pets': pets,
         'vets': vets,
         'medicines': medicines,
     })
+
+
 
 def pets_delete(request):
     pet_id = request.POST.get("pet_id")
