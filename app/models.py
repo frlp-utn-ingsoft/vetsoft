@@ -21,6 +21,22 @@ def validate_client(data):
 
     return errors
 
+def validate_provider(data):
+    errors = {}
+
+    name = data.get("name", "")
+    email = data.get("email", "")
+
+    if name == "":
+        errors["name"] = "Por favor ingrese un nombre"
+
+    if email == "":
+        errors["email"] = "Por favor ingrese un email"
+    elif email.count("@") == 0:
+        errors["email"] = "Por favor ingrese un email valido"
+
+    return errors
+
 def validate_vet(data):
     errors = {}
 
@@ -78,6 +94,7 @@ def validate_product(data):
     name = data.get("name", "")
     type = data.get("type", "")
     price = data.get("price", "")
+    provider = data.get("provider", "")
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
@@ -96,6 +113,9 @@ def validate_product(data):
             errors["price"] = "Por favor ingrese un precio con maximo 2 decimales"
     except ValueError:
         errors["price"] = "Por favor ingrese un precio valido"
+
+    if not provider:
+        errors["provider"] = "Por favor seleccione un proveedor"
 
     return errors
 
@@ -119,11 +139,37 @@ def validate_pet(data):
         errors["birthday"] = "Por favor ingrese la fecha de cumpleaños"
     return errors
                 
+class Provider(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
 
+    def __str__(self):
+        return self.name
+    
+    @classmethod
+    def save_provider(cls, provider_data):
+        errors = validate_provider(provider_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
+        Provider.objects.create(
+            name=provider_data.get("name"),
+            email=provider_data.get("email"),
+        )
+        return True, None
+    
+    def update_provider(self, provider_data):
+        self.name = provider_data.get("name", "") or self.name
+        self.email = provider_data.get("email", "") or self.email
+
+        self.save()
+    
 class Product(models.Model):
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=50)
     price = models.FloatField()
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -134,11 +180,14 @@ class Product(models.Model):
 
         if len(errors.keys()) > 0:
             return False, errors
+        provider_id = product_data.get("provider")
+        provider_instance = Provider.objects.get(id=provider_id)
 
         Product.objects.create(
             name=product_data.get("name"),
             type=product_data.get("type"),
             price=product_data.get("price"),
+            provider = provider_instance,
         )
         return True, None
     
@@ -186,11 +235,37 @@ class Client(models.Model):
 
         self.save()
 
+def validate_medicine(data):
+    errors = {}
+
+    name = data.get("name", "")
+    description = data.get("description", "")
+    dose = data.get("dose", "")
+
+    if name == "":
+        errors["name"] = "Por favor ingrese un nombre"
+
+    if description == "":
+        errors["description"] = "Por favor ingrese una descripcion"
+
+    if dose == "":
+        errors["dose"] = "Por favor ingrese una dosis"
+    try:
+        float_dose = float(dose)
+        if float_dose <= 0:
+            errors["dose"] = "Por favor ingrese una dosis mayor que 0"
+        integer_part, decimal_part = str(float_dose).split(".")
+        if len(decimal_part) > 2:
+            errors["dose"] = "Por favor ingrese una dosis con maximo 2 decimales"
+    except ValueError:
+        errors["dose"] = "Por favor ingrese una dosis valida"
+
+    return errors
 
 class Medicine(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
-    dose = models.IntegerField()
+    dose = models.FloatField()
 #    pets = models.ManyToManyField('Pet', related_name='medicines')
 
     def __str__(self):
@@ -198,6 +273,11 @@ class Medicine(models.Model):
 
     @classmethod
     def save_medicine(cls, medicine_data):
+        errors = validate_medicine(medicine_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+        
         Medicine.objects.create(
             name=medicine_data.get("name"),
             description=medicine_data.get("description"),
