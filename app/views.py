@@ -142,39 +142,43 @@ def pets_form(request, id=None):
 
 
 def pets_medical_history(request, id):
-    # Obtener todas las mascotas, veterinarios y medicamentos disponibles
-    pets = Pet.objects.all()
-    vets = Vet.objects.all()
-    medicines = Medicine.objects.all()
-
-    # Obtener la mascota correspondiente al ID proporcionado (si existe)
+    # Obtener la mascota correspondiente al ID proporcionado
     pet = get_object_or_404(Pet, id=id)
 
+    # Obtener todos los veterinarios y medicamentos disponibles
+    vets = Vet.objects.all()
+    medicines = Medicine.objects.all()
+    pets = Pet.objects.all()
+    
     if request.method == 'POST':
-        # Si es una solicitud POST, significa que se está enviando el formulario
-        # Obtener los datos del formulario
-        medicine_ids = request.POST.getlist('medicines')  # Obtener una lista de IDs de medicamentos seleccionados
-        vet_ids = request.POST.getlist('vets')  # Obtener una lista de IDs de veterinarios seleccionados
-        
-        # Actualizar la relación de muchos a muchos con los medicamentos seleccionados
-        for medicine in medicines:
-            medicine_id = get_object_or_404(Medicine, id=medicine_id)
-            pet.medicines.add(medicine_id)
-        
-        # Actualizar la relación de muchos a muchos con los veterinarios seleccionados
-        for vet_id in vets:
-            vet = get_object_or_404(Vet, id=vet_id)
-            vet.pets.add(pet)
-        
-        # Guardar la mascota en la base de datos
-        pet.save()
 
-        # Redirigir a la página de historial de mascotas
+        # Obtener las listas de IDs seleccionados del formulario
+        medicine_id = request.POST.get("medicines", "")  # Corregido para obtener el campo correcto
+        vet_id = request.POST.get("vet", "") 
+
+        if not vet_id:
+            return render(request, 'error_page.html', {"message": "Falta el ID del veterinario"})
+
+        vet = get_object_or_404(Vet, id=vet_id)
+
+        if medicine_id and vet_id:
+            pet.medicines.add(medicine_id)  # Agregar el medicamento seleccionado a la mascota
+            pet.save()
+  
+            vet.pets.add(pet)  # Agregar la mascota al veterinario
+            vet.save()
+        print(request.POST)  
+
+
         return redirect(reverse("pets_history", args=(id,)))
 
-
-    # Si es una solicitud GET, simplemente renderizar el formulario con los datos de la mascota y las opciones de veterinarios y medicamentos
-    return render(request, 'pets/medical_history.html', {'pet': pet, 'pets': pets, 'vets': vets, 'medicines': medicines})
+    # Renderizar el formulario si es una solicitud GET
+    return render(request, 'pets/medical_history.html', {
+        'pet': pet,
+        'pets': pets,
+        'vets': vets,
+        'medicines': medicines,
+    })
 
 def pets_delete(request):
     pet_id = request.POST.get("pet_id")
