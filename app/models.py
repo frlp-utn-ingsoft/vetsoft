@@ -1,5 +1,7 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
+import re
 
 def validate_client(data):
     errors = {}
@@ -7,12 +9,15 @@ def validate_client(data):
     name = data.get("name", "")
     phone = data.get("phone", "")
     email = data.get("email", "")
+    pattern_phone = r'^\+?[\d\s\-\(\)]+$'
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
 
     if phone == "":
         errors["phone"] = "Por favor ingrese un teléfono"
+    elif not re.match(pattern_phone, phone):
+        raise ValidationError("El formato del teléfono es inválido.")
 
     if email == "":
         errors["email"] = "Por favor ingrese un email"
@@ -68,9 +73,13 @@ def validate_medicine(data):
 
     if description == "":
         errors["description"] = "Por favor ingrese una descripción"
-
-    if dose == "":
-        errors["dose"] = "Por favor ingrese una dosis"
+    else:
+        try:
+            int_dose = int(dose)
+            if int_dose <= 0:
+                errors["dose"] = "La dosis debe ser mayor que cero"
+        except ValueError:
+            errors["dose"] = "La dosis debe ser un número entero válido"
     return errors
 
 class Medicine(models.Model):
@@ -268,6 +277,7 @@ def validate_vet(data):
     name = data.get("name", "")
     email = data.get("email", "")
     phone = data.get("phone", "")
+    pattern_phone = r'^\+?[\d\s\-\(\)]+$'
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
@@ -278,6 +288,8 @@ def validate_vet(data):
         errors["email"] = "Por favor ingrese un email valido"
     if phone == "":
         errors["phone"] = "Por favor ingrese un teléfono"
+    elif not re.match(pattern_phone, phone):
+        raise ValidationError("El formato del teléfono es inválido.")
 
     return errors
 
