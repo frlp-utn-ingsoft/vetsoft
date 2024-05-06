@@ -31,9 +31,12 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 
 ## Convenciones de git
 ### commits
+- STABLE(commit_msg): Version estable/probada de una funcionalidad o de una integración de features.
 - ADD(commit_msg): Añade desarrollo a una funcionalidad existente.
-- FIX(commit_msg): Corrige un error para una funcionalidad.
 - MOD(commit_msg): Modifica el código de una funcionalidad.
+- REF(commit_msg): Refactorización de funcionalidad.
+- FIX(commit_msg): Corrige un error para una funcionalidad.
+
 ### ramas
 - MAIN (Rama principal del proyecto)
 - NOMBRE_INTEGRANTE (Rama de desarrollo para cada integrante)
