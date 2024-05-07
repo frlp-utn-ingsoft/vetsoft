@@ -46,6 +46,7 @@ INFORMACION:
                 - feat(Component): Se agrego nuevo funcionalidad.
 
 2. Significado de cada tipo de commit:
+
         - **feat**: 
                 - Se utiliza para indicar la adición de una nueva funcionalidad al software. Por ejemplo, «feat: Añadir funcionalidad de búsqueda».
 
@@ -78,6 +79,7 @@ INFORMACION:
 
 
 3. Formato de escritura: 
+
         **snake_case**: palabras separadas por barra baja en vez de espacios y 
         con la primera letra de cada palabra en minúscula. 
 
