@@ -57,7 +57,7 @@ INFORMACION:
                 - Reservado para commits relacionados con la documentación del proyecto, como actualizaciones en documentos o comentarios en el código. Por ejemplo, «docs: Actualizar la guía del usuario».
 
         - style: 
-                - Se utiliza para cambios que afectan solo al estilo del código, como la formateación, el espaciado o la                       indentación. Por ejemplo, «style: Ajustar formateo del código».
+                - Se utiliza para cambios que afectan solo al estilo del código, como la formateación, el espaciado o la indentación. Por ejemplo, «style: Ajustar formateo del código».
 
         - chore: 
                 - Este tipo de commit está destinado a tareas de mantenimiento general o actividades que no encajan en las categorías anteriores.Por ejemplo, «chore: Limpiar archivos no utilizados».
