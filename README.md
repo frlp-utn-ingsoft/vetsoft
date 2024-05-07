@@ -22,16 +22,16 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 
 `python manage.py runserver`
 
-1. NOMBRE DE INTEGRANTES:
-        *Iñaki Jose Zelayeta
-        *Bruno Alejo Santillan
-        *Katerina Mariescurrena 
-        *Lautaro Frias
+NOMBRE DE LOS INTEGRANTES:
 
+        - Iñaki Jose Zelayeta
+        - Bruno Alejo Santillan
+        - Katerina Mariescurrena 
+        - Lautaro Frias
 
 INFORMACION:
 
-2. Formato de escritura de los commits:
+1. Formato de escritura de los commits:
 
         <tipo> [optional scope]:<descripcion>
         ^----^ ^--------------^ ^-----------^   
@@ -45,7 +45,7 @@ INFORMACION:
         - EJEMPLO
                 - feat(Component): Se agrego nuevo funcionalidad.
 
-3. Significado de cada tipo de commit:
+2. Significado de cada tipo de commit:
 
         - feat: 
                 - Se utiliza para indicar la adición de una nueva funcionalidad al software. Por ejemplo, «feat: Añadir funcionalidad de búsqueda».
@@ -78,7 +78,7 @@ INFORMACION:
                 - Agregar pruebas faltantes o corregir pruebas existentes.
 
 
-4. Formato de escritura: 
+3. Formato de escritura: 
 
         snake_case: palabras separadas por barra baja en vez de espacios y 
         con la primera letra de cada palabra en minúscula. 
