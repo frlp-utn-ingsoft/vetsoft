@@ -47,34 +47,34 @@ INFORMACION:
 
 2. Significado de cada tipo de commit:
 
-        - **feat**: 
+        - feat: 
                 - Se utiliza para indicar la adición de una nueva funcionalidad al software. Por ejemplo, «feat: Añadir funcionalidad de búsqueda».
 
-        - **fix**: 
+        - fix: 
                 - Este tipo se usa para commits que corrigen errores o problemas existentes en el código. Por ejemplo, «fix: Corregir error de validación de formulario».
 
-        - **doc**: 
+        - doc: 
                 - Reservado para commits relacionados con la documentación del proyecto, como actualizaciones en documentos o comentarios en el código. Por ejemplo, «docs: Actualizar la guía del usuario».
 
-        - **style**: 
+        - style: 
                 - Se utiliza para cambios que afectan solo al estilo del código, como la formateación, el espaciado o la                       indentación. Por ejemplo, «style: Ajustar formateo del código».
 
-        - **chore**: 
+        - chore: 
                 - Este tipo de commit está destinado a tareas de mantenimiento general o actividades que no encajan en las categorías anteriores.Por ejemplo, «chore: Limpiar archivos no utilizados».
 
-        - **build**: 
+        - build: 
                 - Cambios que afectan el sistema de compilación o dependencias externas.Por ejemplo: «build(Electron): Bump version 7 to 9».
 
-        - **ci**: 
+        - ci: 
                 - Cambios en nuestros archivos y scripts de configuración de integración continua.
 
-        - **perf**: 
+        - perf: 
                 - Un cambio de código que mejora el rendimiento.
 
-        - **refacto**: 
+        - refacto: 
                 - Un cambio de código que no corrige un error ni agrega una característica.
 
-        - **test**: 
+        - test: 
                 - Agregar pruebas faltantes o corregir pruebas existentes.
 
 
