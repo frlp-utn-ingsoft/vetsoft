@@ -23,10 +23,10 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 `python manage.py runserver`
 
 NOMBRE DE INTEGRANTES:
-        #Iñaki Jose Zelayeta
-        #Bruno Alejo Santillan
-        #Katerina Mariescurrena 
-        #Lautaro Frias
+        *Iñaki Jose Zelayeta
+        *Bruno Alejo Santillan
+        *Katerina Mariescurrena 
+        *Lautaro Frias
 
 
 INFORMACION:
@@ -80,7 +80,7 @@ INFORMACION:
 
 3. Formato de escritura: 
 
-        **snake_case**: palabras separadas por barra baja en vez de espacios y 
+        snake_case: palabras separadas por barra baja en vez de espacios y 
         con la primera letra de cada palabra en minúscula. 
 
         Por ejemplo: mi_blog_de_desarrollo.
