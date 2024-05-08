@@ -41,8 +41,8 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 - NOMBRE_INTEGRANTE (Rama de desarrollo para cada integrante)
 - NOMBRE_INTEGRANTE/FUNCIONALIDAD (Rama en opcional en caso de querer separar desarrollo)
 
-## Correr el proyecto dockerizado.
+## Correr el proyecto dockerizado (vetsoft-app:1.0.0).
 1. Pararse en la carpeta bash de la raiz del proyecto.
 2. ejecutar `./correr-contenedor.sh`
 3. Esperar para que se cree la imagen y el contenedor vetsoft.
-4. Acceder al proyecto desde `localhost:8001`
+4. Acceder al proyecto desde `localhost:8001` (o el puerto configurado en `./correr-contenedor.sh` en caso de querer usar otro)
