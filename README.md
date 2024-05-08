@@ -22,6 +22,15 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 
 `python manage.py runserver`
 
+## Crear la imagen de docker
+
+`docker build -t vetsoft-app:Version .`
+
+## Desplegar el contenedor de docker
+
+`$ docker run --name actividad-2 -p 8000:8000 vetsoft-app:Version`
+
+
 NOMBRE DE LOS INTEGRANTES:
 
         - Iñaki Jose Zelayeta
@@ -31,7 +40,11 @@ NOMBRE DE LOS INTEGRANTES:
 
 INFORMACION:
 
-1. Formato de escritura de los commits:
+1. Version actual de la imagen Docker utilizada:
+
+        vetsoft-app:1.0
+
+2. Formato de escritura de los commits:
 
         <tipo> [optional scope]:<descripcion>
         ^----^ ^--------------^ ^-----------^   
@@ -45,7 +58,7 @@ INFORMACION:
         - EJEMPLO
                 - feat(Component): Se agrego nuevo funcionalidad.
 
-2. Significado de cada tipo de commit:
+3. Significado de cada tipo de commit:
 
         - feat: 
                 - Se utiliza para indicar la adición de una nueva funcionalidad al software. Por ejemplo, «feat: Añadir funcionalidad de búsqueda».
@@ -78,7 +91,7 @@ INFORMACION:
                 - Agregar pruebas faltantes o corregir pruebas existentes.
 
 
-3. Formato de escritura: 
+4. Formato de escritura: 
 
         snake_case: palabras separadas por barra baja en vez de espacios y 
         con la primera letra de cada palabra en minúscula. 
