@@ -6,7 +6,6 @@ __pycache__
 
 # Archivos y directorios del venv (No necesarios para este proyecto)
 venv/
-*.env
 
 
 *.sqlite3
