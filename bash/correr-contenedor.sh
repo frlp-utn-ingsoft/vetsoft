@@ -2,6 +2,7 @@
 
 nombre_imagen="vetsoft-app:1.0.0"
 nombre_contenedor="vetsoft"
+puerto_docker="8001"
 
 if docker ps -a --format '{{.Names}}' | grep -q "$nombre_contenedor"; then
     echo "El contenedor $nombre_contenedor ya fue creado... corriendo contenedor"
@@ -17,7 +18,7 @@ else
         docker build -t "$nombre_imagen" . --no-cache
     fi
     echo "Creando contenedor $nombre_contenedor de la imagen ->  $nombre_imagen..."
-    docker run -d -p 8001:8000 --name "$nombre_contenedor" "$nombre_imagen" &&
+    docker run -d -p ${puerto_docker}:8000 --name "$nombre_contenedor" "$nombre_imagen" &&
     echo "Se ha levantado el contenedor"
 fi
 
