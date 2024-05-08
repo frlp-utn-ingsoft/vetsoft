@@ -1,6 +1,6 @@
 #!/bin/bash
 
-nombre_imagen="vetsoft-app:1.0.0"
+nombre_imagen="vetsoft-app:1.0.1"
 nombre_contenedor="vetsoft"
 puerto_docker="8001"
 

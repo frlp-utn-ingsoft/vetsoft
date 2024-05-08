@@ -1,17 +1,19 @@
-# usando la ultima version de ubuntu
-FROM ubuntu:latest
-# instalando python3 para usar DJango
-RUN apt-get update && apt-get install -y python3 python3-pip
+# Utiliza una imagen base más liviana
+FROM python:slim
 
-# usando el proyecto copiado en la carpeta app
+# Instala paquetes necesarios para compilar dependencias de Python
+RUN apt-get update && \
+    apt-get install -y build-essential libffi-dev libssl-dev
+
+# Establece el directorio de trabajo dentro del contenedor
 WORKDIR /app
 COPY . /app/
 
-# instalo los requirements para el proyecto (librerias de python)
-RUN pip3 install --no-cache-dir --break-system-packages -r requirements.txt
+# Instala las dependencias del proyecto (librerías de Python)
+RUN pip install --no-cache-dir --no-cache --disable-pip-version-check -r requirements.txt
 
-# expongo el puerto
+# Exponer el puerto
 EXPOSE 8000
 
-# comando para que el contenedor inicialize la app vetsoft
-CMD ["sh", "-c", "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"]
+# Comando para inicializar la aplicación Django
+CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
