@@ -1,0 +1,11 @@
+# Archivos generados automáticamente
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Archivos y directorios del venv (No necesarios para este proyecto)
+venv/
+
+
+*.sqlite3
