@@ -1,27 +1,6 @@
 
 from django.db import models
 
-#CLIENTES
-def validate_client(data):
-    errors = {}
-
-    name = data.get("name", "")
-    phone = data.get("phone", "")
-    email = data.get("email", "")
-
-    if name == "":
-        errors["name"] = "Por favor ingrese un nombre"
-
-    if phone == "":
-        errors["phone"] = "Por favor ingrese un teléfono"
-
-    if email == "":
-        errors["email"] = "Por favor ingrese un email"
-    elif email.count("@") == 0:
-        errors["email"] = "Por favor ingrese un email valido"
-
-    return errors
-
 ############################################## CLIENT ##############################################
 class Client(models.Model):
     name = models.CharField(max_length=100)
@@ -31,10 +10,29 @@ class Client(models.Model):
 
     def __str__(self):
         return self.name
+    @classmethod
+    def validate_client(cls, data):
+        errors = {}
 
+        name = data.get("name", "")
+        phone = data.get("phone", "")
+        email = data.get("email", "")
+
+        if name == "":
+            errors["name"] = "Por favor ingrese un nombre"
+
+        if phone == "":
+            errors["phone"] = "Por favor ingrese un teléfono"
+
+        if email == "":
+            errors["email"] = "Por favor ingrese un email"
+        elif email.count("@") == 0:
+            errors["email"] = "Por favor ingrese un email valido"
+
+        return errors
     @classmethod
     def save_client(cls, client_data):
-        errors = validate_client(client_data)
+        errors = cls.validate_client(client_data)
 
         if len(errors.keys()) > 0:
             return False, errors
@@ -155,38 +153,36 @@ class Medicine(models.Model):
 ####################################################################################################
 
 ############################################### VET ################################################
-def validate_vet(data):
-    errors = {}
-
-    name = data.get("name", "")
-    phone = data.get("phone", "")
-    email = data.get("email", "")
-
-    if name == "":
-        errors["name"] = "Por favor ingrese un nombre"
-
-    if phone == "":
-        errors["phone"] = "Por favor ingrese un teléfono"
-
-    if email == "":
-        errors["email"] = "Por favor ingrese un email"
-    elif email.count("@") == 0:
-        errors["email"] = "Por favor ingrese un email valido"
-
-    return errors
-
-
 class Vet(models.Model):
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
     email = models.EmailField()
 
-    def __str__(self):
-        return self.name
+
+    @classmethod
+    def validate_vet(cls, data):
+        errors = {}
+
+        name = data.get("name", "")
+        phone = data.get("phone", "")
+        email = data.get("email", "")
+
+        if name == "":
+            errors["name"] = "Por favor ingrese un nombre"
+
+        if phone == "":
+            errors["phone"] = "Por favor ingrese un teléfono"
+
+        if email == "":
+            errors["email"] = "Por favor ingrese un email"
+        elif email.count("@") == 0:
+            errors["email"] = "Por favor ingrese un email valido"
+
+        return errors
 
     @classmethod
     def save_vet(cls, vet_data):
-        errors = validate_vet(vet_data)
+        errors = cls.validate_vet(vet_data)
 
         if len(errors.keys()) > 0:
             return False, errors
@@ -196,8 +192,10 @@ class Vet(models.Model):
             phone=vet_data.get("phone"),
             email=vet_data.get("email"),
         )
-
         return True, None
+
+    def __str__(self):
+        return self.name
 
     def update_vet(self, vet_data):
         self.name = vet_data.get("name", "") or self.name
@@ -218,8 +216,33 @@ class Provider(models.Model):
         return self.name
 
     @classmethod
+    def validate_provider(cls, data):
+        errors = {}
+
+        name = data.get("name", "")
+        phone = data.get("phone", "")
+        email = data.get("email", "")
+        address = data.get("address", "")
+
+        if name == "":
+            errors["name"] = "Por favor ingrese un nombre"
+
+        if phone == "":
+            errors["phone"] = "Por favor ingrese un teléfono"
+
+        if email == "":
+            errors["email"] = "Por favor ingrese un email"
+        elif email.count("@") == 0:
+            errors["email"] = "Por favor ingrese un email valido"
+
+        if address == "":
+            errors["address"] = "Por favor ingrese una dirección"
+
+        return errors
+
+    @classmethod
     def save_provider(cls, provider_data):
-        errors = validate_provider(provider_data)
+        errors = cls.validate_provider(provider_data)
 
         if len(errors.keys()) > 0:
             return False, errors
@@ -240,62 +263,37 @@ class Provider(models.Model):
         self.address = provider_data.get("address", "") or self.address
 
         self.save()
-
-def validate_provider(data):
-    errors = {}
-
-    name = data.get("name", "")
-    phone = data.get("phone", "")
-    email = data.get("email", "")
-    address = data.get("address", "")
-
-    if name == "":
-        errors["name"] = "Por favor ingrese un nombre"
-
-    if phone == "":
-        errors["phone"] = "Por favor ingrese un teléfono"
-
-    if email == "":
-        errors["email"] = "Por favor ingrese un email"
-    elif email.count("@") == 0:
-        errors["email"] = "Por favor ingrese un email valido"
-
-    if address == "":
-        errors["address"] = "Por favor ingrese una dirección"
-
-    return errors
 ####################################################################################################
 
 ############################################### PET ################################################
-def validate_pet(data):
-    errors = {}
-
-    name = data.get("name", "")
-    breed = data.get("breed", "")
-    birthday = data.get("birthday", "")
-
-    if name == "":
-        errors["name"] = "Por favor ingrese un nombre"
-
-    if breed == "":
-        errors["breed"] = "Por favor ingrese una raza"
-
-    if birthday == "":
-        errors["birthday"] = "Por favor ingrese una fecha"
-
-    return errors
 
 class Pet(models.Model):
     name = models.CharField(max_length=100)
     breed = models.CharField(max_length=50, blank=True)
     birthday = models.DateField()
 
-    def __str__(self):
-        return self.name
+    @classmethod
+    def validate_pet(cls, data):
+        errors = {}
+
+        name = data.get("name", "")
+        breed = data.get("breed", "")
+        birthday = data.get("birthday", "")
+
+        if name == "":
+            errors["name"] = "Por favor ingrese un nombre"
+
+        if breed == "":
+            errors["breed"] = "Por favor ingrese una raza"
+
+        if birthday == "":
+            errors["birthday"] = "Por favor ingrese una fecha"
+
+        return errors
 
     @classmethod
     def save_pet(cls, pet_data):
-        errors = validate_pet(pet_data)
+        errors = cls.validate_pet(pet_data)
 
         if len(errors.keys()) > 0:
             return False, errors
@@ -314,4 +312,8 @@ class Pet(models.Model):
         self.birthday = pet_data.get("birthday", "") or self.birthday
 
         self.save()
+
+    def __str__(self):
+        return self.name
+
 ####################################################################################################
