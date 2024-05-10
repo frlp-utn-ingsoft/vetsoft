@@ -18,10 +18,10 @@ urlpatterns = [
     path("productos/eliminar/", views.ProductDeleteView.as_view(), name="products_delete"),
 
     #VETERINARIAS
-    path("veterinarias/", view=views.vets_repository, name="vets_repo"),
-    path("veterinarias/nuevo/", view=views.vets_form, name="vets_form"),
-    path("veterinarias/editar/<int:id>/", view=views.vets_form, name="vets_edit"),
-    path("veterinarias/eliminar/", view=views.vets_delete, name="vets_delete"),
+    path("veterinarias/", view=views.VetRepositoryView.as_view(), name="vets_repo"),
+    path("veterinarias/nuevo/", view=views.VetFormView.as_view(), name="vets_form"),
+    path("veterinarias/editar/<int:id>/", view=views.VetFormView.as_view(), name="vets_edit"),
+    path("veterinarias/eliminar/", view=views.VetDeleteView.as_view(), name="vets_delete"),
 
     #MEDICAMENTOS
     path("medicamentos/", views.MedicineRepositoryView.as_view(), name="medicines_repo"),

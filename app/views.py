@@ -123,14 +123,22 @@ class MedicineDeleteView(View):
         return redirect(reverse("medicines_repo"))
 ####################################################################################################
 
-############################################# VETS #############################################
-def vets_repository(request):
-    vets = Vet.objects.all()
-    return render(request, "vets/repository.html", {"vets": vets})
+############################################# VETS #################################################
+class VetRepositoryView(View):
+    def get(self, request):
+        vets = Vet.objects.all()
+        return render(request, "vets/repository.html", {"vets": vets})
 
+class VetFormView(View):
+    template_name = "vets/form.html"
 
-def vets_form(request, id=None):
-    if request.method == "POST":
+    def get(self, request, id=None):
+        vet = None
+        if id is not None:
+            vet = get_object_or_404(Vet, pk=id)
+        return render(request, self.template_name, {"vet": vet})
+
+    def post(self, request, id=None):
         vet_id = request.POST.get("id", "")
         errors = {}
         saved = True
@@ -139,28 +147,18 @@ def vets_form(request, id=None):
             saved, errors = Vet.save_vet(request.POST)
         else:
             vet = get_object_or_404(Vet, pk=vet_id)
-            vet.update_vet(request.POST)
+            saved, errors = vet.update_vet(request.POST)
 
         if saved:
             return redirect(reverse("vets_repo"))
+        return render(request, self.template_name, {"errors": errors, "vet": request.POST})
 
-        return render(
-            request, "vets/form.html", {"errors": errors, "vet": request.POST}
-        )
-
-    vet = None
-    if id is not None:
-        vet = get_object_or_404(Vet, pk=id)
-
-    return render(request, "vets/form.html", {"vet": vet})
-
-
-def vets_delete(request):
-    vet_id = request.POST.get("vet_id")
-    vet = get_object_or_404(Vet, pk=int(vet_id))
-    vet.delete()
-
-    return redirect(reverse("vets_repo"))
+class VetDeleteView(View):
+    def post(self, request):
+        vet_id = request.POST.get("vet_id")
+        vet = get_object_or_404(Vet, pk=int(vet_id))
+        vet.delete()
+        return redirect(reverse("vets_repo"))
 ####################################################################################################
 
 ########################################### PROVEEDORES ############################################
