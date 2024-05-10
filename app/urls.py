@@ -36,8 +36,8 @@ urlpatterns = [
     path("proveedores/eliminar/", view=views.ProviderDeleteView.as_view(), name="providers_delete"),
 
     #MASCOTAS
-    path("mascotas/", view=views.pets_repository, name="pets_repo"),
-    path("mascotas/nueva/", view=views.pets_form, name="pets_form"),
-    path("mascotas/editar/<int:id>/", view=views.pets_form, name="pets_edit"),
-    path("mascotas/eliminar/", view=views.pets_delete, name="pets_delete"),
+    path("mascotas/", view=views.PetRepositoryView.as_view(), name="pets_repo"),
+    path("mascotas/nueva/", view=views.PetFormView.as_view(), name="pets_form"),
+    path("mascotas/editar/<int:id>/", view=views.PetFormView.as_view(), name="pets_edit"),
+    path("mascotas/eliminar/", view=views.PetDeleteView.as_view(), name="pets_delete"),
 ]
