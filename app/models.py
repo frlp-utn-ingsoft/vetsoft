@@ -8,8 +8,6 @@ class Client(models.Model):
     email = models.EmailField()
     address = models.CharField(max_length=100, blank=True)
 
-    def __str__(self):
-        return self.name
     @classmethod
     def validate_client(cls, data):
         errors = {}
@@ -53,6 +51,10 @@ class Client(models.Model):
         self.address = client_data.get("address", "") or self.address
 
         self.save()
+        return True, None
+
+    def __str__(self):
+        return self.name
 ####################################################################################################
 
 ############################################# PRODUCT ##############################################
@@ -203,6 +205,8 @@ class Vet(models.Model):
         self.phone = vet_data.get("phone", "") or self.phone
 
         self.save()
+        return True, None
+
 ####################################################################################################
 
 ############################################# PROVIDER #############################################
@@ -263,6 +267,8 @@ class Provider(models.Model):
         self.address = provider_data.get("address", "") or self.address
 
         self.save()
+        return True, None
+
 ####################################################################################################
 
 ############################################### PET ################################################
@@ -312,6 +318,8 @@ class Pet(models.Model):
         self.birthday = pet_data.get("birthday", "") or self.birthday
 
         self.save()
+        return True, None
+
 
     def __str__(self):
         return self.name
