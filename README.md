@@ -46,3 +46,8 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 2. ejecutar `./correr-contenedor.sh`
 3. Esperar para que se cree la imagen y el contenedor vetsoft.
 4. Acceder al proyecto desde `localhost:8001` (o el puerto configurado en `./correr-contenedor.sh` en caso de querer usar otro)
+
+## Fixtures (crear datos de prueba para la aplicación)
+1. Una vez corridas las migrations de la app.
+2. correr `python manage.py loaddata fixtures/data.json`
+3. En caso de querer más datos cambiar `DATA_COUNT` en `fixtures/generator.py` a la cantidad querida y repetir paso 2.
