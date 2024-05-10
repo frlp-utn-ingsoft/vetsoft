@@ -30,11 +30,11 @@ urlpatterns = [
     path("medicamentos/eliminar/", views.MedicineDeleteView.as_view(), name="medicines_delete"),
 
     #PROVEEDORES
-    path("proveedores/", view=views.providers_repository, name="providers_repo"),
-    path("proveedores/nuevo/", view=views.providers_form, name="providers_form"),
-    path("proveedores/editar/<int:id>/", view=views.providers_form, name="providers_edit"),
-    path("proveedores/eliminar/", view=views.providers_delete, name="providers_delete"),
-    
+    path("proveedores/", view=views.ProviderRepositoryView.as_view(), name="providers_repo"),
+    path("proveedores/nuevo/", view=views.ProviderFormView.as_view(), name="providers_form"),
+    path("proveedores/editar/<int:id>/", view=views.ProviderFormView.as_view(), name="providers_edit"),
+    path("proveedores/eliminar/", view=views.ProviderDeleteView.as_view(), name="providers_delete"),
+
     #MASCOTAS
     path("mascotas/", view=views.pets_repository, name="pets_repo"),
     path("mascotas/nueva/", view=views.pets_form, name="pets_form"),

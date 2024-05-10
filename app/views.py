@@ -164,12 +164,21 @@ def vets_delete(request):
 ####################################################################################################
 
 ########################################### PROVEEDORES ############################################
-def providers_repository(request):
-    providers = Provider.objects.all()
-    return render(request, "providers/repository.html", {"providers": providers})
+class ProviderRepositoryView(View):
+    def get(self, request):
+        providers = Provider.objects.all()
+        return render(request, "providers/repository.html", {"providers": providers})
 
-def providers_form(request, id=None):
-    if request.method == "POST":
+class ProviderFormView(View):
+    template_name = "providers/form.html"
+
+    def get(self, request, id=None):
+        provider = None
+        if id is not None:
+            provider = get_object_or_404(Provider, pk=id)
+        return render(request, self.template_name, {"provider": provider})
+
+    def post(self, request, id=None):
         provider_id = request.POST.get("id", "")
         errors = {}
         saved = True
@@ -178,27 +187,18 @@ def providers_form(request, id=None):
             saved, errors = Provider.save_provider(request.POST)
         else:
             provider = get_object_or_404(Provider, pk=provider_id)
-            provider.update_provider(request.POST)
+            saved, errors = provider.update_provider(request.POST)
 
         if saved:
             return redirect(reverse("providers_repo"))
+        return render(request, self.template_name, {"errors": errors, "provider": request.POST})
 
-        return render(
-            request, "providers/form.html", {"errors": errors, "provider": request.POST}
-        )
-
-    provider = None
-    if id is not None:
-        provider = get_object_or_404(Provider, pk=id)
-
-    return render(request, "providers/form.html", {"provider": provider})
-
-def providers_delete(request):
-    provider_id = request.POST.get("provider_id")
-    provider = get_object_or_404(Provider, pk=int(provider_id))
-    provider.delete()
-
-    return redirect(reverse("providers_repo"))
+class ProviderDeleteView(View):
+    def post(self, request):
+        provider_id = request.POST.get("provider_id")
+        provider = get_object_or_404(Provider, pk=int(provider_id))
+        provider.delete()
+        return redirect(reverse("providers_repo"))
 ####################################################################################################
 
 ############################################### PETS ###############################################
@@ -224,7 +224,7 @@ def pets_form(request, id=None):
         return render(
             request, "pets/form.html", {"errors": errors, "pet": request.POST}
         )
-    
+
     pet = None
     if id is not None:
         pet = get_object_or_404(Pet, pk=id)
