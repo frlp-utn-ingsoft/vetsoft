@@ -22,7 +22,7 @@ def validate_client(data):
 
     return errors
 
-
+############################################## CLIENT ##############################################
 class Client(models.Model):
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
@@ -55,8 +55,9 @@ class Client(models.Model):
         self.address = client_data.get("address", "") or self.address
 
         self.save()
+####################################################################################################
 
-
+############################################# PRODUCT ##############################################
 class Product(models.Model):
     name = models.CharField(max_length=75)
     type = models.CharField(max_length=25)
@@ -103,8 +104,9 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+####################################################################################################
 
-
+############################################# MEDICINE #############################################
 class Medicine(models.Model):
     name = models.CharField(max_length=75)
     description = models.CharField(max_length=255)
@@ -150,9 +152,9 @@ class Medicine(models.Model):
 
     def __str__(self):
         return self.name
+####################################################################################################
 
-
-#VETS
+############################################### VET ################################################
 def validate_vet(data):
     errors = {}
 
@@ -203,8 +205,9 @@ class Vet(models.Model):
         self.phone = vet_data.get("phone", "") or self.phone
 
         self.save()
+####################################################################################################
 
-
+############################################# PROVIDER #############################################
 class Provider(models.Model):
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
@@ -261,7 +264,9 @@ def validate_provider(data):
         errors["address"] = "Por favor ingrese una dirección"
 
     return errors
+####################################################################################################
 
+############################################### PET ################################################
 def validate_pet(data):
     errors = {}
 
@@ -287,14 +292,14 @@ class Pet(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     @classmethod
     def save_pet(cls, pet_data):
         errors = validate_pet(pet_data)
 
         if len(errors.keys()) > 0:
             return False, errors
-        
+
         Pet.objects.create(
             name=pet_data.get("name"),
             breed=pet_data.get("breed"),
@@ -302,10 +307,11 @@ class Pet(models.Model):
         )
 
         return True, None
-    
+
     def update_pet(self, pet_data):
         self.name = pet_data.get("name", "") or self.name
         self.breed = pet_data.get("breed", "") or self.breed
         self.birthday = pet_data.get("birthday", "") or self.birthday
 
         self.save()
+####################################################################################################
