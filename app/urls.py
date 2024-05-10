@@ -6,10 +6,10 @@ urlpatterns = [
     path("", view=views.home, name="home"),
 
     #CLIENTES
-    path("clientes/", view=views.clients_repository, name="clients_repo"),
-    path("clientes/nuevo/", view=views.clients_form, name="clients_form"),
-    path("clientes/editar/<int:id>/", view=views.clients_form, name="clients_edit"),
-    path("clientes/eliminar/", view=views.clients_delete, name="clients_delete"),
+    path("clientes/", view=views.ClientRepositoryView.as_view(), name="clients_repo"),
+    path("clientes/nuevo/", view=views.ClientFormView.as_view(), name="clients_form"),
+    path("clientes/editar/<int:id>/", view=views.ClientFormView.as_view(), name="clients_edit"),
+    path("clientes/eliminar/", view=views.ClientDeleteView.as_view(), name="clients_delete"),
 
     #PRODUCTOS
     path("productos/", views.ProductRepositoryView.as_view(), name="products_repo"),

@@ -4,46 +4,53 @@ from django.views import View
 from .models import Client, Medicine, Product, Vet, Provider, Pet
 
 def home(request):
-    return render(request, "home.html")
+    buttonsHome = [
+        {'url': reverse("clients_repo"), 'id': 'home-Clientes', 'icon': 'bi-people', 'text': 'Clientes'},
+        {'url': reverse("vets_repo"), 'id': 'home-Veterinarias', 'icon': 'bi-shop', 'text': 'Veterinarias'},
+        {'url': reverse("products_repo"), 'id': 'home-Productos', 'icon': 'bi-basket', 'text': 'Productos'},
+        {'url': reverse("medicines_repo"), 'id': 'home-Medicamentos', 'icon': 'bi-capsule', 'text': 'Medicamentos'},
+        {'url': reverse("providers_repo"), 'id': 'home-Proveedores', 'icon': 'bi-truck', 'text': 'Proveedores'},
+        {'url': reverse("pets_repo"), 'id': 'home-Mascotas', 'icon': 'bi-chat-heart', 'text': 'Mascotas'},
+    ]
 
-#CLIENTS
-def clients_repository(request):
-    clients = Client.objects.all()
-    return render(request, "clients/repository.html", {"clients": clients})
+    return render(request, "home.html",context={'buttons': buttonsHome})
 
+############################################# CLIENTS ##############################################
+class ClientRepositoryView(View):
+    template_name = "clients/repository.html"
 
-def clients_form(request, id=None):
-    if request.method == "POST":
+    def get(self, request):
+        clients = Client.objects.all()
+        return render(request, self.template_name, {"clients": clients})
+
+class ClientFormView(View):
+    template_name = "clients/form.html"
+
+    def get(self, request, id=None):
+        client = None
+        if id is not None:
+            client = get_object_or_404(Client, pk=id)
+        return render(request, self.template_name, {"client": client})
+
+    def post(self, request, id=None):
         client_id = request.POST.get("id", "")
-        errors = {}
-        saved = True
-
         if client_id == "":
             saved, errors = Client.save_client(request.POST)
         else:
             client = get_object_or_404(Client, pk=client_id)
-            client.update_client(request.POST)
+            saved, errors = client.update_client(request.POST)
 
         if saved:
             return redirect(reverse("clients_repo"))
+        return render(request, self.template_name, {"errors": errors, "client": request.POST})
 
-        return render(
-            request, "clients/form.html", {"errors": errors, "client": request.POST}
-        )
-
-    client = None
-    if id is not None:
-        client = get_object_or_404(Client, pk=id)
-
-    return render(request, "clients/form.html", {"client": client})
-
-
-def clients_delete(request):
-    client_id = request.POST.get("client_id")
-    client = get_object_or_404(Client, pk=int(client_id))
-    client.delete()
-
-    return redirect(reverse("clients_repo"))
+class ClientDeleteView(View):
+    def post(self, request):
+        client_id = request.POST.get("client_id")
+        client = get_object_or_404(Client, pk=int(client_id))
+        client.delete()
+        return redirect(reverse("clients_repo"))
+####################################################################################################
 
 ############################################# PRODUCTS #############################################
 class ProductRepositoryView(TemplateView):
@@ -53,7 +60,6 @@ class ProductRepositoryView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["products"] = Product.objects.all()
         return context
-
 
 class ProductFormView(View):
     template_name = "products/form.html"
