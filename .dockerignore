@@ -1,0 +1,5 @@
+README.md
+.gitignore
+.editorconfig
+.ruff.toml
+db.sqlite3
