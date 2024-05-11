@@ -11,11 +11,11 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 Aclaración: Se deberá tener instalado previamente docker en la PC
 
 1. Construir la imagen
-    `docker build -t vetsoft . `(-t para nombra "vetsoft" a la imagen, . indica donde buscar el dockerfile)
+    `docker build -t vetsoft .` (-t para nombra "vetsoft" a la imagen, . indica donde buscar el dockerfile)
 
 2. Desplegar el contenedor
     Una vez creada la imagen "vetsoft", ejecutar:
-        `docker run -d -p 8000:80 vetsoft `(-d es para que ejecute la aplicación en segundo plano, -p hace el binding de puertos)
+        `docker run -d -p 8000:80 vetsoft` (-d es para que ejecute la aplicación en segundo plano, -p hace el binding de puertos)
 
 3. Ir a la URL localhost:8000 para poder utilizar la aplicación.
 
