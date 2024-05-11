@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - DB_ENGINE=django.db.backends.sqlite3
+        - DB_NAME=vetsoftdb.sqlite3
+        - DEBUG=true
+    environment:
+      - SECRET_KEY=secreto
+    image: vetsoft-app:1.0
