@@ -2,6 +2,11 @@
 
 Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y Calidad de Software. UTN-FRLP
 
+## Standard commits
+
+- [type]:<mensaje-commit>
+- type: fix (arrreglamos bug), feat (agregamos una nueva funcionalidad), refactor (refactorizamos codigo)
+
 ## Dependencias
 
 -   python 3
