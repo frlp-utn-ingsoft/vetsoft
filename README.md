@@ -28,3 +28,10 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
  - Pavoni Nicolás
  - Garcia Montes Luciano
  - Rodríguez Luciano Matias
+
+## Levantar proyecto con Docker
+
+1. Verificamos la existencia de la imagen : docker images
+2. Construir la imagen : docker build -t vetsoft-app1.0 .
+3. Ejecutar la imagen: docker run -d -p 8000:8000 vetsoft-app1.0
+4. Verificar el contenedor ejecutado : docker ps
