@@ -1,0 +1,11 @@
+#Archivos sensibles
+.env
+
+#Versionado
+.git
+
+#Archivos temporales
+__pycache__
+
+#Documentación innecesaria
+README.md
