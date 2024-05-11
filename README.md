@@ -29,3 +29,7 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 * Juan Ignacio Frangolini  
 * Nuria Robledo  
 * Milagros Soberon
+
+## Levantar Docker:
+
+`docker-compose up`
