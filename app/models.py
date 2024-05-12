@@ -110,7 +110,7 @@ class Product(models.Model):
 class Medicine(models.Model):
     name = models.CharField(max_length=75)
     description = models.CharField(max_length=255)
-    dose = models.IntegerField()
+    dose = models.FloatField()
 
     @classmethod
     def save_medicine(cls, medicine_data: dict) -> tuple[bool, dict | None]:
