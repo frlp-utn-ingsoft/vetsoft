@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  web:
+    container_name: vetsoft
+    image: vetsoft-app:1.0.0
+    build: .
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:${CONTAINER_PORT}"
+    ports:
+      - "${LOCAL_PORT}:${CONTAINER_PORT}"
+    

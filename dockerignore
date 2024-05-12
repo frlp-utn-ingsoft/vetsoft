@@ -1,0 +1,13 @@
+.venv
+*.pyc
+.env
+__pycache__/
+.ruff.toml
+.git
+.gitignore
+.DS_Store
+Thumbs.db
+db.sqlite3
+*.log
+.editorconfig
+README.md
