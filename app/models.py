@@ -421,9 +421,14 @@ class Medicine(models.Model):
 
     # Método para actualizar un medicamento existente
     def update_medicine(self, medicine_data):
+        errors = validate_medicine(medicine_data)
+        if len(errors.keys()) > 0:
+            return False, errors
+    
         self.name = medicine_data.get("name", "") or self.name
-        self.description = medicine_data.get(
-            "description", "") or self.description
+        self.description = medicine_data.get("description", "") or self.description
         self.dose = medicine_data.get("dose", "") or self.dose
 
         self.save()
+        
+        return True, None
