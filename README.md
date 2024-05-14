@@ -33,3 +33,6 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 ## Levantar Docker:
 
 `docker-compose up --build`
+
+### Acceder a la aplicación
+[Link de la aplicación](http://localhost:8000/)
