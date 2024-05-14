@@ -32,4 +32,4 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 
 ## Levantar Docker:
 
-`docker-compose up`
+`docker-compose up --build`
