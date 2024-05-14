@@ -332,6 +332,8 @@ def validate_vet(data):
 
     if phone == "":
         errors["phone"] = "Por favor ingrese un teléfono"
+    elif not phone.isdigit():
+        errors["phone"] = "Por favor ingrese un teléfono"
 
     if email == "":
         errors["email"] = "Por favor ingrese un email"
@@ -368,12 +370,19 @@ class Vet(models.Model):
         return True, None
 
     def update_vet(self, vet_data):
+        errors = validate_vet(vet_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
         self.name = vet_data.get("name", "") or self.name
         self.email = vet_data.get("email", "") or self.email
         self.phone = vet_data.get("phone", "") or self.phone
         self.address = vet_data.get("address", "") or self.address
 
         self.save()
+
+        return True, None
 
 # Función de validación de medicamentos
 
