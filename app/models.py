@@ -65,12 +65,19 @@ class Client(models.Model):
         return True, None
 
     def update_client(self, client_data):
+        errors = validate_client(client_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
         self.name = client_data.get("name", "") or self.name
         self.email = client_data.get("email", "") or self.email
         self.phone = client_data.get("phone", "") or self.phone
         self.address = client_data.get("address", "") or self.address
 
         self.save()
+
+        return True, None
 
 ########################### SEPARADOR ###################################
 # agrego validacion de datos de mascota
@@ -268,6 +275,8 @@ def validate_product(data):
         errors["price"] = "Por favor ingrese un precio"
     elif isfloat(price) == False:
         errors["price"] = "Por favor ingrese un precio"
+    elif float(price) < 0:
+        errors["price"] = "Por favor ingrese un precio"
 
     return errors
 
@@ -298,7 +307,6 @@ class Product(models.Model):
     def update_product(self, product_data):
         errors = validate_product(product_data)
 
-        print(errors.keys())
         if len(errors.keys()) > 0:
             return False, errors
 
@@ -308,6 +316,7 @@ class Product(models.Model):
 
         self.save()
 
+        return True, None
 
 def validate_vet(data):
     errors = {}
