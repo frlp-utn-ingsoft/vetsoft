@@ -11,3 +11,5 @@ services:
     environment:
       - SECRET_KEY=secreto
     image: vetsoft-app:1.0
+    ports:
+      - "8000:8000"
