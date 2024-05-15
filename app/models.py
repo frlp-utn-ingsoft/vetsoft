@@ -27,14 +27,20 @@ def validate_provider(data):
 
     name = data.get("name", "")
     email = data.get("email", "")
+    phone = data.get("phone", "")
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
 
+    if phone == "":
+        errors["phone"] = "Por favor ingrese un teléfono"
+    elif not phone.isdigit():
+        errors["phone"] = "Por favor ingrese un teléfono"
+
     if email == "":
         errors["email"] = "Por favor ingrese un email"
     elif email.count("@") == 0:
-        errors["email"] = "Por favor ingrese un email valido"
+        errors["email"] = "Por favor ingrese un email válido"
 
     return errors
 
