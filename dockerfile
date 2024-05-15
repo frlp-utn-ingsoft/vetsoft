@@ -13,8 +13,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copia el resto de la aplicacion al contenedor
 COPY . .
 
+# Ejecutar las migraciones de la base de datos
+RUN python manage.py migrate
+
 # Expone el puerto en el que escucha la aplicacion
 EXPOSE 8000
 
 # Define el comando predeterminado para ejecutar la aplicacion
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["sh", "-c", "python manage.py runserver 0.0.0.0:8000"]
