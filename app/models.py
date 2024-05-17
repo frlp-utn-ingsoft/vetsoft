@@ -2,7 +2,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 import re
-
+##---------clients----------   
 def validate_client(data):
     errors = {}
 
@@ -25,7 +25,6 @@ def validate_client(data):
         errors["email"] = "Por favor ingrese un email valido"
 
     return errors
-
 
 class Client(models.Model):
     name = models.CharField(max_length=100)
@@ -61,6 +60,9 @@ class Client(models.Model):
         self.save()
 
  ##---------medicine----------   
+
+
+##---------medicines----------   
 def validate_medicine(data):
     errors = {}
 
@@ -113,6 +115,8 @@ class Medicine(models.Model):
     
 
  ##---------pets----------   
+
+##---------pets----------   
 def validate_pet(data):
     errors = {}
 
@@ -133,8 +137,7 @@ def validate_pet(data):
     if not weight.isdigit() or int(weight) <= 0:
         errors["weight"] = "El peso debe ser un número mayor a cero"
     return errors
-    
-    
+       
 class Pet(models.Model):
     name = models.CharField(max_length=100)
     breed = models.CharField(max_length=50)
@@ -198,7 +201,6 @@ def validate_product(data):
             errors["price"] = "El precio debe ser un número válido"
     return errors
 
-
 class Product(models.Model):
     name = models.CharField(max_length=50)
     type = models.CharField(max_length=50)
@@ -249,7 +251,6 @@ def validate_provider(data):
 
     return errors
 
-
 class Provider(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(max_length=254)
@@ -278,6 +279,8 @@ class Provider(models.Model):
         self.save()
 
  ##---------vets----------   
+
+##---------vets----------   
 def validate_vet(data):
     errors = {}
 
