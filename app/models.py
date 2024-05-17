@@ -161,7 +161,7 @@ class Pet(models.Model):
             name=pet_data.get("name"),
             breed=pet_data.get("breed"),
             birthday=pet_data.get("birthday"),
-            weight=pet_data.get("weight"),
+            weight=pet_data.get("weight",0),
         )
 
         return True, None
@@ -170,9 +170,27 @@ class Pet(models.Model):
         self.name = pet_data.get("name", "") or self.name
         self.breed = pet_data.get("breed", "") or self.breed
         self.birthday = pet_data.get("birthday", "") or self.birthday
-        self.weight = pet_data.get("weight", "") or self.weight
+        self.weight = pet_data.get("weight", 0) or self.weight
 
         self.save()
+
+##---------clase enumerativa de raza----------   
+class Breed(models.TextChoices):
+    #raza de perros
+    LABRADOR = 'LABRADOR', 'Labrador'
+    BEAGLE = 'BEAGLE', 'Beagle'
+    BULLDOG = 'BULLDOG', 'Bulldog'
+    CHIHUAHUA = 'CHIHUAHUA', 'Chihuahua'
+    DOGO_ARGENTINO = 'DOGO_ARGENTINO', 'Dogo Argentino'
+    PUG = 'PUG', 'Pug'
+    POODLE = 'POODLE', 'Poodle'
+    ROTTWEILER = 'ROTTWEILER', 'Rottweiler'
+
+    # Razas de Gatos
+    SIAMESE = 'SIAMESE', 'Siamés'
+    PERSIAN = 'PERSIAN', 'Persa'
+    SPHYNX = 'SPHYNX', 'Sphynx'
+    BENGAL = 'BENGAL', 'Bengalí'
 
 ##---------products----------   
 def validate_product(data):
@@ -332,3 +350,7 @@ class Vet(models.Model):
         self.phone = vet_data.get("phone", "") or self.phone
 
         self.save()
+
+
+
+    
