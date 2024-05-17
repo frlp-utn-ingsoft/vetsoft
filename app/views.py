@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
-from .models import Client, Medicine, Pet, Product, Provider, Vet
+from .models import Client, Medicine, Pet, Product, Provider, Vet, Breed
 
 
 def home(request):
@@ -136,6 +136,8 @@ def pets_history(request, id):
         pet = get_object_or_404(Pet, pk=id)
 
     return render(request, "pets/form.html", {"pet": pet, "clients": clients})
+
+
 def pets_form(request, id=None):
     clients = Client.objects.all()
     if request.method == "POST":
@@ -168,14 +170,14 @@ def pets_form(request, id=None):
             return redirect(reverse("pets_repo"))
 
         return render(
-            request, "pets/form.html", {"errors": errors, "pet": request.POST, "clients": clients}
+            request, "pets/form.html", {"errors": errors, "pet": request.POST, "clients": clients, "Breed": Breed}
         )
 
     pet = None
     if id is not None:
         pet = get_object_or_404(Pet, pk=id)
 
-    return render(request, "pets/form.html", {"pet": pet, "clients": clients})
+    return render(request, "pets/form.html", {"pet": pet, "clients": clients, "Breed": Breed})
 
 
 def pets_form_history(request, id):
