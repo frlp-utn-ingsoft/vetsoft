@@ -129,20 +129,21 @@ def validate_pet(data):
         errors["name"] = "Por favor ingrese un nombre"
 
     if breed == "":
-        errors["breed"] = "Por favor ingrese una raza"
+        errors["breed"] = "Por favor seleccione una raza"
 
     if birthday == "":
         errors["birthday"] = "Por favor ingrese una fecha de nacimiento"
 
-    if not weight.isdigit() or int(weight) <= 0:
+    if weight is None or weight <= "0":
         errors["weight"] = "El peso debe ser un número mayor a cero"
+
     return errors
        
 class Pet(models.Model):
     name = models.CharField(max_length=100)
     breed = models.CharField(max_length=50)
     birthday = models.DateField()
-    weight = models.IntegerField(null=True)
+    weight = models.DecimalField(max_digits=8, decimal_places=3, null=True)  
     client = models.ForeignKey("Client", on_delete=models.CASCADE, null=True, blank=True)
     medicines = models.ManyToManyField(Medicine)
     vets = models.ManyToManyField("Vet", blank=True)
@@ -159,18 +160,18 @@ class Pet(models.Model):
 
         Pet.objects.create(
             name=pet_data.get("name"),
-            breed=pet_data.get("breed"),
+            breed=pet_data.get("breed", 0),
             birthday=pet_data.get("birthday"),
-            weight=pet_data.get("weight",0),
+            weight=pet_data.get("weight"),
         )
 
         return True, None
     
     def update_pet(self, pet_data):
         self.name = pet_data.get("name", "") or self.name
-        self.breed = pet_data.get("breed", "") or self.breed
+        self.breed = pet_data.get("breed", 0) or self.breed
         self.birthday = pet_data.get("birthday", "") or self.birthday
-        self.weight = pet_data.get("weight", 0) or self.weight
+        self.weight = pet_data.get("weight", "") or self.weight
 
         self.save()
 
