@@ -123,7 +123,7 @@ def validate_pet(data):
     name = data.get("name", "")
     breed = data.get("breed", "")
     birthday = data.get("birthday", "")
-    weight = data.get("weight", "")
+    weight = data.get("weight", None)
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
@@ -134,9 +134,16 @@ def validate_pet(data):
     if birthday == "":
         errors["birthday"] = "Por favor ingrese una fecha de nacimiento"
 
-    if weight is None or weight <= "0":
-        errors["weight"] = "El peso debe ser un número mayor a cero"
-
+    if weight == "": 
+        errors["weight"] = "Por favor ingrese un peso"
+    else:
+        try:
+                decimal_weight = float(weight)
+                if decimal_weight <= 0:
+                    errors["weight"] = "El peso debe ser un número mayor a cero"
+        except ValueError:
+            errors["weight"] = "El peso debe ser un número válido"
+    
     return errors
        
 class Pet(models.Model):
