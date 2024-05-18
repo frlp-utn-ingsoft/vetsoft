@@ -91,7 +91,7 @@ class ProductModelTest(TestCase):
         product_updated = Product.objects.get(pk=1)
         self.assertEqual(product_updated.stock, 75)
         
-    def test_update_product_stock_with_error(self):
+    def test_update_product_stock_with_error_negative_value(self):
         Product.save_product(
             {
                 "name": "Lavandina",
@@ -103,5 +103,35 @@ class ProductModelTest(TestCase):
         product = Product.objects.get(pk=1)
         self.assertEqual(product.stock, 50)
         product.update_product({"stock":"-75"})
+        product_updated = Product.objects.get(pk=1)
+        self.assertEqual(product_updated.stock, 50)
+        
+    def test_update_product_stock_with_error_string_value(self):
+        Product.save_product(
+            {
+                "name": "Lavandina",
+                "type": "Limpieza",
+                "price": "100",
+                "stock": "50",
+            }
+        )
+        product = Product.objects.get(pk=1)
+        self.assertEqual(product.stock, 50)
+        product.update_product({"stock":"asd"})
+        product_updated = Product.objects.get(pk=1)
+        self.assertEqual(product_updated.stock, 50)
+    
+    def test_update_product_stock_with_error_empty_value(self):
+        Product.save_product(
+            {
+                "name": "Lavandina",
+                "type": "Limpieza",
+                "price": "100",
+                "stock": "50",
+            }
+        )
+        product = Product.objects.get(pk=1)
+        self.assertEqual(product.stock, 50)
+        product.update_product({"stock":""})
         product_updated = Product.objects.get(pk=1)
         self.assertEqual(product_updated.stock, 50)
