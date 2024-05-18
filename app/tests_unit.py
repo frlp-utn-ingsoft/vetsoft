@@ -1,5 +1,6 @@
 from django.test import TestCase
-from app.models import Client
+from app.models import Client, validate_pet
+from datetime import date
 
 
 class ClientModelTest(TestCase):
@@ -57,3 +58,24 @@ class ClientModelTest(TestCase):
         client_updated = Client.objects.get(pk=1)
 
         self.assertEqual(client_updated.phone, "221555232")
+
+class PetModelTest(TestCase):
+    def test_birthday_today_date(self):
+
+        today = date.today().isoformat()
+
+        # Creo un setup
+        pet_data = {
+            "name": "Pepe",
+            "breed": "Labrador",
+            "birthday": today,
+            "client": 1,
+        }
+
+        errors = validate_pet(pet_data)
+
+        # Compruebo que hay error en el campo de birthday
+        self.assertIn("birthday", errors)
+        self.assertEqual(errors["birthday"], "La fecha de nacimiento no puede ser mayor o igual a la fecha actual")
+
+    
