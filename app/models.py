@@ -43,6 +43,7 @@ def validate_product(data):
     name = data.get("name", "")
     type = data.get("type", "")
     price = data.get("price", "")
+    stock = data.get("stock", "")
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
@@ -53,6 +54,8 @@ def validate_product(data):
     if price == "":
         errors["price"] = "Por favor ingrese un precio"
 
+    if stock == "":
+        errors["stock"] = "Por favor ingrese un stock"
     return errors
 
 def validate_veterinary(data):
@@ -130,7 +133,8 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=50)
     price = models.FloatField()
-
+    stock = models.IntegerField()
+    
     def __str__(self):
         return self.name
 
@@ -145,6 +149,7 @@ class Product(models.Model):
             name=product_data.get("name"),
             type=product_data.get("type"),
             price=product_data.get("price"),
+            stock=product_date.get("stock"),
         )
 
         return True, None    
@@ -152,6 +157,7 @@ class Product(models.Model):
         self.name = product_data.get("name", "") or self.name
         self.type = product_data.get("type", "") or self.type
         self.price = product_data.get("price", "") or self.price
+        self.stock = product_data.get("stock", "") or self.stock
 
         self.save()
 
