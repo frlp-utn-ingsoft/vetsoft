@@ -1,5 +1,5 @@
 from django.test import TestCase
-from app.models import Client
+from app.models import Client, validate_pet
 
 
 class ClientModelTest(TestCase):
@@ -57,3 +57,34 @@ class ClientModelTest(TestCase):
         client_updated = Client.objects.get(pk=1)
 
         self.assertEqual(client_updated.phone, "221555232")
+
+
+
+
+class PetModelTest(TestCase):
+    def test_weight_greater_than_zero(self):
+          # Crear una instancia de Mascota con un peso mayor a cero
+        mascota_data = {
+            "name": "Fido",
+            "breed": 2,
+            "birthday": "2020-01-01",
+            "weight": 10
+        }
+        errors = validate_pet(mascota_data)
+        # verifica que no hay error en el peso
+        self.assertNotIn("weight", errors, "No debe haber un error de peso cuando es mayor a cero")
+
+
+
+    def weight_test_less_than_zero(self):
+        # Crear una instancia de Mascota con un peso menor a cero
+        mascota_data: dict ={
+            "name": "Roma",
+            "breed": 1,
+            "birthday": "2021-01-01",
+            "weight": -2
+        }
+       
+        errors= validate_pet(mascota_data)
+        #  verifica que la respuesta del error sea correcta
+        self.assertEqual(errors["weight"], "El peso debe ser un número mayor a cero")
