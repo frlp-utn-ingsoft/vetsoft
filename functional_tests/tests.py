@@ -242,3 +242,47 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         expect(edit_action).to_have_attribute(
             "href", reverse("clients_edit", kwargs={"id": client.id})
         )
+
+class ProductCreatePriceGreaterThanZeroTestCase(PlaywrightTestCase):
+    def test_should_be_able_to_create_a_new_product(self):
+        self.page.goto(f"{self.live_server_url}{reverse('products_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Amoxicilina")
+        self.page.get_by_label("Tipo").fill("Antibiotico")
+        self.page.get_by_label("Precio").fill("100");
+
+        self.page.get_by_role("button", name="Guardar").click()
+        
+        expect(self.page.get_by_text("Amoxicilina")).to_be_visible()
+        expect(self.page.get_by_text("Antibiotico")).to_be_visible()
+        #expect(self.page.get_by_text("Proveedor 1")).to_be_visible()
+        expect(self.page.get_by_text("100")).to_be_visible()
+
+    def test_should_view_errors_if_form_is_invalid_with_price_less_than_zero(self):
+        self.page.goto(f"{self.live_server_url}{reverse('products_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un tipo")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un precio")).to_be_visible()
+        
+
+        self.page.get_by_label("Nombre").fill("Amoxicilina")
+        self.page.get_by_label("Tipo").fill("Antibiótico")
+        self.page.get_by_label("Precio").fill("-10")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(
+            self.page.get_by_text("Por favor ingrese un tipo")
+        ).not_to_be_visible()
+
+        expect(
+            self.page.get_by_text("El precio debe ser mayor que cero")
+        ).to_be_visible()
