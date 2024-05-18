@@ -1,5 +1,6 @@
 from django.test import TestCase
-from app.models import Client
+from django.urls import reverse
+from app.models import Client, validate_product
 
 
 class ClientModelTest(TestCase):
@@ -57,3 +58,27 @@ class ClientModelTest(TestCase):
         client_updated = Client.objects.get(pk=1)
 
         self.assertEqual(client_updated.phone, "221555232")
+
+class ProductModelTest(TestCase):
+    def test_price_greater_than_zero(self):
+        # Crear un diccionario con los datos del producto
+        product_data = {
+            "name": "Test Product",
+            "type": "Test Type",
+            "price": -10 
+        }
+
+        # Llamar a la función de validación del producto
+        errors = validate_product(product_data)
+
+        # Comprobar que hay un error de validación en el campo 'price'
+        self.assertIn("price", errors)
+        self.assertEqual(errors["price"], "El precio debe ser mayor que cero")
+
+        # Probar con un precio válido
+        product_data["price"] = 0
+        errors = validate_product(product_data)
+
+        # Comprobar que hay un error de validación en el campo 'price'
+        self.assertIn("price", errors)
+        self.assertEqual(errors["price"], "El precio debe ser mayor que cero")
