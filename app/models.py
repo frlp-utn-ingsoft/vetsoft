@@ -153,11 +153,19 @@ class Product(models.Model):
         )
 
         return True, None    
+    
     def update_product(self, product_data):
         self.name = product_data.get("name", "") or self.name
         self.type = product_data.get("type", "") or self.type
         self.price = product_data.get("price", "") or self.price
         self.stock = product_data.get("stock", "") or self.stock
+        
+        try:
+            if (int(self.stock) < 0):
+                raise ValueError("El stock no puede ser negativo.")
+        except ValueError as e:
+            print(f"El stock no puede ser negativo: {e}")
+            self.stock = Product.objects.get(pk=self.pk).stock
 
         self.save()
 
