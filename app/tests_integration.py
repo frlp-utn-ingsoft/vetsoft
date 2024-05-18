@@ -93,3 +93,17 @@ class ClientsTest(TestCase):
         self.assertEqual(editedClient.phone, client.phone)
         self.assertEqual(editedClient.address, client.address)
         self.assertEqual(editedClient.email, client.email)
+
+class MedicinesTest(TestCase):
+    def test_validation_invalid_dose(self):
+        # client es un objeto que proporciona Django para simular solicitudes HTTP en tus tests.
+        response = self.client.post(
+            reverse("medicines_form"),
+            data={
+                "name": "Diclofenac",
+                "description": "Calma el dolor muscular",
+                "dose": 0,
+            },
+        )
+
+        self.assertContains(response, "La dosis debe estar en un rango de 1 a 10")
