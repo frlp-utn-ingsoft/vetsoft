@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from datetime import date
 
 import re
 
@@ -128,6 +129,14 @@ def validate_pet(data):
 
     if birthday == "":
         errors["birthday"] = "Por favor ingrese una fecha de nacimiento"
+    else:
+        try:
+            birth = date.fromisoformat(birthday)
+            if birth >= date.today():
+                errors["birthday"] = "La fecha de nacimiento no puede ser mayor o igual a la fecha actual"
+        except ValueError:
+            errors["birthday"] = "Formato de fecha inválido. Por favor ingrese la fecha en el formato correcto (YYYY-MM-DD)"
+
     return errors
     
     
