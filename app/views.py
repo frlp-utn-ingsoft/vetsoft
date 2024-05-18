@@ -110,11 +110,20 @@ def products_form(request, id=None):
         product_id = request.POST.get("id", "")
         errors = {}
         saved = True
-        stock = int(request.POST.get("stock"))
+        stock = request.POST.get("stock")
 
-        if (product_id == "" and stock >= 0):
+        try:
+            int(stock)
+        except Exception as e:
+            errors["stock"] = "El campo de stock no puede estar vacio."
+            return render(
+            request, "products/form.html", {"errors": errors, "product": request.POST}
+            )
+        
+        if (product_id == "" and int(stock) >= 0):
+            stock = int(request.POST.get("stock"))
             saved, errors = Product.save_product(request.POST)
-        elif (stock < 0):
+        elif (int(stock) < 0):
             saved = False
             errors["stock"] = "El stock no puede ser negativo."
         else:
