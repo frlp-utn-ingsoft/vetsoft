@@ -93,3 +93,18 @@ class ClientsTest(TestCase):
         self.assertEqual(editedClient.phone, client.phone)
         self.assertEqual(editedClient.address, client.address)
         self.assertEqual(editedClient.email, client.email)
+
+
+class PetsTest(TestCase):
+    def test_validation_invalid_birthday(self):
+        
+        response = self.client.post(
+            reverse("pets_form"),
+            data = {
+            "name": "Pepe",
+            "breed": "Labrador",
+            "birthday": "2026-01-01",
+        }
+        )
+
+        self.assertContains(response, "La fecha de nacimiento no puede ser mayor o igual a la fecha actual")
