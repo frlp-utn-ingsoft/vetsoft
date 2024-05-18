@@ -73,11 +73,13 @@ def validate_medicine(data):
 
     if description == "":
         errors["description"] = "Por favor ingrese una descripción"
+    if dose == "":
+        errors["dose"] = "Por favor ingrese una dosis"
     else:
         try:
             int_dose = int(dose)
-            if int_dose <= 0:
-                errors["dose"] = "La dosis debe ser mayor que cero"
+            if int_dose < 1 or int_dose > 10:
+                errors["dose"] = "La dosis debe estar en un rango de 1 a 10"
         except ValueError:
             errors["dose"] = "La dosis debe ser un número entero válido"
     return errors
