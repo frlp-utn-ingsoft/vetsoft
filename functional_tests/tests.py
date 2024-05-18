@@ -242,3 +242,73 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         expect(edit_action).to_have_attribute(
             "href", reverse("clients_edit", kwargs={"id": client.id})
         )
+
+class MedicineCreateDoseRangeOneToTen(PlaywrightTestCase):
+    def test_should_be_able_to_create_a_new_medicine(self):
+        self.page.goto(f"{self.live_server_url}{reverse('medicines_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Diclofenaco")
+        self.page.get_by_label("Descripción").fill("Calma el dolor")
+        self.page.get_by_label("Dosis").fill("3");
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Amoxicilina")).to_be_visible()
+        expect(self.page.get_by_text("Antibiotico")).to_be_visible()
+        expect(self.page.get_by_text("3")).to_be_visible()
+
+    def test_should_view_errors_if_form_is_invalid_with_price_greater_than_ten(self):
+        self.page.goto(f"{self.live_server_url}{reverse('products_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una descripción")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una dosis")).to_be_visible()
+
+
+        self.page.get_by_label("Nombre").fill("Diclofenaco")
+        self.page.get_by_label("Tipo").fill("Calma el dolor")
+        self.page.get_by_label("Dosis").fill("13")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(
+            self.page.get_by_text("Por favor ingrese una descripcion")
+        ).not_to_be_visible()
+
+        expect(
+            self.page.get_by_text("La dosis debe estar en un rango de 1 a 10")
+        ).to_be_visible()
+    
+    def test_should_view_errors_if_form_is_invalid_with_price_less_than_one(self):
+        self.page.goto(f"{self.live_server_url}{reverse('products_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una descripción")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una dosis")).to_be_visible()
+
+
+        self.page.get_by_label("Nombre").fill("Diclofenaco")
+        self.page.get_by_label("Tipo").fill("Calma el dolor")
+        self.page.get_by_label("Dosis").fill("-3")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(
+            self.page.get_by_text("Por favor ingrese una descripcion")
+        ).not_to_be_visible()
+
+        expect(
+            self.page.get_by_text("La dosis debe estar en un rango de 1 a 10")
+        ).to_be_visible()
