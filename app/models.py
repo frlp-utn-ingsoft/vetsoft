@@ -180,8 +180,6 @@ def validate_product(data):
 
     if price == "": 
         errors["price"] = "Por favor ingrese un precio"
-    elif not price.isdigit():
-        errors["price"] = "El precio debe ser un número válido"
     else:
         try:
             float_price = float(price)
