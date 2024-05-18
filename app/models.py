@@ -129,7 +129,7 @@ def validate_pet(data):
         errors["name"] = "Por favor ingrese un nombre"
 
     if breed == "":
-        errors["breed"] = "Por favor seleccione una raza"
+        errors["breed"] = "Por favor ingrese una raza"
 
     if birthday == "":
         errors["birthday"] = "Por favor ingrese una fecha de nacimiento"
@@ -143,7 +143,6 @@ def validate_pet(data):
                     errors["weight"] = "El peso debe ser un número mayor a cero"
         except ValueError:
             errors["weight"] = "El peso debe ser un número válido"
-    
     return errors
        
 class Pet(models.Model):
@@ -170,6 +169,7 @@ class Pet(models.Model):
             breed=pet_data.get("breed", 0),
             birthday=pet_data.get("birthday"),
             weight=pet_data.get("weight"),
+             weight=pet_data.get("weight"),
         )
 
         return True, None
@@ -179,26 +179,9 @@ class Pet(models.Model):
         self.breed = pet_data.get("breed", 0) or self.breed
         self.birthday = pet_data.get("birthday", "") or self.birthday
         self.weight = pet_data.get("weight", "") or self.weight
-
         self.save()
 
-##---------clase enumerativa de raza----------   
-class Breed(models.TextChoices):
-    #raza de perros
-    LABRADOR = 'LABRADOR', 'Labrador'
-    BEAGLE = 'BEAGLE', 'Beagle'
-    BULLDOG = 'BULLDOG', 'Bulldog'
-    CHIHUAHUA = 'CHIHUAHUA', 'Chihuahua'
-    DOGO_ARGENTINO = 'DOGO_ARGENTINO', 'Dogo Argentino'
-    PUG = 'PUG', 'Pug'
-    POODLE = 'POODLE', 'Poodle'
-    ROTTWEILER = 'ROTTWEILER', 'Rottweiler'
 
-    # Razas de Gatos
-    SIAMESE = 'SIAMESE', 'Siamés'
-    PERSIAN = 'PERSIAN', 'Persa'
-    SPHYNX = 'SPHYNX', 'Sphynx'
-    BENGAL = 'BENGAL', 'Bengalí'
 
 ##---------products----------   
 def validate_product(data):
