@@ -8,13 +8,22 @@
             Nuevo Producto
         </a>
     </div>
-
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     <table class="table">
         <thead>
             <tr>
                 <th>Nombre</th>
                 <th>Tipo</th>
                 <th>Precio</th>
+                <th>Stock</th>
+                <th>Agregar una unidad</th>
+                <th>Quitar una unidad</th>
                 <th></th>
             </tr>
         </thead>
@@ -25,6 +34,28 @@
                 <td>{{product.name}}</td>
                 <td>{{product.type}}</td>
                 <td>{{product.price}}</td>
+                <td>{{product.stock}}</td>
+                <td>
+                    <form
+                        method="POST"
+                        action="{% url 'increment_stock' id=product.id %}"
+                    >
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-success">
+                            +
+                        </button>
+                    </form>
+                </td>
+                <td>
+                    <form
+                        method="POST"
+                        action="{% url 'decrement_stock' id=product.id %}"
+                    >
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-warning">
+                            -
+                        </button>
+                </td>
                 <td>
                     <a
                         class="btn btn-outline-primary"
@@ -46,6 +77,7 @@
                         <button class="btn btn-outline-danger">Eliminar</button>
                     </form>
                 </td>
+                
             </tr>
             {% empty %}
             <tr>
