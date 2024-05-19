@@ -5,7 +5,7 @@ from playwright.sync_api import sync_playwright, expect, Browser
 
 from django.urls import reverse
 
-from app.models import Client
+from app.models import Client, Pet
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 playwright = sync_playwright().start()
@@ -241,4 +241,73 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         edit_action = self.page.get_by_role("link", name="Editar")
         expect(edit_action).to_have_attribute(
             "href", reverse("clients_edit", kwargs={"id": client.id})
+        )
+
+class PetCreateValidateTestCase(PlaywrightTestCase):
+    def test_should_be_able_to_create_a_new_pet(self):
+        self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Firulais")
+        self.page.get_by_label("Raza").fill("Labrador")
+        self.page.get_by_label("Fecha de Cumpleaños").fill("2022-01-01")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Firulais")).to_be_visible()
+        expect(self.page.get_by_text("Labrador")).to_be_visible()
+        expect(self.page.get_by_text("Jan. 1, 2022")).to_be_visible()
+
+    
+    def test_should_view_errors_if_form_is_invalid(self):
+        self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una raza")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una fecha de nacimiento")).to_be_visible()
+        
+
+        self.page.get_by_label("Nombre").fill("Firulais")
+        self.page.get_by_label("Raza").fill("Labrador")
+        self.page.get_by_label("Fecha de Cumpleaños").fill("2026-01-01")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una raza")).not_to_be_visible()
+        expect(self.page.get_by_text("La fecha de nacimiento no puede ser mayor o igual a la fecha actual")).to_be_visible()
+
+
+    def test_should_be_able_to_edit_a_pet(self):
+        pet = Pet.objects.create(
+            name="Firulais",
+            breed="Labrador",
+            birthday="2022-01-01"
+        )
+
+        path = reverse("pets_edit", kwargs={"id": pet.id})
+        self.page.goto(f"{self.live_server_url}{path}")
+
+        self.page.get_by_label("Nombre").fill("Pepito")
+        self.page.get_by_label("Raza").fill("Beagle")
+        self.page.get_by_label("Fecha de Cumpleaños").fill("2002-10-10")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Firulais")).not_to_be_visible()
+        expect(self.page.get_by_text("Labrador")).not_to_be_visible()
+        expect(self.page.get_by_text("Jan. 1, 2022")).not_to_be_visible()
+
+        expect(self.page.get_by_text("Pepito")).to_be_visible()
+        expect(self.page.get_by_text("Beagle")).to_be_visible()
+        expect(self.page.get_by_text("Oct. 10, 2002")).to_be_visible()
+
+        edit_action = self.page.get_by_role("link", name="Editar")
+        expect(edit_action).to_have_attribute(
+            "href", reverse("pets_edit", kwargs={"id": pet.id})
         )
