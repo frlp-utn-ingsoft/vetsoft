@@ -146,7 +146,7 @@ class Pet(models.Model):
     name = models.CharField(max_length=100)
     breed = models.CharField(max_length=50)
     birthday = models.DateField()
-    weight = models.DecimalField(max_digits=8, decimal_places=3, null=True)  
+    weight = models.DecimalField(max_digits=8, decimal_places=3)  
     client = models.ForeignKey("Client", on_delete=models.CASCADE, null=True, blank=True)
     medicines = models.ManyToManyField(Medicine)
     vets = models.ManyToManyField("Vet", blank=True)
