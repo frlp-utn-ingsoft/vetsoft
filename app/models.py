@@ -292,6 +292,6 @@ class Med(models.Model):
     def update_med(self, med_data):
         self.name = med_data.get("name","") or self.name
         self.desc = med_data.get("desc","") or self.desc
-        self.dose = med_data.get("desc","") or self.dose
+        self.dose = med_data.get("dose","") or self.dose
 
         self.save()
