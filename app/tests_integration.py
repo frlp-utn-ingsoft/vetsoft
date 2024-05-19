@@ -94,6 +94,20 @@ class ClientsTest(TestCase):
         self.assertEqual(editedClient.address, client.address)
         self.assertEqual(editedClient.email, client.email)
 
+class ProductsTest(TestCase):
+    def test_validation_invalid_price(self):
+        # client es un objeto que proporciona Django para simular solicitudes HTTP en tus tests.
+        response = self.client.post(
+            reverse("products_form"),
+            data={
+                "name": "Paracetamol",
+                "description": "Medicamento para el dolor",
+                "price": 0,
+            },
+        )
+
+        self.assertContains(response, "El precio debe ser mayor que cero")
+        
 class MedicinesTest(TestCase):
     def test_validation_invalid_dose(self):
         # client es un objeto que proporciona Django para simular solicitudes HTTP en tus tests.

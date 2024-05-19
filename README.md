@@ -34,5 +34,29 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 
 `docker-compose up --build`
 
+## Commits
+- Convencional commits => feat:..., fix:...
+- No mencionar el nombre del archivo en el mensaje del commit
+
+
+## PR
+- Seleccionar nuestro repositorio (no el de la catedra)
+- Seleccionar rama develop
+- Seleccionar Reviewer: Juan Ignacio => Milagros => Sebastián => Nuria => Juan Ignacio
+- Seleccionar Assignees (el que solicita el PR)
+- Una rama por cada ticket
+
+## Convención PR
+    # Descripción del PR
+
+    breve descripción
+
+    ## Lista de cambios
+
+    - Realicé ...
+    - Agregué ...
+    - Modifiqué ...
+
+
 ### Acceder a la aplicación
 [Link de la aplicación](http://localhost:8000/)
