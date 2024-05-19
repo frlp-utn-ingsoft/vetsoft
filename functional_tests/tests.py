@@ -5,7 +5,7 @@ from playwright.sync_api import sync_playwright, expect, Browser
 
 from django.urls import reverse
 
-from app.models import Client
+from app.models import Client, Product
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 playwright = sync_playwright().start()
@@ -242,3 +242,68 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         expect(edit_action).to_have_attribute(
             "href", reverse("clients_edit", kwargs={"id": client.id})
         )
+
+class productCreateEditTestCase(PlaywrightTestCase):
+    def test_should_be_able_to_create_a_new_product(self):
+        self.page.goto(f"{self.live_server_url}{reverse('products_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Lavandina")
+        self.page.get_by_label("Tipo").fill("Limpieza")
+        self.page.get_by_label("Precio").fill("100")
+        self.page.get_by_label("Stock").fill("50")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Lavandina")).to_be_visible()
+        expect(self.page.get_by_text("Limpieza")).to_be_visible()
+        expect(self.page.get_by_text("100")).to_be_visible()
+        expect(self.page.get_by_text("50")).to_be_visible()
+    
+    def test_increase_stock_product_by_touching_button(self):
+        product = Product.objects.create(
+            name="Lavandina",
+            type="Limpieza",
+            price=100,
+            stock=50,
+        )
+        
+        self.page.goto(f"{self.live_server_url}{reverse('products_repo')}")
+        expect(self.page.get_by_text("Lavandina")).to_be_visible()
+        expect(self.page.get_by_text("Limpieza")).to_be_visible()
+        expect(self.page.get_by_text("100")).to_be_visible()
+        expect(self.page.get_by_text("50")).to_be_visible()
+        
+        self.page.get_by_role("button", name="+").click()
+        
+        expect(self.page.get_by_text("50")).not_to_be_visible()
+        expect(self.page.get_by_text("51")).to_be_visible()
+        
+    def test_edit_form_should_be_able_to_throw_an_error_if_negative_stock(self):
+        product = Product.objects.create(
+            name="Lavandina",
+            type="Limpieza",
+            price=100,
+            stock=50,
+        )
+        
+        self.page.goto(f"{self.live_server_url}{reverse('products_repo')}")
+        expect(self.page.get_by_text("Lavandina")).to_be_visible()
+        expect(self.page.get_by_text("Limpieza")).to_be_visible()
+        expect(self.page.get_by_text("100")).to_be_visible()
+        expect(self.page.get_by_text("50")).to_be_visible()
+        
+        self.page.get_by_role("link", name="Editar").click()
+        expect(self.page.get_by_label("Nombre")).to_have_value("Lavandina")
+        expect(self.page.get_by_label("Tipo")).to_have_value("Limpieza")
+        expect(self.page.get_by_label("Precio")).to_have_value("100.0")
+        expect(self.page.get_by_label("Stock")).to_have_value("50")
+        
+        self.page.evaluate("document.querySelector('input[name=stock]').value = '-100'")
+        self.page.get_by_role("button", name="Guardar").click()
+        expect(self.page.get_by_label("Nombre")).to_have_value("Lavandina")
+        expect(self.page.get_by_label("Tipo")).to_have_value("Limpieza")
+        expect(self.page.get_by_label("Precio")).to_have_value("100.0")
+        expect(self.page.get_by_label("Stock")).to_have_value("-100")
+        expect(self.page.get_by_text("El stock no puede ser negativo."))
