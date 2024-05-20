@@ -86,8 +86,14 @@ class Product(models.Model):
             "price": "Por favor ingrese un precio"
         }
         for key in list(errors.keys()):
+            # restrict values not null
             if data.get(key):
                 errors.pop(key)
+
+                # retrict price not negative
+                if (key == 'price' and float(data.get(key)) <= 0):
+                    errors[key] = "Los precios deben ser mayores a 10"
+
         return errors or None
 
     def update_product(self, product_data: dict)  -> tuple[bool, dict | None]:
