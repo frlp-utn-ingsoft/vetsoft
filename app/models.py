@@ -140,8 +140,13 @@ class Medicine(models.Model):
             "dose": "Por favor ingrese una dosis",
         }
         for key in list(errors.keys()):
+            # restrict values not null
             if data.get(key):
                 errors.pop(key)
+
+                # restrict (1 < dosis < 10)
+                if (key == 'dose' and not (1 <= float(data.get(key)) <= 10) ):
+                    errors[key] = "Las dosis deben estar entre 1 y 10"
         return errors or None
 
     def update_medicine(self, medicine_data: dict) -> tuple[bool, dict | None]:

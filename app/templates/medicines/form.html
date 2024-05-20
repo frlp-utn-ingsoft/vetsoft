@@ -10,7 +10,7 @@
 
     <div class="row">
         <div class="col-lg-6 offset-lg-3">
-            <form class="vstack gap-3 {% if errors %}was-validated{% endif %}"
+            <form class="vstack gap-3"
                 aria-label="Formulario de creación de medicamento"
                 method="POST"
                 action="{% url 'medicines_create' %}"
@@ -25,10 +25,9 @@
                     <input type="text"
                         id="name"
                         name="name"
-                        value="{{medicine.name}}"
-                        class="form-control"
+                        value="{{ medicine.name }}"
+                        class="form-control {% if errors.name %}is-invalid{% endif %}"
                         required/>
-
                     {% if errors.name %}
                         <div class="invalid-feedback">
                             {{ errors.name }}
@@ -40,10 +39,9 @@
                     <input type="text"
                         id="description"
                         name="description"
-                        class="form-control"
-                        value="{{medicine.description}}"
+                        class="form-control {% if errors.description %}is-invalid{% endif %}"
+                        value="{{ medicine.description }}"
                         required/>
-
                     {% if errors.description %}
                         <div class="invalid-feedback">
                             {{ errors.description }}
@@ -55,10 +53,9 @@
                     <input type="number"
                         id="dose"
                         name="dose"
-                        class="form-control"
+                        class="form-control {% if errors.dose %}is-invalid{% endif %}"
                         value="{{ medicine.dose }}"
                         required/>
-
                     {% if errors.dose %}
                         <div class="invalid-feedback">
                             {{ errors.dose }}
