@@ -91,8 +91,8 @@ class Product(models.Model):
                 errors.pop(key)
 
                 # retrict price not negative
-                if (key == 'price' and float(data.get(key)) <= 0):
-                    errors[key] = "Los precios deben ser mayores a 10"
+                if (key == 'price' and (float(data.get(key)) <= 0) ):
+                    errors[key] = "Los precios deben ser mayores que 0"
 
         return errors or None
 
@@ -287,6 +287,7 @@ class Provider(models.Model):
 class Pet(models.Model):
     name = models.CharField(max_length=100)
     breed = models.CharField(max_length=50, blank=True)
+    weight = models.FloatField(default=0.0)
     birthday = models.DateField()
 
     @classmethod
@@ -296,6 +297,7 @@ class Pet(models.Model):
         name = data.get("name", "")
         breed = data.get("breed", "")
         birthday = data.get("birthday", "")
+        weight = data.get("weight", "")
 
         if name == "":
             errors["name"] = "Por favor ingrese un nombre"
@@ -306,12 +308,17 @@ class Pet(models.Model):
         if birthday == "":
             errors["birthday"] = "Por favor ingrese una fecha"
 
+        if weight == "":
+            errors["weight"] = "Por favor ingrese un peso"
+        else:
+            if (float(weight) < 0):
+                errors["weight"] = "El peso debe ser mayor que 0"
         return errors
 
     @classmethod
     def save_pet(cls, pet_data):
         errors = cls.validate_pet(pet_data)
-
+        print(errors)
         if len(errors.keys()) > 0:
             return False, errors
 
@@ -319,6 +326,7 @@ class Pet(models.Model):
             name=pet_data.get("name"),
             breed=pet_data.get("breed"),
             birthday=pet_data.get("birthday"),
+            weight=pet_data.get("weight")
         )
 
         return True, None
