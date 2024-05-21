@@ -1,5 +1,5 @@
 from django.db import models
-
+from datetime import datetime, date
 
 def validate_client(data):
     errors = {}
@@ -230,11 +230,15 @@ def validate_pet(data):
 
     if birthday == "":
         errors["birthday"] = "Por favor ingrese una fecha de nacimiento"
-    elif birthday.count("/") == 2:
-        errors["birthday"] = "Por favor ingrese una fecha valida"
+    else:
+        try:
+            birthday_date = datetime.strptime(birthday, "%Y-%m-%d").date()
+            if birthday_date > date.today():
+                errors["birthday"] = "La fecha de nacimiento no puede ser posterior al día actual."
+        except ValueError:
+            errors["birthday"] = "Formato de fecha inválido. Use AAAA-MM-DD."
 
     return errors
-
 
 class Pet(models.Model):
     name = models.CharField(max_length=100)
@@ -248,7 +252,7 @@ class Pet(models.Model):
     def save_pet(cls, pet_data):
         errors = validate_pet(pet_data)
 
-        if len(errors.keys()) > 0:
+        if errors:
             return False, errors
 
         Pet.objects.create(
@@ -260,12 +264,16 @@ class Pet(models.Model):
         return True, None
 
     def update_pet(self, pet_data):
+        errors = validate_pet(pet_data)
+
+        if errors:
+            return False, errors
+
         self.name = pet_data.get("name", "") or self.name
         self.breed = pet_data.get("breed", "") or self.breed
         self.birthday = pet_data.get("birthday", "") or self.birthday
-
         self.save()
-
+        return True, None
 
 class Med(models.Model):
     name = models.CharField(max_length=100)
