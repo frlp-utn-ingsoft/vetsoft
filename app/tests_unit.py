@@ -1,6 +1,7 @@
 from django.test import TestCase
 from app.models import Client
-
+from app.models import Pet
+from datetime import date, timedelta
 
 class ClientModelTest(TestCase):
     def test_can_create_and_get_client(self):
@@ -57,3 +58,19 @@ class ClientModelTest(TestCase):
         client_updated = Client.objects.get(pk=1)
 
         self.assertEqual(client_updated.phone, "221555232")
+
+
+class PetModelTest(TestCase):
+    def test_cant_invalidate_birthday(self):
+        future_birthday = (date.today() + timedelta(days=1)).strftime("%Y-%m-%d")
+        pet_instance = Pet.objects.create(
+            name="Paco",
+            breed="Salchica",
+            birthday=future_birthday
+        )
+        with self.assertRaises(ValueError):
+            pet_instance.update_pet({
+                "name": "Nuevo Nombre",
+                "breed": "Nueva Raza",
+                "birthday": future_birthday
+            })
