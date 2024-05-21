@@ -126,26 +126,35 @@ class Medicine(models.Model):
         self.save()
     
 def validate_products(data):
-        errors = {}
-        name = data.get("name", "")
-        type = data.get("type", "")
-        price = data.get("price", "")
+    errors = {}
+    name = data.get("name", "")
+    type = data.get("type", "")
+    price = data.get("price", "")
+    stock = data.get("stock", "")
 
-        if name == "":
-            errors["name"] = "Ingrese el nombre del producto"
+    if name == "":
+        errors["name"] = "Ingrese el nombre del producto"
 
-        if type == "":
-            errors["type"] = "Ingrese el tipo de producto"
-        
-        if price == "":
-            errors["price"] = "Ingrese precio del producto, el precio no puede ser 0"
+    if type == "":
+        errors["type"] = "Ingrese el tipo de producto"
+    
+    if price == "":
+        errors["price"] = "Ingrese el precio del producto"
 
-        return errors
+    try:
+        stock = int(stock)
+        if stock < 0:
+            errors["stock"] = "El stock no puede ser negativo"
+    except ValueError:
+        errors["stock"] = "El stock debe ser un número entero"
+
+    return errors
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
     price = models.FloatField()
+    stock = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -161,7 +170,8 @@ class Product(models.Model):
             name=product_data.get("name"),
             type=product_data.get("type"),
             price=product_data.get("price"),
-            )
+            stock=product_data.get("stock", 0)
+        )
         
         return True, None
     
@@ -169,8 +179,15 @@ class Product(models.Model):
         self.name = product_data.get("name", "") or self.name
         self.type = product_data.get("type", "") or self.type
         self.price = product_data.get("price", "") or self.price
+        
+        if "stock" in product_data:
+            try:
+                self.stock = int(product_data["stock"])
+            except ValueError:
+                pass 
 
         self.save()
+
         
 class Pet(models.Model):
     name = models.CharField(max_length=100)

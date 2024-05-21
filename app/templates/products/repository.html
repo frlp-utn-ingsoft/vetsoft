@@ -17,6 +17,7 @@
                 <th>Nombre</th>
                 <th>Tipo</th>
                 <th>Precio</th>
+                <th>Stock</th>
                 <th></th>
             </tr>
         </thead>
@@ -27,22 +28,33 @@
                 <td>{{ product.name }}</td>
                 <td>{{ product.type }}</td>
                 <td>{{ product.price }}</td>
+                <td>{{ product.stock }}</td>
                 <td class="text-end">
                     <div class="btn-group" role="group">
-                        <a class="btn btn-outline-primary" href="{% url 'products_edit' id=product.id %}">Editar</a>
-                        <form method="POST" action="{% url 'products_delete' %}"
-                            aria-label="Eliminación de productos">
+                        <a class="btn btn-outline-primary me-2"
+                            href="{% url 'products_edit' id=product.id %}">Editar</a>
+                        <form method="POST" action="{% url 'products_delete' %}" aria-label="Eliminación de productos"
+                            onsubmit="return confirm('¿Estás seguro de que quieres eliminar este producto?');">
                             {% csrf_token %}
-
                             <input type="hidden" name="product_id" value="{{ product.id }}" />
-                            <button class="btn btn-outline-danger">Eliminar</button>
+                            <button class="btn btn-outline-danger me-2">Eliminar</button>
+                        </form>
+                        <form method="POST" action="{% url 'increase_stock' %}" class="me-2">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ product.id }}" />
+                            <button type="submit" class="btn btn-success">+</button>
+                        </form>
+                        <form method="POST" action="{% url 'decrease_stock' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ product.id }}" />
+                            <button type="submit" class="btn btn-danger">-</button>
                         </form>
                     </div>
                 </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="4" class="text-center">
+                <td colspan="5" class="text-center">
                     No hay productos cargados
                 </td>
             </tr>
