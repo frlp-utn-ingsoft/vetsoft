@@ -65,6 +65,27 @@
                         </div>
                     {% endif %}
                 </div>
+                <div>
+                    <label for="speciality" class="form-label">Especialidad</label>
+                    <select id="speciality" name="speciality" required class="form-control">
+                        {% if not vet or not vet.id %}
+                            <option value="" disabled selected>Seleccionar una opción</option>
+                        {% endif %}
+                        <option value="Oftalmologia" {% if vet and vet.speciality == "Oftalmologia" %}selected{% endif %}>Oftalmología</option>
+                        <option value="Quimioterapia" {% if vet and vet.speciality == "Quimioterapia" %}selected{% endif %}>Quimioterapia</option>
+                        <option value="Radiologia" {% if vet and vet.speciality == "Radiologia" %}selected{% endif %}>Radiología</option>
+                        <option value="Ecocardiografias" {% if vet and vet.speciality == "Ecocardiografias" %}selected{% endif %}>Ecocardiografías</option>
+                        <option value="Traumatologia" {% if vet and vet.speciality == "Traumatologia" %}selected{% endif %}>Traumatología</option>
+                        <option value="Ecografias" {% if vet and vet.speciality == "Ecografias" %}selected{% endif %}>Ecografías</option>
+                        <option value="Urgencias" {% if vet and vet.speciality == "Urgencias" %}selected{% endif %}>Urgencias</option>
+                    </select>
+                    
+                    {% if errors.speciality %}
+                        <div class="invalid-feedback">
+                            {{ errors.speciality }}
+                        </div>
+                    {% endif %}
+                </div>
 
                 <button class="btn btn-primary">Guardar</button>
             </form>
