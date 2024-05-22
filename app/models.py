@@ -134,10 +134,28 @@ def validate_pet(data):
         errors["birthday"] = "Por favor ingrese una fecha de nacimiento"
 
     return errors
-       
+
+##---------clase enumerativa de raza----------   
+class Breed(models.TextChoices):
+     # raza de perros
+    LABRADOR = 'labrador', 'Labrador'
+    BEAGLE = 'beagle', 'Beagle'
+    BULLDOG = 'bulldog', 'Bulldog'
+    CHIHUAHUA = 'chihuahua', 'Chihuahua'
+    DOGO_ARGENTINO = 'dogo_argentino', 'Dogo Argentino'
+    PUG = 'pug', 'Pug'
+    POODLE = 'poodle', 'Poodle'
+    ROTTWEILER = 'rottweiler', 'Rottweiler'
+    
+    # razas de gatos
+    SIAMESE = 'siamese', 'Siamés'
+    PERSIAN = 'persian', 'Persa'
+    SPHYNX = 'sphynx', 'Sphynx'
+    BENGAL = 'bengal', 'Bengalí'
+
 class Pet(models.Model):
     name = models.CharField(max_length=100)
-    breed = models.CharField(max_length=50)
+    breed = models.CharField(max_length=50, choices=Breed.choices)
     birthday = models.DateField()
     client = models.ForeignKey("Client", on_delete=models.CASCADE, null=True, blank=True)
     medicines = models.ManyToManyField(Medicine)
@@ -168,23 +186,7 @@ class Pet(models.Model):
 
         self.save()
 
-##---------clase enumerativa de raza----------   
-class Breed(models.TextChoices):
-    #raza de perros
-    LABRADOR = 'LABRADOR', 'Labrador'
-    BEAGLE = 'BEAGLE', 'Beagle'
-    BULLDOG = 'BULLDOG', 'Bulldog'
-    CHIHUAHUA = 'CHIHUAHUA', 'Chihuahua'
-    DOGO_ARGENTINO = 'DOGO_ARGENTINO', 'Dogo Argentino'
-    PUG = 'PUG', 'Pug'
-    POODLE = 'POODLE', 'Poodle'
-    ROTTWEILER = 'ROTTWEILER', 'Rottweiler'
 
-    # Razas de Gatos
-    SIAMESE = 'SIAMESE', 'Siamés'
-    PERSIAN = 'PERSIAN', 'Persa'
-    SPHYNX = 'SPHYNX', 'Sphynx'
-    BENGAL = 'BENGAL', 'Bengalí'
 
 ##---------products----------   
 def validate_product(data):
