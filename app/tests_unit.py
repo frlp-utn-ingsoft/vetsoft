@@ -1,6 +1,6 @@
 from django.test import TestCase
-from app.models import Client
-
+from app.models import Client, validate_date_of_birthday
+from datetime import datetime
 
 class ClientModelTest(TestCase):
     def test_can_create_and_get_client(self):
@@ -61,3 +61,25 @@ class ClientModelTest(TestCase):
         client_updated = Client.objects.get(pk=1)
 
         self.assertEqual(client_updated.phone, "221555232")
+
+class PetModelTest(TestCase):
+    def test_valid_date(self):
+        date_str = '2020-05-22'
+        self.assertIsNone(validate_date_of_birthday(date_str))
+
+    def test_future_date(self):
+        future_date = (datetime.today().year + 1, 5, 22)
+        date_str = datetime(*future_date).strftime('%Y-%m-%d')
+        self.assertEqual(validate_date_of_birthday(date_str), "La fecha no puede ser mayor al dia de hoy")
+
+    def test_invalid_format(self):
+        date_str = '22-05-2020'
+        self.assertEqual(validate_date_of_birthday(date_str), "Formato de fecha incorrecto")
+
+    def test_empty_string(self):
+        date_str = ''
+        self.assertEqual(validate_date_of_birthday(date_str), "Formato de fecha incorrecto")
+
+    def test_non_date_string(self):
+        date_str = 'not-a-date'
+        self.assertEqual(validate_date_of_birthday(date_str), "Formato de fecha incorrecto")

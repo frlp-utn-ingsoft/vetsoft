@@ -1,6 +1,7 @@
+from datetime import date, datetime
 from django.test import TestCase
 from django.shortcuts import reverse
-from app.models import Client
+from app.models import Client, Pet
 
 
 class HomePageTest(TestCase):
@@ -96,3 +97,52 @@ class ClientsTest(TestCase):
         self.assertEqual(editedClient.phone, client.phone)
         self.assertEqual(editedClient.address, client.address)
         self.assertEqual(editedClient.email, client.email)
+
+class PetsTest(TestCase):
+    def test_use_pets_repo_template(self):
+        response = self.client.get(reverse("pets_repo"))
+        self.assertTemplateUsed(response, "pets/repository.html")
+    
+    def test_can_create_pet(self):
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": "Manolo",
+                "breed": "golden",
+                "birthday": "2019-03-14",
+            },
+        )
+        pets = Pet.objects.all()
+        self.assertEqual(len(pets), 1)
+
+        self.assertEqual(pets[0].name, "Manolo")
+        self.assertEqual(pets[0].breed, "golden")
+        self.assertEqual(pets[0].birthday, date(2019, 3, 14))
+
+        self.assertRedirects(response, reverse("pets_repo"))
+    
+    def test_validate_date_of_birthday(self):
+        future_date = (datetime.today().year + 1, 5, 22)
+        date_str = datetime(*future_date).strftime('%Y-%m-%d')
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": "Manolo",
+                "breed": "golden",
+                "birthday": date_str,
+            },
+        )
+
+        self.assertContains(response, "La fecha no puede ser mayor al dia de hoy")
+
+    def test_validate_invalid_date_of_birthday(self):
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": "Manolo",
+                "breed": "golden",
+                "birthday": 'not-a-date',
+            },
+        )
+
+        self.assertContains(response, "Formato de fecha incorrecto")
