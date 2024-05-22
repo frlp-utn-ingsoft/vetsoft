@@ -318,7 +318,6 @@ class Pet(models.Model):
     @classmethod
     def save_pet(cls, pet_data):
         errors = cls.validate_pet(pet_data)
-        print(errors)
         if len(errors.keys()) > 0:
             return False, errors
 
