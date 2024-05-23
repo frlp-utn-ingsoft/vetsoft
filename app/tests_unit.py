@@ -1,5 +1,5 @@
 from django.test import TestCase
-from app.models import Client, validate_product,validate_medicine
+from app.models import Client, validate_product,validate_medicine, validate_pet, Pet, Breed
 
 
 class ClientModelTest(TestCase):
@@ -57,6 +57,51 @@ class ClientModelTest(TestCase):
         client_updated = Client.objects.get(pk=1)
 
         self.assertEqual(client_updated.phone, "221555232")
+
+#test para ver si la clase enumerativa de raza existe
+class TestBreedEnum(TestCase):
+    def test_breed_enum_exists(self):
+        # Verifica que la enumeración Breed existe
+        self.assertTrue(hasattr(Breed, 'BEAGLE'))
+        self.assertTrue(hasattr(Breed, 'LABRADOR'))
+        self.assertTrue(hasattr(Breed, 'PUG'))
+        self.assertTrue(hasattr(Breed, 'BULLDOG'))
+
+        # Verifica los valores de la enumeración
+        self.assertEqual(Breed.BEAGLE, "beagle")
+        self.assertEqual(Breed.LABRADOR, "labrador")
+        self.assertEqual(Breed.PUG, "pug")
+        self.assertEqual(Breed.BULLDOG, "bulldog")
+
+class PetModelTest(TestCase):
+     
+     def test_can_create_pet(self):
+          # Crear una instancia de Mascota con una raza seleccionada
+        mascota_data = {
+            "name": "Charly",
+            "breed": "Pug",
+            "birthday": "2020-06-18",
+            "weight": 130
+        }
+        errors = validate_pet(mascota_data)
+        # verifica que no hay error en el peso
+        self.assertNotIn("breed", errors, "No debe haber un error de seleccion de raza")
+
+     def test_cant_create_pet(self):
+          # Crear una instancia de Mascota SIN una raza seleccionada
+        mascota_data = {
+            "name": "Charly",
+            "breed": "",
+            "birthday": "2020-06-18",
+            "weight": 130
+        }
+        errors = validate_pet(mascota_data)
+        # verifica que salga el error correspondiente
+        self.assertEqual(errors["breed"], "Por favor seleccione una raza")
+         # Verificar que no se haya creado la mascota en la base de datos
+        self.assertEqual(Pet.objects.count(), 0)
+
+
 
 class MedicineModelTest(TestCase):
     def test_medicine_dose_validation_in_range_1_to_10(self):
