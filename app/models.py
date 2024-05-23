@@ -10,8 +10,11 @@ def validate_fields(data, required_fields):
             errors[key] = f"Por favor ingrese un {value}"
         elif key == 'email' and field_value.count("@") == 0:
             errors["email"] = "Por favor ingrese un email valido"
+        elif key == 'weight' and int(field_value) < 0:
+            errors["weight"] = "El peso de la mascota no puede ser negativo"
 
     return errors
+
 
 class Client(models.Model):
     name = models.CharField(max_length=100)
@@ -65,6 +68,7 @@ class Pet(models.Model):
     name = models.CharField(max_length=100)
     breed = models.CharField(max_length=50)
     birthday = models.DateField()
+    weight = models.IntegerField()
 
     def __str__(self):
         return self.name
@@ -74,7 +78,8 @@ class Pet(models.Model):
         return {
             "name": "nombre",
             "breed": "raza", 
-            "birthday": "fecha de nacimiento"
+            "birthday": "fecha de nacimiento",
+            "weight": "peso"
         }
 
     @classmethod
@@ -84,10 +89,12 @@ class Pet(models.Model):
         if len(errors.keys()) > 0:
             return False, errors
 
+
         Pet.objects.create(
             name=pet_data.get("name"),
             breed=pet_data.get("breed"),
             birthday=pet_data.get("birthday"),
+            weight=pet_data.get("weight"),
         )
 
         return True, None
@@ -101,6 +108,7 @@ class Pet(models.Model):
         self.name = pet_data.get("name", "") or self.name
         self.breed = pet_data.get("breed", "") or self.breed
         self.birthday = pet_data.get("birthday", "") or self.birthday
+        self.weight = pet_data.get("weight", "") or self.weight
 
         self.save()
 
