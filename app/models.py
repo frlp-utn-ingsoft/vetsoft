@@ -281,7 +281,7 @@ def validate_product(data):
         errors["price"] = "Por favor ingrese un precio"
     elif isfloat(price) == False:
         errors["price"] = "Por favor ingrese un precio"
-    elif float(price) < 0:
+    elif float(price) <= 0:
         errors["price"] = "Por favor ingrese un precio"
 
     return errors
