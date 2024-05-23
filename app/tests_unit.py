@@ -75,8 +75,8 @@ class TestBreedEnum(TestCase):
 
 class PetModelTest(TestCase):
      
-     #creacion de mascota con raza seleccionada
-     def test_can_create_pet(self):
+     #test de validacion de creacion de mascota con raza seleccionada
+     def test_validation_create_pet_with_breed(self):
           # Crear una instancia de Mascota con una raza seleccionada
         mascota_data = {
             "name": "Charly",
@@ -88,8 +88,8 @@ class PetModelTest(TestCase):
         # verifica que no hay error en el peso
         self.assertNotIn("breed", errors, "No debe haber un error de seleccion de raza")
 
-    #creacion de mascota sin raza seleccionada
-     def test_cant_create_pet(self):
+    #test de validacion de creacion de mascota sin raza seleccionada
+     def test_validation_create_pet_breedless(self):
           # Crear una instancia de Mascota SIN una raza seleccionada
         mascota_data = {
             "name": "Charly",
