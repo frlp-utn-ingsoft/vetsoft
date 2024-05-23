@@ -264,16 +264,16 @@ class Pet(models.Model):
         return True, None
 
     def update_pet(self, pet_data):
-        errors = validate_pet(pet_data)
-
-        if errors:
-            return False, errors
-
         self.name = pet_data.get("name", "") or self.name
         self.breed = pet_data.get("breed", "") or self.breed
-        self.birthday = pet_data.get("birthday", "") or self.birthday
+        new_birthday = pet_data.get("birthday", "") or self.birthday
+        if new_birthday and isinstance(new_birthday, str):
+            birthday_date = datetime.strptime(new_birthday, "%Y-%m-%d").date()
+            if birthday_date > date.today():
+                raise ValueError("La fecha de nacimiento no puede ser posterior al día actual.")
+        self.birthday = new_birthday
+        
         self.save()
-        return True, None
 
 class Med(models.Model):
     name = models.CharField(max_length=100)
