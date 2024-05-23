@@ -9,8 +9,8 @@ from app.models import Client
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 playwright = sync_playwright().start()
-headless = os.environ.get("HEADLESS", 1) == 1
-slow_mo = os.environ.get("SLOW_MO", 0)
+headless = os.environ.get("HEADLESS", 0) == 1
+slow_mo = os.environ.get("SLOW_MO", 500)
 
 
 class PlaywrightTestCase(StaticLiveServerTestCase):
@@ -242,3 +242,19 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         expect(edit_action).to_have_attribute(
             "href", reverse("clients_edit", kwargs={"id": client.id})
         )
+
+class AddMedicine(PlaywrightTestCase):
+    def test_add_new_medicine(self):
+        self.page.goto(f"{self.live_server_url}{reverse('medicines_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Bayaspirina")
+        self.page.get_by_label("Descripción").fill("Para dolores de cabeza")
+        self.page.get_by_label("Dosis").fill("1")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Bayaspirina")).to_be_visible()
+        expect(self.page.get_by_text("Para dolores de cabeza")).to_be_visible()
+        expect(self.page.get_by_text("1")).to_be_visible()

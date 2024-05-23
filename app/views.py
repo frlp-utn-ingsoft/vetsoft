@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from .models import Client, Medicine, Product, Pet, Vet
-
+from django.contrib import messages
 
 def home(request):
     return render(request, "home.html")
@@ -86,7 +86,6 @@ def products_repository(request):
     products = Product.objects.all()
     return render(request, "products/repository.html", {"products": products})
 
-
 def products_form(request, id=None):
     if request.method == "POST":
         product_id = request.POST.get("id", "")
@@ -112,13 +111,34 @@ def products_form(request, id=None):
 
     return render(request, "products/form.html", {"product": product})
 
-
 def products_delete(request):
     product_id = request.POST.get("product_id")
     product = get_object_or_404(Product, pk=int(product_id))
     product.delete()
 
     return redirect(reverse("products_repo"))
+
+def increase_stock(request):
+    if request.method == "POST":
+        product_id = request.POST.get("product_id")
+        product = get_object_or_404(Product, pk=product_id)
+        product.stock += 1
+        product.save()
+        return redirect("products_repo")
+
+def decrease_stock(request):
+    if request.method == "POST":
+        product_id = request.POST.get("product_id")
+        product = get_object_or_404(Product, pk=product_id)
+        if product.stock > 0:
+            product.stock -= 1
+            product.save()
+        
+        if product.stock == 0:
+            messages.warning(request, f"{product.name}:  Fuera de stock.")
+
+        return redirect("products_repo")
+
 
 
 def pets_repository(request):

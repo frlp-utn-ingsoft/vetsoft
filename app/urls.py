@@ -15,6 +15,8 @@ urlpatterns = [
     path("products/nuevo/", view=views.products_form, name="products_form"),
     path("products/editar/<int:id>/", view=views.products_form, name="products_edit"),
     path("products/eliminar/", view=views.products_delete, name="products_delete"),
+    path("products/increase_stock/", view=views.increase_stock, name="increase_stock"),
+    path("products/decrease_stock/", view=views.decrease_stock, name="decrease_stock"),
     path("mascotas/", view=views.pets_repository, name="pets_repo"),
     path("mascotas/nuevo/", view=views.pets_form, name="pets_form"),
     path("mascotas/editar/<int:id>/", view=views.pets_form, name="pets_edit"),
