@@ -94,8 +94,7 @@ class ClientsTest(TestCase):
         self.assertEqual(editedClient.address, client.address)
         self.assertEqual(editedClient.email, client.email)
 
-
-
+# TEST DE PET
 class PetsTest(TestCase):
     
     # creacion de mascota
@@ -138,4 +137,33 @@ class PetsTest(TestCase):
             )
         # Verifico si el peso es negativo y muestra un mensaje de error
         self.assertContains(response, "El peso debe ser un número mayor a cero")
+
+
+class ProductsTest(TestCase):
+    def test_validation_invalid_price(self):
+        # client es un objeto que proporciona Django para simular solicitudes HTTP en tus tests.
+        response = self.client.post(
+            reverse("products_form"),
+            data={
+                "name": "Paracetamol",
+                "description": "Medicamento para el dolor",
+                "price": 0,
+            },
+        )
+
+        self.assertContains(response, "El precio debe ser mayor que cero")
+        
+class MedicinesTest(TestCase):
+    def test_validation_invalid_dose(self):
+        # client es un objeto que proporciona Django para simular solicitudes HTTP en tus tests.
+        response = self.client.post(
+            reverse("medicines_form"),
+            data={
+                "name": "Diclofenac",
+                "description": "Calma el dolor muscular",
+                "dose": 0,
+            },
+        )
+
+        self.assertContains(response, "La dosis debe estar en un rango de 1 a 10")
 
