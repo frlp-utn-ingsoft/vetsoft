@@ -26,7 +26,7 @@
                         id="name"
                         name="name"
                         value="{{medicine.name}}"
-                        class="form-control"
+                        class="form-control {% if errors.name %}is-invalid{% endif %}"
                         required/>
 
                     {% if errors.name %}
@@ -40,7 +40,7 @@
                     <input type="text"
                         id="description"
                         name="description"
-                        class="form-control"
+                        class="form-control {% if errors.description %}is-invalid{% endif %}"
                         value="{{medicine.description}}"
                         required/>
 
@@ -55,7 +55,7 @@
                     <input type="number"
                         id="dose"
                         name="dose"
-                        class="form-control"
+                        class="form-control {% if errors.dose %}is-invalid{% endif %}"
                         value="{{ medicine.dose }}"
                         required/>
 
