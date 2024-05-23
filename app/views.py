@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from .models import Client, Medicine, Product, Pet, Vet
-
+from django.contrib import messages
 
 def home(request):
     return render(request, "home.html")
@@ -133,6 +133,10 @@ def decrease_stock(request):
         if product.stock > 0:
             product.stock -= 1
             product.save()
+        
+        if product.stock == 0:
+            messages.warning(request, f"{product.name}:  Fuera de stock.")
+
         return redirect("products_repo")
 
 
