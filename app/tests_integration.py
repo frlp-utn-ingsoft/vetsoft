@@ -96,3 +96,93 @@ class ClientsTest(TestCase):
         self.assertEqual(editedClient.phone, client.phone)
         self.assertEqual(editedClient.address, client.address)
         self.assertEqual(editedClient.email, client.email)
+
+
+class petsTest(TestCase):
+    def test_repo_use_repo_template(self):
+        response = self.pet.get(reverse("pets_repo"))
+        self.assertTemplateUsed(response, "pets/repository.html")
+
+    def test_repo_display_all_pets(self):
+        response = self.pet.get(reverse("pets_repo"))
+        self.assertTemplateUsed(response, "pets/repository.html")
+
+    def test_form_use_form_template(self):
+        response = self.pet.get(reverse("pets_form"))
+        self.assertTemplateUsed(response, "pets/form.html")
+
+    def test_can_create_pet(self):
+        response = self.pet.post(
+            reverse("pets_form"),
+            data={
+                "name": "Nami",
+                "breed": "Siames",
+                "birthday": '2020-05-22',
+                "weight": "30",
+            },
+        )
+        pets = pet.objects.all()
+        self.assertEqual(len(pets), 1)
+
+        self.assertEqual(pets[0].name, "Nami")
+        self.assertEqual(pets[0].breed, "Siames")
+        self.assertEqual(pets[0].birthday, '2020-05-22')
+        self.assertEqual(pets[0].weight, "30")
+
+        self.assertRedirects(response, reverse("pets_repo"))
+
+    def test_validation_errors_create_pet(self):
+        response = self.pet.post(
+            reverse("pets_form"),
+            data={},
+        )
+
+        self.assertContains(response, "Por favor ingrese un nombre")
+        self.assertContains(response, "Por favor ingrese una raza")
+        self.assertContains(response, "Por favor ingrese un a fecha de cumpleaños")
+        self.assertContains(response, "Por favor ingrese un peso")
+
+    def test_should_response_with_404_status_if_pet_doesnt_exists(self):
+        response = self.pet.get(reverse("pets_edit", kwargs={"id": 100}))
+        self.assertEqual(response.status_code, 404)
+
+    def test_validation_invalid_weight(self):
+        response = self.pet.post(
+            reverse("pets_form"),
+            data={
+                "name": "Nami",
+                "breed": "Siames",
+                "birthday": '2020-05-22',
+                "weight": "-30",
+            },
+        )
+
+        self.assertContains(response, "Por favor ingrese un peso valido")
+
+    def test_edit_user_with_valid_data(self):
+        pet = pet.objects.create(
+            name="Nami",
+            breed="Siames",
+            birthday='2020-05-22',
+            weight="30",
+        )
+
+        response = self.pet.post(
+            reverse("pets_form"),
+            data={
+                "id": pet.id,
+                "name": "Luffy",
+                "breed": pet.breed,
+                "weight": pet.weight,
+                "birthday": pet.birthday
+            },
+        )
+
+        # redirect after post
+        self.assertEqual(response.status_code, 302)
+
+        editedpet = pet.objects.get(pk=pet.id)
+        self.assertEqual(editedpet.name, "Luffy")
+        self.assertEqual(editedpet.breed, pet.breed)
+        self.assertEqual(editedpet.birthday, pet.birthday)
+        self.assertEqual(editedpet.weight, pet.weight)
