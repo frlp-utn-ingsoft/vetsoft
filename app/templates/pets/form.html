@@ -55,12 +55,13 @@
                     {% endif %}
                 </div>
                 <div>
-                    <label for="email" class="form-label">Fecha de nacimiento</label>
+                    <label for="birthday" class="form-label">Fecha de nacimiento</label>
                     <input type="date"
                         id="birthday"
                         name="birthday"
                         class="form-control"
-                        value="{{ pet.birthday|date:"Y-m-d" }}"
+                        value="{{ pet.birthday }}"
+                        max="{{ today }}"
                         required/>
 
                     {% if errors.birthday %}
