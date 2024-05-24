@@ -194,6 +194,7 @@ class Pet(models.Model):
         self.name = pet_data.get("name","") or self.name
         self.breed = pet_data.get("breed", "") or self.breed
         self.birthday = pet_data.get("birthday", "") or self.birthday
+        self.weight = pet_data.get("weight", "") or self.weight
 
         self.save()    
 
