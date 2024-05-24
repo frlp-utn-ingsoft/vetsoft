@@ -34,7 +34,7 @@
                         
                         <form method="POST"
                             action="{% url 'pets_delete' %}"
-                            aria-label="Formulario de eliminación de mascotas">
+                            aria-label="Formulario de eliminación de mascotas"> 
                             {% csrf_token %}
 
                             <input type="hidden" name="pet_id" value="{{ pet.id }}" />

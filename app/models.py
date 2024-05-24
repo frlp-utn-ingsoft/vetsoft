@@ -1,5 +1,6 @@
 from django.db import models
 from enum import Enum
+import datetime
 
 def validate_client(data):
     errors = {}
@@ -89,8 +90,10 @@ def validate_pet(data):
     if breed == "":
         errors["breed"] = "Por favor ingrese una raza"
 
-    if birthday == "":
-        errors["birthday"] = "Por favor ingrese una fecha de nacimiento"
+    date_now = datetime.date.today().strftime("%Y-%m-%d")
+
+    if birthday == "" or birthday >= date_now: 
+        errors["birthday"] = "Por favor ingrese una fecha de nacimiento valida y anterior a la de hoy"
 
     return errors
 
@@ -274,11 +277,17 @@ class Pet (models.Model):
         return True, None
     
     def update_pet(self, pet_data):
+        errors = validate_pet(pet_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
         self.name=pet_data.get("name", "") or self.name
         self.breed=pet_data.get("breed", "") or self.breed
         self.birthday=pet_data.get("birthday","") or self.birthday
 
         self.save()
+        return True, None
 
 class Speciality(Enum):
     Oftalmologia = "Oftalmologia"
