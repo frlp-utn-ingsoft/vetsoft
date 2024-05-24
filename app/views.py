@@ -21,7 +21,7 @@ def clients_form(request, id=None):
             saved, errors = Client.save_client(request.POST)
         else:
             client = get_object_or_404(Client, pk=client_id)
-            saved, errors = client.update_client(request.POST)
+            saved, errors = client.update_client(request.POST) 
 
         if saved:
             return redirect(reverse("clients_repo"))
@@ -166,7 +166,7 @@ def pets_form(request, id=None):
             saved, errors = Pet.save_pet(request.POST)
         else:
             pet = get_object_or_404(Pet, pk=pet_id)
-            pet.update_pet(request.POST)
+            saved, errors = pet.update_pet(request.POST)
 
         if saved:
             return redirect(reverse("pets_repo"))

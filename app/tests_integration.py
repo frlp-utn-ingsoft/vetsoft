@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.shortcuts import reverse
-from app.models import Client
-
+from app.models import Client, Pet
+import datetime
 
 class HomePageTest(TestCase):
     def test_use_home_template(self):
@@ -69,7 +69,7 @@ class ClientsTest(TestCase):
 
         self.assertContains(response, "Por favor ingrese un email valido")
 
-    def test_edit_user_with_valid_data(self):
+    def test_edit_user_with_valid_data(self): 
         client = Client.objects.create(
             name="Juan Sebastián Veron",
             address="13 y 44",
@@ -81,7 +81,10 @@ class ClientsTest(TestCase):
             reverse("clients_form"),
             data={
                 "id": client.id,
-                "name": "Guido Carrillo",
+                "name": "Guido Carrillo", 
+                "address":client.address,
+                "phone":client.phone,
+                "email":client.email,
             },
         )
 
@@ -93,3 +96,167 @@ class ClientsTest(TestCase):
         self.assertEqual(editedClient.phone, client.phone)
         self.assertEqual(editedClient.address, client.address)
         self.assertEqual(editedClient.email, client.email)
+
+class PetsTest(TestCase):
+    def test_repo_use_repo_template(self):
+        response = self.client.get(reverse("pets_repo"))
+        self.assertTemplateUsed(response, "pets/repository.html")
+
+    def test_repo_display_all_pets(self):
+        response = self.client.get(reverse("pets_repo"))
+        self.assertTemplateUsed(response, "pets/repository.html")
+
+    def test_form_use_form_template(self):
+        response = self.client.get(reverse("pets_form"))
+        self.assertTemplateUsed(response, "pets/form.html")
+
+    def test_can_create_pet(self):
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": "gatito",
+                "breed": "orange",
+                "birthday": "2024-05-18",
+            },
+        )
+        pets = Pet.objects.all()
+        self.assertEqual(len(pets), 1)
+
+        self.assertEqual(pets[0].name, "gatito")
+        self.assertEqual(pets[0].breed, "orange")
+        self.assertEqual(pets[0].birthday, datetime.date(2024, 5, 18))
+
+        self.assertRedirects(response, reverse("pets_repo"))
+
+    def test_validation_errors_create_pet(self):
+        response = self.client.post(
+            reverse("pets_form"),
+            data={},
+        )
+
+        self.assertContains(response, "Por favor ingrese un nombre")
+        self.assertContains(response, "Por favor ingrese una raza")
+        self.assertContains(response, "Por favor ingrese una fecha de nacimiento valida y anterior a la de hoy")
+
+    def test_should_response_with_404_status_if_pet_doesnt_exists(self):
+        response = self.client.get(reverse("pets_edit", kwargs={"id": 100}))
+        self.assertEqual(response.status_code, 404)
+
+    def test_validation_invalid_birthday_date_now(self): 
+        date_now = datetime.date.today().strftime("%Y-%m-%d")
+
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": "gatito",
+                "breed": "orange",
+                "email": date_now,
+            },
+        )
+
+        self.assertContains(response, "Por favor ingrese una fecha de nacimiento valida y anterior a la de hoy")
+
+    def test_validation_invalid_birthday_date_later_than_today(self): 
+        date_now = datetime.date.today()
+        date_later = date_now + datetime.timedelta(days=1)
+        date = date_later.strftime("%Y-%m-%d")
+
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": "gatito",
+                "breed": "orange",
+                "email": date,
+            },
+        )
+
+        self.assertContains(response, "Por favor ingrese una fecha de nacimiento valida y anterior a la de hoy")
+
+    def test_edit_user_with_valid_data_pet(self):
+        pet = Pet.objects.create(
+            name="gatito",
+            breed="orange",
+            birthday="2024-05-18"
+        )
+
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "id": pet.id,
+                "name": "mishu",
+                "breed":pet.breed,
+                "birthday":pet.birthday,
+            },
+        )
+
+        # redirect after post
+        self.assertEqual(response.status_code, 302)
+
+        editedPet = Pet.objects.get(pk=pet.id)
+        self.assertEqual(editedPet.name, "mishu")
+        self.assertEqual(editedPet.breed, pet.breed)
+        self.assertEqual(editedPet.birthday.strftime("%Y-%m-%d"), pet.birthday)
+
+    def test_edit_user_with_invalid_data_pet(self):
+        pet = Pet.objects.create(
+            name="gatito",
+            breed="orange",
+            birthday="2024-05-18"
+        )
+
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "id": pet.id,
+                "name": "",
+                "breed":"",
+                "birthday":"",
+            },
+        )
+
+        self.assertContains(response, "Por favor ingrese un nombre")
+        self.assertContains(response, "Por favor ingrese una raza")
+        self.assertContains(response, "Por favor ingrese una fecha de nacimiento valida y anterior a la de hoy")
+
+    def test_edit_user_with_invalid_birthday_today(self):
+        pet = Pet.objects.create(
+            name="gatito",
+            breed="orange",
+            birthday="2024-05-18"
+        )
+
+        date_now = datetime.date.today().strftime("%Y-%m-%d")
+
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "id": pet.id,
+                "name": pet.name,
+                "breed":pet.breed,
+                "birthday":date_now,
+            },
+        )
+
+        self.assertContains(response, "Por favor ingrese una fecha de nacimiento valida y anterior a la de hoy")
+
+    def test_edit_user_with_invalid_birthday_later_than_today(self): 
+        pet = Pet.objects.create(
+            name="gatito",
+            breed="orange",
+            birthday="2024-05-18"
+        )
+
+        date_now = datetime.date.today()
+        date_later = date_now + datetime.timedelta(days=1)
+        date = date_later.strftime("%Y-%m-%d")
+
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": pet.name,
+                "breed": pet.breed,
+                "email": date,
+            },
+        )
+
+        self.assertContains(response, "Por favor ingrese una fecha de nacimiento valida y anterior a la de hoy")
