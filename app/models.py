@@ -1,4 +1,5 @@
 from django.db import models
+from enum import Enum
 import datetime
 
 def validate_client(data):
@@ -102,10 +103,11 @@ def validate_vet(data):
     name = data.get("name", "")
     email = data.get("email", "")
     phone = data.get("phone", "")
+    speciality = data.get("speciality", "")
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
-        
+
     if email == "":
         errors["email"] = "Por favor ingrese un email"
     elif email.count("@") == 0:
@@ -113,6 +115,9 @@ def validate_vet(data):
 
     if phone == "":
         errors["phone"] = "Por favor ingrese un teléfono"
+
+    if speciality == "":
+        errors["speciality"] = "Por favor seleccione una especialidad"
 
     return errors
 
@@ -284,10 +289,24 @@ class Pet (models.Model):
         self.save()
         return True, None
 
+class Speciality(Enum):
+    Oftalmologia = "Oftalmologia"
+    Quimioterapia = "Quimioterapia"
+    Radiologia = "Radiologia"
+    Ecocardiografias = "Ecocardiografias"
+    Traumatologia = "Traumatologia"
+    Ecografias = "Ecografias"
+    Urgencias = "Urgencias"
+    
+    @classmethod
+    def choices(cls):
+        return [(key.name, key.value) for key in cls]
+
 class Vet(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
     phone = models.CharField(max_length=15)
+    speciality = models.CharField(max_length=100, choices=Speciality.choices(), default=Speciality.Urgencias)
 
     def __str__(self):
         return self.name
@@ -303,6 +322,7 @@ class Vet(models.Model):
             name=vet_data.get("name"),
             email=vet_data.get("email"),
             phone=vet_data.get("phone"),
+            speciality=vet_data.get("speciality", Speciality.Urgencias),
         )
 
         return True, None
@@ -316,5 +336,7 @@ class Vet(models.Model):
         self.name = vet_data.get("name", "") or self.name
         self.email = vet_data.get("email", "") or self.email
         self.phone = vet_data.get("phone", "") or self.phone
+        self.speciality = vet_data.get("speciality", "") or self.speciality
         self.save()
         return True, None
+    

@@ -1,7 +1,9 @@
 from django.test import TestCase
 from django.shortcuts import reverse
-from app.models import Client, Pet
+from app.models import Client, Pet, Vet, Speciality
+
 import datetime
+
 
 class HomePageTest(TestCase):
     def test_use_home_template(self):
@@ -96,6 +98,7 @@ class ClientsTest(TestCase):
         self.assertEqual(editedClient.phone, client.phone)
         self.assertEqual(editedClient.address, client.address)
         self.assertEqual(editedClient.email, client.email)
+
 
 class PetsTest(TestCase):
     def test_repo_use_repo_template(self):
@@ -260,3 +263,100 @@ class PetsTest(TestCase):
         )
 
         self.assertContains(response, "Por favor ingrese una fecha de nacimiento valida y anterior a la de hoy")
+
+
+class VetsTest(TestCase):
+    def test_repo_use_repo_template(self):
+        response = self.client.get(reverse("vets_repo"))
+        self.assertTemplateUsed(response, "vets/repository.html")
+
+    def test_repo_display_all_vets(self):
+        response = self.client.get(reverse("vets_repo"))
+        self.assertTemplateUsed(response, "vets/repository.html")
+
+    def test_form_use_form_template(self):
+        response = self.client.get(reverse("vets_form"))
+        self.assertTemplateUsed(response, "vets/form.html")
+
+    def test_can_create_vet(self):
+        speciality = "Urgencias"
+
+        self.assertTrue(self.is_valid_speciality(speciality))
+
+        response = self.client.post(
+            reverse("vets_form"),
+            data={
+                "name": "Juan Sebastian Veron",
+                "email": "brujita75@hotmail.com",
+                "phone": "221555232",
+                "speciality": speciality,
+            },
+        )
+        vets = Vet.objects.all()
+        self.assertEqual(len(vets), 1)
+
+        self.assertEqual(vets[0].name, "Juan Sebastian Veron")
+        self.assertEqual(vets[0].email, "brujita75@hotmail.com")
+        self.assertEqual(vets[0].phone, "221555232")
+        self.assertEqual(vets[0].speciality, "Urgencias")
+
+        self.assertRedirects(response, reverse("vets_repo"))
+
+    def is_valid_speciality(self, speciality):
+        return speciality in [choice.value for choice in Speciality]
+    
+    def test_validation_errors_create_vet(self):
+        response = self.client.post(
+            reverse("vets_form"),
+            data={},
+        )
+
+        self.assertContains(response, "Por favor ingrese un nombre")
+        self.assertContains(response, "Por favor ingrese un email")
+        self.assertContains(response, "Por favor ingrese un teléfono")
+        self.assertContains(response, "Por favor seleccione una especialidad")
+
+    def test_should_response_with_404_status_if_vet_doesnt_exists(self):
+        response = self.client.get(reverse("vets_edit", kwargs={"id": 100}))
+        self.assertEqual(response.status_code, 404)
+
+    def test_validation_invalid_email(self):
+        response = self.client.post(
+            reverse("vets_form"),
+            data={
+                "name": "Juan Sebastian Veron",
+                "email": "brujita75",
+                "phone": "221555232",
+                "speciality": "Urgencias",
+            },
+        )
+
+        self.assertContains(response, "Por favor ingrese un email valido")
+
+    def test_edit_user_with_valid_data_vet(self):
+        vet = Vet.objects.create(
+            name="Juan Sebastián Veron",
+            phone="221555232",
+            email="brujita75@hotmail.com",
+            speciality="Urgencias",
+        )
+
+        response = self.client.post(
+            reverse("vets_form"),
+            data={
+                "id": vet.id,
+                "name": "Guido Carrillo",
+                "phone":vet.phone,
+                "email":vet.email,
+                "speciality":vet.speciality,
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+
+        editedVet = Vet.objects.get(pk=vet.id)
+        self.assertEqual(editedVet.name, "Guido Carrillo")
+        self.assertEqual(editedVet.email, vet.email)
+        self.assertEqual(editedVet.phone, vet.phone)
+        self.assertEqual(editedVet.speciality, vet.speciality)
+
