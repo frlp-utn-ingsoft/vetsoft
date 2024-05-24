@@ -91,3 +91,21 @@ class MedicineModelTest(TestCase):
         medicine_updated = Medicine.objects.get(pk=1)
 
         self.assertEqual(medicine_updated.description, "analgesico")
+
+    def test_update_medicine_with_error(self):
+        Medicine.save_medicine(
+            {
+                "name": "ibuprofeno",
+                "description": "analgesico",
+                "dose": "4",
+            }
+        )
+        medicine = Medicine.objects.get(pk=1)
+
+        self.assertEqual(medicine.description, "analgesico")
+
+        medicine.update_medicine({"description": ""})
+
+        medicine_updated = Medicine.objects.get(pk=1)
+
+        self.assertEqual(medicine_updated.description, "analgesico")
