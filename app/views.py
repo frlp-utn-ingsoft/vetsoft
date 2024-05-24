@@ -1,6 +1,6 @@
+from datetime import date
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from .models import Client, Pet, Medicine, Vet, Product
-
 
 def home(request):
     return render(request, "home.html")
@@ -21,7 +21,7 @@ def clients_form(request, id=None):
             saved, errors = Client.save_client(request.POST)
         else:
             client = get_object_or_404(Client, pk=client_id)
-            client.update_client(request.POST)
+            saved, errors = client.update_client(request.POST)
 
         if saved:
             return redirect(reverse("clients_repo"))
@@ -49,6 +49,7 @@ def pets_repository(request):
     return render(request, "pets/repository.html", {"pets": pets})
 
 def pets_form(request, id=None):
+    today = date.today().strftime('%Y-%m-%d')
     if request.method == "POST":
         pet_id = request.POST.get("id", "")
         errors = {}
@@ -58,20 +59,21 @@ def pets_form(request, id=None):
             saved, errors = Pet.save_pet(request.POST)
         else:
             pet = get_object_or_404(Pet, pk=pet_id)
-            pet.update_pet(request.POST)
+            saved, errors = pet.update_pet(request.POST)
 
         if saved:
             return redirect(reverse("pets_repo"))
 
         return render(
-            request, "pets/form.html", {"errors": errors, "pet": request.POST}
+            request, "pets/form.html", {"errors": errors, "pet": request.POST, "today": today}
         )
 
     pet = None
     if id is not None:
         pet = get_object_or_404(Pet, pk=id)
+        pet.birthday = pet.birthday.strftime('%Y-%m-%d')
 
-    return render(request, "pets/form.html", {"pet": pet})
+    return render(request, "pets/form.html", {"pet": pet, "today": today})
 
 def pets_delete(request):
     pet_id = request.POST.get("pet_id")
@@ -94,7 +96,7 @@ def medicines_form(request, id=None):
             saved, errors = Medicine.save_medicine(request.POST)
         else:
             medicine = get_object_or_404(Medicine, pk=medicine_id)
-            medicine.update_medicine(request.POST)
+            saved, errors = medicine.update_medicine(request.POST)
 
         if saved:
             return redirect(reverse("medicines_repo"))
@@ -131,12 +133,11 @@ def vets_form(request, id=None):
         
         else:
             vet = get_object_or_404(Vet, pk=vet_id)
-            vet.update_vet(request.POST)
+            saved, errors = vet.update_vet(request.POST)
 
         if saved:
             return redirect(reverse("vets_repo"))
 
-        print(errors)
         return render(
             request, "vet/form.html", {"errors": errors, "vet": request.POST}
         )
@@ -169,7 +170,7 @@ def products_form(request, id=None):
             saved, errors = Product.save_product(request.POST)
         else:
             product = get_object_or_404(Product, pk=product_id)
-            product.update_product(request.POST)
+            saved, errors = product.update_product(request.POST)
 
         if saved:
             return redirect(reverse("products_repo"))
