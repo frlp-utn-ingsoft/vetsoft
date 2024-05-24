@@ -140,4 +140,24 @@ class PetsTest(TestCase):
         self.assertContains(response, "Por favor ingrese la fecha de cumpleaños")
         self.assertContains(response, "Por favor ingrese un peso")
 
+    def test_validation_invalid_weight(self):
+        Client.save_client(
+            {
+                "name": "Juan Sebastian Veron",
+                "phone": "221555232",
+                "address": "13 y 44",
+                "email": "brujita75@hotmail.com",
+            }
+        )
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": "Loki",
+                "breed": "Border Collie",
+                "birthday": date(2024,5,5),
+                "weight": 0,
+                "client":1
+            },
+        )
+        self.assertContains(response, "Por favor ingrese un peso mayor que 0")
     
