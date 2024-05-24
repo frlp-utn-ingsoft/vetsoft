@@ -62,8 +62,8 @@ class ProductModelTest(TestCase):
     def test_can_create_and_get_product(self):
         Product.save_product(
             {
-                "name": "Producto",
-                "type": "Tipo",
+                "name": "NombreProducto",
+                "type": "TipoProducto",
                 "price": 8,
             }
         )
@@ -71,15 +71,15 @@ class ProductModelTest(TestCase):
         products = Product.objects.all()
         self.assertEqual(len(products), 1)
 
-        self.assertEqual(products[0].name, "Producto")
-        self.assertEqual(products[0].type, "Tipo")
+        self.assertEqual(products[0].name, "NombreProducto")
+        self.assertEqual(products[0].type, "TipoProducto")
         self.assertEqual(products[0].price, 8)
 
-    def test_create_product_with_negative_price(self):
+    def test_create_product_with_negative_product(self):
         Product.save_product(
             {
-                "name": "Producto",
-                "type": "Tipo",
+                "name": "NombreProducto",
+                "type": "TipoProducto",
                 "price": -8,
             }
         )
@@ -88,11 +88,11 @@ class ProductModelTest(TestCase):
         self.assertEqual(len(products), 0)
 
 
-    def test_create_product_with_no_price(self):
+    def test_create_product_with_no_product(self):
         Product.save_product(
             {
-                "name": "Producto",
-                "type": "Tipo",
+                "name": "NombreProducto",
+                "type": "TipoProducto",
                 "price": 0,
             }
         )

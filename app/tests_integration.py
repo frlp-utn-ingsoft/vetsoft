@@ -99,37 +99,37 @@ class ProductsTest(TestCase):
         response = self.client.post(
             reverse("products_form"),
             data={
-                "name": "Producto",
-                "type": "Tipo",
+                "name": "NombreProducto",
+                "type": "TipoProducto",
                 "price": 8,
             },
         )
         products = Product.objects.all()
         self.assertEqual(len(products), 1)
 
-        self.assertEqual(products[0].name, "Producto")
-        self.assertEqual(products[0].type, "Tipo")
+        self.assertEqual(products[0].name, "NombreProducto")
+        self.assertEqual(products[0].type, "TipoProducto")
         self.assertEqual(products[0].price, 8)
 
         self.assertRedirects(response, reverse("products_repo"))
 
-    def test_create_product_negative_price(self):
+    def test_create_product_negative_product(self):
         response = self.client.post(
             reverse("products_form"),
             data={
-                "name": "Producto",
-                "type": "Tipo",
+                "name": "NombreProducto",
+                "type": "TipoProducto",
                 "price": -8,
             },
         )
         self.assertContains(response, "Por favor ingrese un precio")
 
-    def test_create_product_zero_price(self):
+    def test_create_product_no_product(self):
         response = self.client.post(
             reverse("products_form"),
             data={
-                "name": "Producto",
-                "type": "Tipo",
+                "name": "NombreProducto",
+                "type": "TipoProducto",
                 "price": 0,
             },
         )
