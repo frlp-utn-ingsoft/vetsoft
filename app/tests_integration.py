@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.shortcuts import reverse
-from app.models import Client
+from app.models import Client, Vet, Specialty
 
 
 class HomePageTest(TestCase):
@@ -93,3 +93,88 @@ class ClientsTest(TestCase):
         self.assertEqual(editedClient.phone, client.phone)
         self.assertEqual(editedClient.address, client.address)
         self.assertEqual(editedClient.email, client.email)
+
+class VetTest(TestCase):
+    def test_repo_use_repo_template(self):
+        response = self.client.get(reverse("vets_repo"))
+        self.assertTemplateUsed(response, "vets/repository.html")
+
+    def test_repo_display_all_vets(self):
+        response = self.client.get(reverse("vets_repo"))
+        self.assertTemplateUsed(response, "vets/repository.html")
+
+    def test_form_use_form_template(self):
+        response = self.client.get(reverse("vets_form"))
+        self.assertTemplateUsed(response, "vets/form.html")
+
+    def test_can_create_vet(self):
+        response = self.client.post(
+            reverse("vets_form"),
+            data={
+                "name": "Carlos Chaplin",
+                "phone": "2284563542",
+                "email": "carlix@gmail.com",
+                "specialty": Specialty.GENERAL.value,
+            },
+        )
+
+        vets = Vet.objects.all()
+        self.assertEqual(len(vets), 1)
+        self.assertEqual(vets[0].name, "Carlos Chaplin")
+        self.assertEqual(vets[0].phone, "2284563542")
+        self.assertEqual(vets[0].email, "carlix@gmail.com")
+        self.assertEqual(vets[0].specialty, Specialty.GENERAL.value)
+
+        self.assertRedirects(response, reverse("vets_repo"))
+
+    def test_validation_errors_create_vet(self):
+        response = self.client.post(
+            reverse("vets_form"),
+            data={},
+        )
+
+        self.assertContains(response, "Por favor ingrese un nombre")
+        self.assertContains(response, "Por favor ingrese un teléfono")
+        self.assertContains(response, "Por favor ingrese un email")
+        self.assertContains(response, "Por favor ingrese una especialidad")
+
+    def test_validation_invalid_email(self):
+        response = self.client.post(
+            reverse("vets_form"),
+            data={
+                "name": "Carlos Chaplin",
+                "phone": "2284563542",
+                "email": "carlix",
+                "specialty": Specialty.GENERAL.value,
+            },
+        )
+
+        self.assertContains(response, "Por favor ingrese un email valido")
+    
+    def test_edit_vet_with_valid_data(self):
+        vet = Vet.objects.create(
+            name="Carlos Chaplin",
+            phone="2284563542",
+            email="carlix@gmail.com",
+            specialty=Specialty.GENERAL.value,
+        )
+
+        response = self.client.post(
+            reverse("vets_form"),
+            data={
+                "id": vet.id,
+                "name": "Diogenes Sinope",
+                "specialty": Specialty.SURGERY.value,
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        editedVet = Vet.objects.get(pk=vet.id)
+        self.assertEqual(editedVet.name, "Diogenes Sinope")
+        self.assertEqual(editedVet.phone, vet.phone)
+        self.assertEqual(editedVet.email, vet.email)
+        self.assertEqual(editedVet.specialty, Specialty.SURGERY.value)
+
+    def test_404_if_vet_doesnt_exists(self):
+        response = self.client.get(reverse("vets_edit", kwargs={"id": 100}))
+        self.assertEqual(response.status_code, 404)
