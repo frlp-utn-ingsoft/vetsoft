@@ -114,7 +114,7 @@ jobs:
         run: |
           npx playwright install
       - name: Run E2E tests
-        run: python manage.py test functional_tests
+        run: npx playwright test
       - name: Stop Django development server
         run: kill $(cat django_pid.txt)
 
