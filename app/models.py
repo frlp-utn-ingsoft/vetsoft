@@ -166,6 +166,7 @@ class Pet(models.Model):
     name=models.CharField(max_length=100)
     breed=models.CharField(max_length=100)
     birthday=models.DateField(verbose_name="Fecha de Cumpleaños")
+    weight=models.FloatField()
     client = models.ForeignKey(Client,on_delete=models.CASCADE, null=True)
     medicines = models.ManyToManyField(Medicine)
 
