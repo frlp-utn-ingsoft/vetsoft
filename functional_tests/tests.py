@@ -5,7 +5,7 @@ from playwright.sync_api import sync_playwright, expect, Browser
 
 from django.urls import reverse
 
-from app.models import Client
+from app.models import Client, Vet, Specialty
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 playwright = sync_playwright().start()
@@ -241,4 +241,179 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         edit_action = self.page.get_by_role("link", name="Editar")
         expect(edit_action).to_have_attribute(
             "href", reverse("clients_edit", kwargs={"id": client.id})
+        )
+
+class VetsRepoTestCase(PlaywrightTestCase):
+    
+    def test_should_show_message_if_table_is_empty(self):
+        self.page.goto(f"{self.live_server_url}{reverse('vets_repo')}")
+
+        expect(self.page.get_by_text("No existen veterinarios")).to_be_visible()
+    
+    def test_should_show_vets_data(self):
+        Vet.objects.create(
+            name="Carlos Chaplin",
+            phone="2284563542",
+            email="carlix@gmail.com",
+            specialty=Specialty.GENERAL.value,
+        )
+
+        Vet.objects.create(
+            name="Diogenes Sinope",
+            phone="221232555",
+            email="diogeneselperro@gmail.com",
+            specialty=Specialty.SURGERY.value,
+        )
+
+        self.page.goto(f"{self.live_server_url}{reverse('vets_repo')}")
+
+        expect(self.page.get_by_text("No existen veterinarios")).not_to_be_visible()
+
+        expect(self.page.get_by_text("Carlos Chaplin")).to_be_visible()
+        expect(self.page.get_by_text("2284563542")).to_be_visible()
+        expect(self.page.get_by_text("carlix@gmail.com")).to_be_visible()
+        expect(self.page.get_by_text("General")).to_be_visible()
+
+        expect(self.page.get_by_text("Diogenes Sinope")).to_be_visible()
+        expect(self.page.get_by_text("221232555")).to_be_visible()
+        expect(self.page.get_by_text("diogeneselperro@gmail.com")).to_be_visible()
+        expect(self.page.get_by_text("Cirugía")).to_be_visible()
+
+    def test_should_show_add_vet_action(self):
+        self.page.goto(f"{self.live_server_url}{reverse('vets_repo')}")
+
+        add_vet_action = self.page.get_by_role(
+            "link", name="Nuevo veterinario", exact=False
+        )
+        expect(add_vet_action).to_have_attribute("href", reverse("vets_form"))
+    
+    def test_should_show_vet_edit_action(self):
+        vet = Vet.objects.create(
+            name="Carlos Chaplin",
+            phone="2284563542",
+            email="carlix@gmail.com",
+            specialty=Specialty.GENERAL.value,
+        )
+
+        self.page.goto(f"{self.live_server_url}{reverse('vets_repo')}")
+
+        edit_action = self.page.get_by_role("link", name="Editar")
+        expect(edit_action).to_have_attribute(
+            "href", reverse("vets_edit", kwargs={"id": vet.id})
+        )
+
+    def test_should_show_vet_delete_action(self):
+        vet = Vet.objects.create(
+            name="Carlos Chaplin",
+            phone="2284563542",
+            email="carlix@gmail.com",
+            specialty=Specialty.GENERAL.value,
+        )
+
+        self.page.goto(f"{self.live_server_url}{reverse('vets_repo')}")
+        edit_form = self.page.get_by_role(
+            "form", name="Formulario de eliminación de veterinario"
+        )
+        vet_id_input = edit_form.locator("input[name=vet_id]")
+        expect(edit_form).to_be_visible()
+        expect(edit_form).to_have_attribute("action", reverse("vets_delete"))
+        expect(vet_id_input).not_to_be_visible()
+        expect(vet_id_input).to_have_value(str(vet.id))
+        expect(edit_form.get_by_role("button", name="Eliminar")).to_be_visible()
+
+    def test_should_can_be_able_to_delete_a_vet(self):
+        Vet.objects.create(
+            name="Carlos Chaplin",
+            phone="2284563542",
+            email="carlix@gmail.com",
+            specialty=Specialty.GENERAL.value,
+        )
+
+        self.page.goto(f"{self.live_server_url}{reverse('vets_repo')}")
+        expect(self.page.get_by_text("Carlos Chaplin")).to_be_visible()
+
+        def is_delete_response(response):
+            return response.url.find(reverse("vets_delete"))
+        
+        with self.page.expect_response(is_delete_response) as response_info:
+            self.page.get_by_role("button", name="Eliminar").click()
+
+        response = response_info.value
+        self.assertTrue(response.status < 400)
+
+        expect(self.page.get_by_text("Carlos Chaplin")).not_to_be_visible()
+
+class VetCreateEditTestCase(PlaywrightTestCase):
+    def test_should_be_able_to_create_a_new_vet(self):
+        self.page.goto(f"{self.live_server_url}{reverse('vets_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Carlos Chaplin")
+        self.page.get_by_label("Teléfono").fill("2284563542")
+        self.page.get_by_label("Email").fill("carlix@gmail.com")
+        self.page.get_by_label("Especialidad").select_option("General")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Carlos Chaplin")).to_be_visible()
+        expect(self.page.get_by_text("2284563542")).to_be_visible()
+        expect(self.page.get_by_text("carlix@gmail.com")).to_be_visible()
+        expect(self.page.get_by_text("General")).to_be_visible()
+
+    def test_should_view_errors_if_form_is_invalid(self):
+        self.page.goto(f"{self.live_server_url}{reverse('vets_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un teléfono")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un email")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una especialidad")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Carlos Chaplin")
+        self.page.get_by_label("Teléfono").fill("2284563542")
+        self.page.get_by_label("Email").fill("carlix")
+        self.page.get_by_label("Especialidad").select_option("General")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un teléfono")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un email valido")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una especialidad")).not_to_be_visible()
+
+    def test_should_be_able_to_edit_a_vet(self):
+        vet = Vet.objects.create(
+            name="Carlos Chaplin",
+            phone="2284563542",
+            email="carlix@gmail.com",
+            specialty=Specialty.GENERAL.value,
+        )
+
+        path = reverse("vets_edit", kwargs={"id": vet.id})
+        self.page.goto(f"{self.live_server_url}{path}")
+
+        self.page.get_by_label("Nombre").fill("Diogenes Sinope")
+        self.page.get_by_label("Teléfono").fill("221232555")
+        self.page.get_by_label("Email").fill("diogeneselperro@gmail.com")
+        self.page.get_by_label("Especialidad").select_option("Cirugía")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Carlos Chaplin")).not_to_be_visible()
+        expect(self.page.get_by_text("2284563542")).not_to_be_visible()
+        expect(self.page.get_by_text("carlix@gmail.com")).not_to_be_visible()
+        expect(self.page.get_by_text("General")).not_to_be_visible()
+
+        expect(self.page.get_by_text("Diogenes Sinope")).to_be_visible()
+        expect(self.page.get_by_text("221232555")).to_be_visible()
+        expect(self.page.get_by_text("diogeneselperro@gmail.com")).to_be_visible()
+        expect(self.page.get_by_text("Cirugía")).to_be_visible()
+
+        edit_action = self.page.get_by_role("link", name="Editar")
+        expect(edit_action).to_have_attribute(
+            "href", reverse("vets_edit", kwargs={"id": vet.id})
         )
