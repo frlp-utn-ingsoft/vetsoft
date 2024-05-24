@@ -107,14 +107,14 @@ jobs:
         run: |
           python manage.py runserver 0.0.0.0:8000 &
           echo $! > django_pid.txt
-      - name: Check if Playwright is installed
-        run: |
-          if ! command -v playwright; then npm install -D playwright; fi
+      # - name: Check if Playwright is installed
+      #   run: |
+      #     if ! command -v playwright; then npm install -D playwright; fi
       - name: Install Playwright browsers
         run: |
-          npx playwright install
+          playwright install
       - name: Run E2E tests
-        run: npx playwright test
+        run: python manage.py test functional_tests
       - name: Stop Django development server
         run: kill $(cat django_pid.txt)
 
