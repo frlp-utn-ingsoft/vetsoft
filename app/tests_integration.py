@@ -1,6 +1,7 @@
+from datetime import date
 from django.test import TestCase
 from django.shortcuts import reverse
-from app.models import Client
+from app.models import Client, Pet
 
 
 class HomePageTest(TestCase):
@@ -93,3 +94,38 @@ class ClientsTest(TestCase):
         self.assertEqual(editedClient.phone, client.phone)
         self.assertEqual(editedClient.address, client.address)
         self.assertEqual(editedClient.email, client.email)
+        
+class PetsTest(TestCase):
+    def test_can_create_pet(self):
+
+        Client.save_client(
+            {
+                "name": "Juan Sebastian Veron",
+                "phone": "221555232",
+                "address": "13 y 44",
+                "email": "brujita75@hotmail.com",
+            }
+        )
+
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": "Loki",
+                "breed": "Border Collie",
+                "birthday": date(2024,5,5),
+                "weight": 10,
+                "client":1
+            },
+        )
+
+        pets = Pet.objects.all()
+        self.assertEqual(len(pets), 1)
+
+        self.assertEqual(pets[0].name, "Loki")
+        self.assertEqual(pets[0].breed, "Border Collie")
+        self.assertEqual(pets[0].birthday, date(2024,5,5))
+        self.assertEqual(pets[0].weight, 10)
+        self.assertEqual(pets[0].client, Client.objects.get(pk=1))
+
+        self.assertRedirects(response, reverse("pets_repo"))
+    
