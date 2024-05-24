@@ -250,17 +250,22 @@ def validate_medicine(data):
 
     if dose == "":
         errors["dose"] = "Por favor ingrese una dosis"
-    try:
-        float_dose = float(dose)
-        if float_dose <= 0:
-            errors["dose"] = "Por favor ingrese una dosis mayor que 0"
-        integer_part, decimal_part = str(float_dose).split(".")
-        if len(decimal_part) > 2:
-            errors["dose"] = "Por favor ingrese una dosis con maximo 2 decimales"
-    except ValueError:
-        errors["dose"] = "Por favor ingrese una dosis valida"
+    else:
+        try:
+            float_dose = float(dose)
+            if float_dose <= 0:
+                errors["dose"] = "Por favor ingrese una dosis mayor que 0"
+            elif float_dose < 1 or float_dose > 10:
+                errors["dose"] = "Por favor ingrese una dosis entre 1 y 10"
+            else:
+                integer_part, decimal_part = str(float_dose).split(".")
+                if len(decimal_part) > 2:
+                    errors["dose"] = "Por favor ingrese una dosis con maximo 2 decimales"
+        except ValueError:
+            errors["dose"] = "Por favor ingrese una dosis valida"
 
     return errors
+
 
 class Medicine(models.Model):
     name = models.CharField(max_length=100)
