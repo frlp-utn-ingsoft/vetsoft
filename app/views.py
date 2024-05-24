@@ -2,7 +2,7 @@ from datetime import date
 from pyexpat.errors import messages
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import messages
-from .models import Client, Product, Provider
+from .models import Client, Product, Provider, Specialty
 from .models import Pet
 from .models import Medicine
 from .models import Vet
@@ -90,13 +90,16 @@ def clients_delete(request):
 
 def vets_repository(request):
     vets = Vet.objects.all()
+    
     return render(request, "vets/repository.html", {"vets": vets})
 
 def vets_form(request, id=None):
+    specialties = Specialty.choices()
     if request.method == "POST":
         vet_id = request.POST.get("id", "")
         errors = {}
         saved = True
+        
 
         if vet_id == "":
             saved, errors = Vet.save_vet(request.POST)
@@ -108,14 +111,14 @@ def vets_form(request, id=None):
             return redirect(reverse("vets_repo"))
 
         return render(
-            request, "vets/form.html", {"errors": errors, "vet": request.POST}
+            request, "vets/form.html", {"errors": errors, "vet": request.POST, "specialties": specialties}
         )
 
     vet = None
     if id is not None:
         vet = get_object_or_404(Vet, pk=id)
 
-    return render(request, "vets/form.html", {"vet": vet})
+    return render(request, "vets/form.html", {"vet": vet, "specialties": specialties})
 
 
 def vets_delete(request):
@@ -332,6 +335,7 @@ def delete_selected_vets(request):
         pet = get_object_or_404(Pet, pk=pet_id)
         pet.medicines.remove(*medicine_ids)
     return redirect('pets_repo')
+
 def pets_add_vet(request, id=None):
     pet = get_object_or_404(Pet, pk=id)
     vets = Vet.objects.all() 
