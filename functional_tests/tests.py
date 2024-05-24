@@ -242,3 +242,34 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         expect(edit_action).to_have_attribute(
             "href", reverse("clients_edit", kwargs={"id": client.id})
         )
+
+
+class PetCreateEditTestCaseWeight(PlaywrightTestCase):
+    def test_should_view_errors_if_form_is_invalid(self):
+        self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un raza")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un fecha de nacimiento")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un peso")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Manolo")
+        self.page.get_by_label("Raza").fill("golden")
+
+        future_date = (datetime.today().year + 1, 5, 22)
+        date_str = datetime(*future_date).strftime('%Y-%m-%d')
+        self.page.get_by_label("Fecha de nacimiento").fill(date_str)
+
+        self.page.get_by_label("Peso").fill("-30")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un raza")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un fecha de nacimiento")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un peso")).not_to_be_visible()
+        expect(self.page.get_by_text("El peso de la mascota no puede ser negativo")).to_be_visible()
