@@ -281,12 +281,12 @@ class Pet (models.Model):
         self.save()
 
 class Speciality(Enum):
-    Oftalmologia = "Oftalmología"
+    Oftalmologia = "Oftalmologia"
     Quimioterapia = "Quimioterapia"
-    Radiologia = "Radiología"
-    Ecocardiografias = "Ecocardiografías"
-    Traumatologia = "Traumatología"
-    Ecografias = "Ecografías"
+    Radiologia = "Radiologia"
+    Ecocardiografias = "Ecocardiografias"
+    Traumatologia = "Traumatologia"
+    Ecografias = "Ecografias"
     Urgencias = "Urgencias"
     
     @classmethod
