@@ -184,6 +184,7 @@ class Pet(models.Model):
             name = pet_data.get("name"),
             breed= pet_data.get("breed"),
             birthday = pet_data.get("birthday"),
+            weight = pet_data.get("weight"),
             client = client2
         )
 
