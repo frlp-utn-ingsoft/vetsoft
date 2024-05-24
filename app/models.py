@@ -55,6 +55,7 @@ def validate_pet(data):
     cliente = data.get("client", "")
     breed = data.get("breed", "")
     birthday = data.get("birthday","")
+    weight = data.get("weight","")
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
@@ -66,6 +67,17 @@ def validate_pet(data):
         errors["breed"] = "Por favor ingrese una raza"
     if birthday == "":
         errors["birthday"] = "Por favor ingrese la fecha de cumpleaños"
+    if weight == "":
+        errors["weight"] = "Por favor ingrese un peso"
+    try:
+        float_weight = float(weight)
+        if float_weight<=0:
+            errors["weight"] = "Por favor ingrese un peso mayor que 0"
+        decimal_part = str(float_weight).split(".")
+        if len(decimal_part)>2:
+            errors["weight"] = "Por favor ingrese un peso con maximo 2 decimales"
+    except ValueError:
+        errors["weight"] = "Por favor ingrese un peso valido"
     return errors
                 
 
