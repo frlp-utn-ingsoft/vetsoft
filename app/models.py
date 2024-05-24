@@ -164,7 +164,7 @@ class Product(models.Model):
 class Provider(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
-    address = models.CharField(max_length=100)
+    address = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return self.name
