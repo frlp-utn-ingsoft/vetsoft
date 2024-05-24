@@ -128,4 +128,16 @@ class PetsTest(TestCase):
         self.assertEqual(pets[0].client, Client.objects.get(pk=1))
 
         self.assertRedirects(response, reverse("pets_repo"))
+
+    def test_validation_errors_create_pet(self):
+        response = self.client.post(
+            reverse("pets_form"),
+            data={},
+        )
+
+        self.assertContains(response, "Por favor ingrese un nombre")
+        self.assertContains(response, "Por favor ingrese una raza")
+        self.assertContains(response, "Por favor ingrese la fecha de cumpleaños")
+        self.assertContains(response, "Por favor ingrese un peso")
+
     
