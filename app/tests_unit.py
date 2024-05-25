@@ -1,5 +1,5 @@
 from django.test import TestCase
-from app.models import Client, Pet, validate_pet, Vet, Speciality
+from app.models import Client, Pet, validate_pet, Vet, Speciality, Provider, validate_provider
 import datetime
 
 
@@ -231,3 +231,96 @@ class VetModelTest(TestCase):
 
     def is_valid_speciality(self, speciality):
         return speciality in [choice.value for choice in Speciality]
+
+class ProviderModelTest(TestCase):
+    # TESTS para el alta de proveedores
+    def test_can_create_and_get_provider(self):
+        Provider.save_provider(
+            {
+                "name":"Demian",
+                "email":"demian@utn.com",
+                "address":"Calle falsa 123"
+            }
+        )
+
+        providers = Provider.objects.all()
+        self.assertEqual(len(providers), 1)
+
+    def test_validate_empty_address_when_create_provider(self):
+        provider_data = {
+                "name":"Demian",
+                "email":"demian@utn.com",
+                "address":""
+            }
+
+        result = validate_provider(provider_data)
+
+        self.assertIn("Por favor ingrese una dirección", result.values())
+
+    def test_validate_provider_with_everything_ok(self):
+        provider_data = {
+            "name":"Demian",
+            "email":"demian@utn.com",
+            "address":"Calle falsa 123"
+        }
+
+        result = validate_provider(provider_data)
+
+        self.assertDictEqual(result, {})
+
+    def test_validate_empty_data(self):
+        provider_data = {
+            "name":"",
+            "email":"",
+            "address":""
+        }
+
+        result = validate_provider(provider_data)
+        self.assertIn("Por favor ingrese un nombre", result.values())
+        self.assertIn("Por favor ingrese un email", result.values())
+        self.assertIn("Por favor ingrese una dirección", result.values())
+
+    # TESTS para modificar proveedores
+    def test_can_update_provider(self):
+        Provider.save_provider(
+            {
+                "name":"Demian",
+                "email":"demian@utn.com",
+                "address":"Calle falsa 123"
+            }
+        )
+        
+        provider = Provider.objects.get(pk=1)
+
+        self.assertEqual(provider.name, "Demian")
+
+        provider.update_provider({
+            "name":provider.name,
+            "email":provider.email,
+            "address":"Avenida Siempreviva 742"
+        })
+
+        updated_provider = Provider.objects.get(pk=1)
+
+        self.assertEqual(updated_provider.address, "Avenida Siempreviva 742")
+
+    def test_cant_update_with_empty_address(self):
+        Provider.save_provider(
+            {
+                "name":"Demian",
+                "email":"demian@utn.com",
+                "address":"Calle falsa 123"
+            }
+        )
+
+        provider = Provider.objects.get(pk=1)
+
+        provider.update_provider({
+            "name":provider.name,
+            "email":provider.email,
+            "address":""
+        })
+
+        updated_provider = Provider.objects.get(pk=1)
+
+        self.assertEqual(updated_provider.address, "Calle falsa 123")
