@@ -49,6 +49,10 @@ def validate_medicine(data):
     name = data.get("name", "")
     description = data.get("description", "")
     dose = data.get("dose")
+    try:
+        num = int(dose)
+    except ValueError:
+        num = None
 
     if name == "":
         errors["name"] = "Por favor, ingrese un nombre de la medicina"
@@ -56,10 +60,12 @@ def validate_medicine(data):
     if description == "":
         errors["description"] = "Por favor, ingrese una descripcion de la medicina"
     
-    if dose is None:
+    if dose == "":
         errors["dose"] = "Por favor, ingrese una cantidad de la dosis de la medicina"
     elif not (isinstance(dose, str) and dose.isdigit()):
         errors["dose"] = "La dosis debe ser un numero entero"
+    elif not (num > 0 and num < 11):
+        errors["dose"] = "La dosis debe estar entre 1 y 10"
     
     return errors
     
