@@ -1,5 +1,6 @@
 from django.db import models
-
+from enum import Enum
+import datetime
 
 def validate_client(data):
     errors = {}
@@ -27,6 +28,7 @@ def validate_provider(data):
     
     name = data.get("name", "")
     email = data.get("email", "")
+    address = data.get("address", "")
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
@@ -35,6 +37,9 @@ def validate_provider(data):
         errors["email"] = "Por favor ingrese un email"
     elif email.count("@") == 0:
         errors["email"] = "Por favor ingrese un email valido"
+
+    if address == "":
+        errors["address"] = "Por favor ingrese una dirección"
 
     return errors
 
@@ -97,8 +102,10 @@ def validate_pet(data):
     if breed == "":
         errors["breed"] = "Por favor ingrese una raza"
 
-    if birthday == "":
-        errors["birthday"] = "Por favor ingrese una fecha de nacimiento"
+    date_now = datetime.date.today().strftime("%Y-%m-%d")
+
+    if birthday == "" or birthday >= date_now: 
+        errors["birthday"] = "Por favor ingrese una fecha de nacimiento valida y anterior a la de hoy"
 
     return errors
 
@@ -108,10 +115,11 @@ def validate_vet(data):
     name = data.get("name", "")
     email = data.get("email", "")
     phone = data.get("phone", "")
+    speciality = data.get("speciality", "")
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
-        
+
     if email == "":
         errors["email"] = "Por favor ingrese un email"
     elif email.count("@") == 0:
@@ -119,6 +127,9 @@ def validate_vet(data):
 
     if phone == "":
         errors["phone"] = "Por favor ingrese un teléfono"
+
+    if speciality == "":
+        errors["speciality"] = "Por favor seleccione una especialidad"
 
     return errors
 
@@ -165,6 +176,7 @@ class Client(models.Model):
 class Provider (models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
+    address = models.CharField(max_length=200)
 
     def __str__(self):
             return self.name
@@ -179,6 +191,7 @@ class Provider (models.Model):
         Provider.objects.create(
             name=provider_data.get("name"),
             email=provider_data.get("email"),
+            address=provider_data.get("address")
         )
 
         return True, None
@@ -191,6 +204,7 @@ class Provider (models.Model):
         
         self.name = provider_data.get("name", "") or self.name
         self.email = provider_data.get("email", "") or self.email
+        self.address = provider_data.get("address", "") or self.address
 
         self.save()
         return True, None
@@ -278,16 +292,36 @@ class Pet (models.Model):
         return True, None
     
     def update_pet(self, pet_data):
+        errors = validate_pet(pet_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
         self.name=pet_data.get("name", "") or self.name
         self.breed=pet_data.get("breed", "") or self.breed
         self.birthday=pet_data.get("birthday","") or self.birthday
 
         self.save()
+        return True, None
+
+class Speciality(Enum):
+    Oftalmologia = "Oftalmologia"
+    Quimioterapia = "Quimioterapia"
+    Radiologia = "Radiologia"
+    Ecocardiografias = "Ecocardiografias"
+    Traumatologia = "Traumatologia"
+    Ecografias = "Ecografias"
+    Urgencias = "Urgencias"
+    
+    @classmethod
+    def choices(cls):
+        return [(key.name, key.value) for key in cls]
 
 class Vet(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
     phone = models.CharField(max_length=15)
+    speciality = models.CharField(max_length=100, choices=Speciality.choices(), default=Speciality.Urgencias)
 
     def __str__(self):
         return self.name
@@ -303,6 +337,7 @@ class Vet(models.Model):
             name=vet_data.get("name"),
             email=vet_data.get("email"),
             phone=vet_data.get("phone"),
+            speciality=vet_data.get("speciality", Speciality.Urgencias),
         )
 
         return True, None
@@ -316,5 +351,7 @@ class Vet(models.Model):
         self.name = vet_data.get("name", "") or self.name
         self.email = vet_data.get("email", "") or self.email
         self.phone = vet_data.get("phone", "") or self.phone
+        self.speciality = vet_data.get("speciality", "") or self.speciality
         self.save()
         return True, None
+    
