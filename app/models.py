@@ -74,11 +74,13 @@ def validate_medicine(data):
 
     if description == "":
         errors["description"] = "Por favor ingrese una descripción"
+    if dose == "":
+        errors["dose"] = "Por favor ingrese una dosis"
     else:
         try:
             int_dose = int(dose)
-            if int_dose <= 0:
-                errors["dose"] = "La dosis debe ser mayor que cero"
+            if int_dose < 1 or int_dose > 10:
+                errors["dose"] = "La dosis debe estar en un rango de 1 a 10"
         except ValueError:
             errors["dose"] = "La dosis debe ser un número entero válido"
     return errors
@@ -120,6 +122,7 @@ def validate_pet(data):
     name = data.get("name", "")
     breed = data.get("breed", "")
     birthday = data.get("birthday", "")
+    weight = data.get("weight", None)
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
@@ -137,6 +140,16 @@ def validate_pet(data):
         except ValueError:
             errors["birthday"] = "Formato de fecha inválido. Por favor ingrese la fecha en el formato correcto (YYYY-MM-DD)"
 
+
+    if weight == "": 
+        errors["weight"] = "Por favor ingrese un peso"
+    else:
+        try:
+                decimal_weight = float(weight)
+                if decimal_weight <= 0:
+                    errors["weight"] = "El peso debe ser un número mayor a cero"
+        except ValueError:
+            errors["weight"] = "El peso debe ser un número válido"
     return errors
     
     
@@ -144,6 +157,7 @@ class Pet(models.Model):
     name = models.CharField(max_length=100)
     breed = models.CharField(max_length=50)
     birthday = models.DateField()
+    weight = models.DecimalField(max_digits=8, decimal_places=3)  
     client = models.ForeignKey("Client", on_delete=models.CASCADE, null=True, blank=True)
     medicines = models.ManyToManyField(Medicine)
     vets = models.ManyToManyField("Vet", blank=True)
@@ -162,6 +176,7 @@ class Pet(models.Model):
             name=pet_data.get("name"),
             breed=pet_data.get("breed"),
             birthday=pet_data.get("birthday"),
+             weight=pet_data.get("weight"),
         )
 
         return True, None
@@ -170,7 +185,7 @@ class Pet(models.Model):
         self.name = pet_data.get("name", "") or self.name
         self.breed = pet_data.get("breed", "") or self.breed
         self.birthday = pet_data.get("birthday", "") or self.birthday
-
+        self.weight = pet_data.get("weight", "") or self.weight
         self.save()
 
 ##---------products----------   
@@ -189,8 +204,6 @@ def validate_product(data):
 
     if price == "": 
         errors["price"] = "Por favor ingrese un precio"
-    elif not price.isdigit():
-        errors["price"] = "El precio debe ser un número válido"
     else:
         try:
             float_price = float(price)
