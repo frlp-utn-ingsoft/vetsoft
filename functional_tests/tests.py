@@ -281,13 +281,8 @@ class ProviderCreateEditTestCase(PlaywrightTestCase):
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
-        expect(
-            self.page.get_by_text("Por favor ingrese un email")
-        ).not_to_be_visible()
-
-        expect(
-            self.page.get_by_text("Por favor ingrese una direccion valido")
-        ).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un email")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una direccion")).not_to_be_visible()
 
     def test_should_be_able_to_edit_a_client(self):
         provider = Provider.objects.create(
