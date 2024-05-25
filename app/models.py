@@ -266,13 +266,8 @@ class Pet(models.Model):
     def update_pet(self, pet_data):
         self.name = pet_data.get("name", "") or self.name
         self.breed = pet_data.get("breed", "") or self.breed
-        new_birthday = pet_data.get("birthday", "") or self.birthday
-        if new_birthday and isinstance(new_birthday, str):
-            birthday_date = datetime.strptime(new_birthday, "%Y-%m-%d").date()
-            if birthday_date > date.today():
-                raise ValueError("La fecha de nacimiento no puede ser posterior al día actual.")
-        self.birthday = new_birthday
-        
+        self.birthday = pet_data.get("birthday", "") or self.birthday
+
         self.save()
 
 class Med(models.Model):

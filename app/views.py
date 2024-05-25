@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from .models import Client, Product , Med, Provider, Veterinary, Pet
-
+from datetime import datetime, date
 def home(request):
     return render(request, "home.html")
 
@@ -54,9 +54,27 @@ def pets_form(request, id=None):
         pet_id = request.POST.get("id", "")
         errors = {}
         saved = True
+        birthday = request.POST.get("birthday")
+
+        if not birthday:
+            errors["birthday"] = "El campo de Nacimiento no puede estar vacio."
+            return render(
+                request, "pets/form.html", {"errors": errors, "product": request.POST}
+            )
+
+        try:
+            birthday_format = datetime.strptime(birthday, "%Y-%m-%d").date()
+        except ValueError as e:
+            errors["birthday"] = "Formato de fecha invalido. Utilice el formato YYYY-MM-DD"
+            return render(
+                request, "pets/form.html", {"errors": errors, "product": request.POST}
+            )
 
         if pet_id == "":
             saved, errors = Pet.save_pet(request.POST)
+        elif (birthday_format > date.today()):
+            saved = False
+            errors["birthday"] = "La fecha de nacimiento no puede ser posterior al día actual."
         else:
             pet = get_object_or_404(Pet, pk=pet_id)
             pet.update_pet(request.POST)
