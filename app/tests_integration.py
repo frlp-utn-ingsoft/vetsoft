@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.shortcuts import reverse
 from app.models import Client
+from app.models import Pet
 
 
 class HomePageTest(TestCase):
@@ -93,3 +94,90 @@ class ClientsTest(TestCase):
         self.assertEqual(editedClient.phone, client.phone)
         self.assertEqual(editedClient.address, client.address)
         self.assertEqual(editedClient.email, client.email)
+
+
+class PetsTest(TestCase):
+    def test_repo_use_repo_template(self):
+        response = self.client.get(reverse("pets_repo"))
+        self.assertTemplateUsed(response, "pets/repository.html")
+
+    def test_repo_display_all_pets(self):
+        response = self.client.get(reverse("pets_repo"))
+        self.assertTemplateUsed(response, "pets/repository.html")
+
+    def test_form_use_form_template(self):
+        response = self.client.get(reverse("pets_form"))
+        self.assertTemplateUsed(response, "pets/form.html")
+
+    def test_can_create_pet(self):
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": "Paco",
+                "breed": "Caniche",
+                "birthday": "2015-05-20"
+            },
+        )
+        pets = Pet.objects.all()
+        self.assertEqual(len(pets), 1)
+
+        self.assertEqual(pets[0].name, "Paco")
+        self.assertEqual(pets[0].breed, "Caniche")
+        self.assertEqual(str(pets[0].birthday), "2015-05-20")
+
+        self.assertRedirects(response, reverse("pets_repo"))
+
+    def test_validation_errors_create_pet(self):
+        response = self.client.post(
+            reverse("pets_form"),
+            data={},
+        )
+
+        self.assertContains(response, "Por favor ingrese un nombre")
+        self.assertContains(response, "Por favor ingrese una raza")
+        self.assertContains(response, "Por favor ingrese una fecha de nacimiento")
+
+    def test_should_response_with_404_status_if_pet_doesnt_exists(self):
+        response = self.client.get(reverse("pets_edit", kwargs={"id": 100}))
+        self.assertEqual(response.status_code, 404)
+
+    def test_validation_invalid_birthday(self):
+        response = self.client.post(
+        reverse("pets_form"),
+        data={
+            "name": "Paco",
+            "breed": "Caniche",
+            "birthday": "2028-05-20",
+        },
+    )
+
+
+        print(response.content.decode())
+
+
+        self.assertContains(response, "La fecha de nacimiento no puede ser posterior al día actual.")
+
+    def test_edit_user_with_valid_data(self):
+        pet = Pet.objects.create(
+            name="Paco",
+            breed="Caniche",
+            birthday="2015-05-20",
+        )
+
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "id": pet.id,
+                "name": "Maguile",
+                "breed": "Caniche",
+                "birthday": "2015-05-20",
+            },
+        )
+
+
+        self.assertEqual(response.status_code, 302)
+
+        editedPet = Pet.objects.get(pk=pet.id)
+        self.assertEqual(editedPet.name, "Maguile")
+        self.assertEqual(editedPet.breed, pet.breed)
+        self.assertEqual(str(editedPet.birthday), "2015-05-20")
