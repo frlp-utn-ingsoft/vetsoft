@@ -1,6 +1,5 @@
 from django.db import models
 
-
 def validate_client(data):
     errors = {}
 
@@ -74,6 +73,7 @@ def validate_veterinary(data):
         errors["email"] = "Por favor ingrese un email valido"
 
     return errors
+
 def validate_med(data):
     errors = {}
 
@@ -306,6 +306,6 @@ class Med(models.Model):
         self.name = med_data.get("name","") or self.name
         self.desc = med_data.get("desc","") or self.desc
         self.dose = med_data.get("dose","") or self.dose
-        
+
         self.save()
         return True, None

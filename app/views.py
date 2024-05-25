@@ -203,9 +203,6 @@ def meds_repository(request):
     meds = Med.objects.all()
     return render(request, "meds/repository.html", {"meds": meds})
 
-from django.shortcuts import render, redirect, reverse, get_object_or_404
-from .models import Client, Product, Med, Provider, Veterinary, Pet
-
 def meds_form(request, id=None):
     if request.method == "POST":
         med_id = request.POST.get("id", "")
