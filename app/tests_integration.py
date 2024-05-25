@@ -97,19 +97,19 @@ class ClientsTest(TestCase):
 
 class MedicinesTest(TestCase):
     def test_repo_use_repo_template(self):
-        response = self.medicines.get(reverse("meds_repo"))
+        response = self.clients.get(reverse("meds_repo"))
         self.assertTemplateUsed(response, "meds/repository.html")
 
     def test_repo_display_all_medicines(self):
-        response = self.medicines.get(reverse("meds_repo"))
+        response = self.clients.get(reverse("meds_repo"))
         self.assertTemplateUsed(response, "meds/repository.html")
 
     def test_form_use_form_template(self):
-        response = self.medicines.get(reverse("meds_form"))
+        response = self.clients.get(reverse("meds_form"))
         self.assertTemplateUsed(response, "meds/form.html")
 
     def test_can_create_medicine(self):
-        response = self.medicine.post(
+        response = self.client.post(
             reverse("meds_form"),
             data={
                 "name": "Paracetamoldog",
@@ -127,7 +127,7 @@ class MedicinesTest(TestCase):
         self.assertRedirects(response, reverse("meds_repo"))
 
     def test_validation_errors_create_medicine(self):
-        response = self.medicine.post(
+        response = self.client.post(
             reverse("meds_form"),
             data={},
         )
@@ -137,11 +137,11 @@ class MedicinesTest(TestCase):
         self.assertContains(response, "Por favor ingrese una dosis")
 
     def test_should_response_with_404_status_if_medicine_doesnt_exists(self):
-        response = self.medicine.get(reverse("meds_edit", kwargs={"id": 100}))
+        response = self.client.get(reverse("meds_edit", kwargs={"id": 100}))
         self.assertEqual(response.status_code, 404)
 
     def test_validation_invalid_dosis(self):
-        response = self.medicine.post(
+        response = self.client.post(
             reverse("meds_form"),
             data={
                 "name": "Paracetamoldog",
@@ -159,7 +159,7 @@ class MedicinesTest(TestCase):
             dose="8",
         )
 
-        response = self.medicine.post(
+        response = self.client.post(
             reverse("meds_form"),
             data={
                 "id": medicine.id,
