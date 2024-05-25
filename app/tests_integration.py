@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.shortcuts import reverse
-from app.models import Client
+from app.models import Client, Product
 
 
 class HomePageTest(TestCase):
@@ -93,3 +93,93 @@ class ClientsTest(TestCase):
         self.assertEqual(editedClient.phone, client.phone)
         self.assertEqual(editedClient.address, client.address)
         self.assertEqual(editedClient.email, client.email)
+
+class ProductsTest(TestCase):
+    def test_can_create_product(self):
+        response = self.client.post(
+            reverse("products_form"),
+            data={
+                "name": "Lavandina",
+                "type": "Limpieza",
+                "price": "100",
+                "stock": "50",
+            },
+        )
+        products = Product.objects.all()
+        self.assertEqual(len(products), 1)
+
+        self.assertEqual(products[0].name, "Lavandina")
+        self.assertEqual(products[0].type, "Limpieza")
+        self.assertEqual(products[0].price, 100)
+        self.assertEqual(products[0].stock, 50)
+
+        self.assertRedirects(response, reverse("products_repo"))
+    
+    def test_can_update_stock_product(self):
+        product = Product.objects.create(
+            name= "Lavandina",
+            type= "Limpieza",
+            price= 100,
+            stock= 50,
+        )
+        
+        response = self.client.post(
+            reverse("products_form"),
+            data={
+                "id": product.id,
+                "stock": 100,
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+
+        editedProduct = Product.objects.get(pk=product.id)
+        self.assertEqual(editedProduct.name, product.name)
+        self.assertEqual(editedProduct.type, product.type)
+        self.assertEqual(editedProduct.price, product.price)
+        self.assertEqual(editedProduct.stock, 100)
+        
+    def test_update_product_with_empty_stock(self):
+        product = Product.objects.create(
+            name= "Lavandina",
+            type= "Limpieza",
+            price= 100,
+            stock= 50,
+        )
+        
+        response = self.client.post(
+            reverse("products_form"),
+            data={
+                "id": product.id,
+                "stock": "",
+            },
+        )
+        
+        editedProduct = Product.objects.get(pk=product.id)
+        self.assertContains(response, "El campo de stock no puede estar vacio.")
+        self.assertEqual(editedProduct.name, product.name)
+        self.assertEqual(editedProduct.type, product.type)
+        self.assertEqual(editedProduct.price, product.price)
+        self.assertEqual(editedProduct.stock, 50)
+        
+    def test_update_product_with_negative_stock(self):
+        product = Product.objects.create(
+            name= "Lavandina",
+            type= "Limpieza",
+            price= 100,
+            stock= 50,
+        )
+        
+        response = self.client.post(
+            reverse("products_form"),
+            data={
+                "id": product.id,
+                "stock": -100,
+            },
+        )
+
+        editedProduct = Product.objects.get(pk=product.id)
+        self.assertContains(response, "El stock no puede ser negativo")
+        self.assertEqual(editedProduct.name, product.name)
+        self.assertEqual(editedProduct.type, product.type)
+        self.assertEqual(editedProduct.price, product.price)
+        self.assertEqual(editedProduct.stock, 50)
