@@ -252,12 +252,12 @@ def validate_pet(data):
 
 class Pet(models.Model):
     class Breed(models.TextChoices):
-        DOG = "DOG", "Perro"
-        CAT = "CAT", "Gato"
-        RABBIT = "RABBIT", "Conejo"
-        BIRD = "BIRD", "Pájaro"
-        FISH = "FISH", "Pez"
-        OTHER = "OTHER", "Otro"
+        Perro = "Perro"
+        Gato = "Gato"
+        Conejo = "Conejo"
+        Pájaro = "Pájaro"
+        Pez = "Pez"
+        Otro = "Otro"
     
     name = models.CharField(max_length=100)
     breed = models.CharField(choices=Breed.choices, max_length=50)
