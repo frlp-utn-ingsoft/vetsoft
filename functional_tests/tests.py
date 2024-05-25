@@ -242,3 +242,73 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         expect(edit_action).to_have_attribute(
             "href", reverse("clients_edit", kwargs={"id": client.id})
         )
+
+
+class ProductCreateEditTestCase(PlaywrightTestCase):
+    def test_should_be_able_to_create_a_new_product(self):
+        self.page.goto(f"{self.live_server_url}{reverse('products_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Ampicilina")
+        self.page.get_by_label("Tipo").fill("Antibiotico")
+        self.page.get_by_label("Precio").fill("10")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Ampicilina")).to_be_visible()
+        expect(self.page.get_by_text("Antibiotico")).to_be_visible()
+        expect(self.page.get_by_text("10")).to_be_visible()
+
+    #def test_should_view_errors_if_price_is_zero(self):
+     #   self.page.goto(f"{self.live_server_url}{reverse('products_form')}")
+
+      #  expect(self.page.get_by_role("form")).to_be_visible()
+        
+       # self.page.get_by_role("button", name="Guardar").click()
+
+        #expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        #expect(self.page.get_by_text("Por favor ingrese un tipo")).to_be_visible()
+        #expect(self.page.get_by_text("Por favor ingrese un precio")).to_be_visible()
+        
+        #self.page.get_by_label("Nombre").fill("ampicilina")
+        #self.page.get_by_label("Tipo").fill("antibiotico")
+        #self.page.get_by_label("Precio").fill("0")
+
+        #self.page.get_by_role("button", name="Guardar").click()
+
+        #expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        #expect(self.page.get_by_text("Por favor ingrese un tipo")).not_to_be_visible()
+        #expect(self.page.get_by_text("Por favor ingrese un precio mayor a cero")).to_be_visible()
+
+    
+    def test_should_view_errors_if_price_is_negative(self):
+        self.page.goto(f"{self.live_server_url}{reverse('products_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+        self.page.get_by_role("button", name="Guardar").click()
+        # Intentar crear un producto con precio negativo
+        self.page.get_by_label("Nombre").fill("ampicilina")
+        self.page.get_by_label("Tipo").fill("antibiotico")
+        self.page.get_by_label("Precio").fill("-10")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        # Verificar los mensajes de error después de enviar el formulario
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un tipo")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un precio")).to_be_visible()
+
+
+    def test_should_view_errors_if_price_is_empty(self):
+        self.page.goto(f"{self.live_server_url}{reverse('products_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Ampicilina")
+        self.page.get_by_label("Tipo").fill("Antibiotico")
+        self.page.get_by_label("Precio").fill("")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un precio")).to_be_visible()

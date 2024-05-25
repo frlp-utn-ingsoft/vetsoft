@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.shortcuts import reverse
-from app.models import Client
+from app.models import Client, Product
 
 
 class HomePageTest(TestCase):
@@ -69,7 +69,7 @@ class ClientsTest(TestCase):
 
         self.assertContains(response, "Por favor ingrese un email valido")
 
-    def test_edit_user_with_valid_data(self):
+    def test_edit_user_with_valid_data(self): 
         client = Client.objects.create(
             name="Juan Sebastián Veron",
             address="13 y 44",
@@ -81,7 +81,10 @@ class ClientsTest(TestCase):
             reverse("clients_form"),
             data={
                 "id": client.id,
-                "name": "Guido Carrillo",
+                "name": "Guido Carrillo", 
+                "address":client.address,
+                "phone":client.phone,
+                "email":client.email,
             },
         )
 
@@ -93,3 +96,34 @@ class ClientsTest(TestCase):
         self.assertEqual(editedClient.phone, client.phone)
         self.assertEqual(editedClient.address, client.address)
         self.assertEqual(editedClient.email, client.email)
+
+
+class TestIntegration(TestCase):
+    def test_some_integration(self):
+        response = self.client.post(
+            reverse("products_form"),
+            data={
+                "name": "ampicilina",
+                "type": "antibiotico",
+                "price": "",
+            },
+            follow=True  # Permite seguir redirecciones
+        )
+
+        self.assertContains(response, "Por favor ingrese un precio")
+        #self.assertNotEqual(response.status_code, 200)
+        #self.assertFalse(Product.objects.filter(name="ampicilina").exists())
+
+
+    def test_valid_product_price(self):
+        response = self.client.post(reverse('products_form'), {
+            "name": "ampicilina",
+            "type": "antibiotico",
+            "price": "10"  # Precio mayor a 0, debería ser válido
+        })
+
+        # Verifica que la solicitud haya sido exitosa (se espera un redirect)
+        self.assertEqual(response.status_code, 302)
+
+        # Verifica que el producto haya sido creado en la base de datos
+        self.assertTrue(Product.objects.filter(name="ampicilina").exists())

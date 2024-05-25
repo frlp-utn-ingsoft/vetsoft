@@ -1,5 +1,5 @@
 from django.test import TestCase
-from app.models import Client
+from app.models import Client, validate_product
 
 
 class ClientModelTest(TestCase):
@@ -33,7 +33,12 @@ class ClientModelTest(TestCase):
 
         self.assertEqual(client.phone, "221555232")
 
-        client.update_client({"phone": "221555233"})
+        client.update_client({
+            "name": "Juan Sebastian Veron",
+            "phone": "221555233",
+            "address": "13 y 44",
+            "email": "brujita75@hotmail.com",
+            })
 
         client_updated = Client.objects.get(pk=1)
 
@@ -57,3 +62,35 @@ class ClientModelTest(TestCase):
         client_updated = Client.objects.get(pk=1)
 
         self.assertEqual(client_updated.phone, "221555232")
+
+
+class TestValidateProduct(TestCase):
+
+    def test_valid_price(self):
+        data = {
+            "name": "ampicilina",
+            "type": "antibiotico",
+            "price": "100"
+        }
+        errors = validate_product(data)
+        self.assertNotIn("price", errors)
+    
+    def test_price_equal_zero(self):
+        data = {
+            "name": "ampicilina",
+            "type": "antibiotico",
+            "price": "0"
+        }
+        errors = validate_product(data)
+        self.assertIn("price", errors)
+        self.assertEqual(errors["price"], "Por favor ingrese un precio mayor a cero")
+
+    def test_price_missing(self):
+        data = {
+            "name": "ampicilina",
+            "type": "antibiotico",
+            "price": ""
+        }
+        errors = validate_product(data)
+        self.assertIn("price", errors)
+        self.assertEqual(errors["price"], "Por favor ingrese un precio")

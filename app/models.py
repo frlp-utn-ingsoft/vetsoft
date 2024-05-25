@@ -71,10 +71,18 @@ def validate_product(data):
     if type == "":
         errors["type"] = "Por favor ingrese un tipo"
 
-    if price == "" or price == "0":
-        errors["price"] = "Por favor ingrese un precio mayor a cero"
+    if price == "":
+        errors["price"] = "Por favor ingrese un precio"
+    else:
+        try:
+            price_value = float(price)
+            if price_value <= 0.0:
+                errors["price"] = "Por favor ingrese un precio mayor a cero"
+        except ValueError:
+            errors["price"] = "Por favor ingrese un precio válido"
 
     return errors
+
 
 def validate_pet(data):
     errors={}
