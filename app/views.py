@@ -50,6 +50,7 @@ def pets_repository(request):
 
 
 def pets_form(request, id=None):
+    breeds = dict(Pet.Breed.choices)
     if request.method == "POST":
         pet_id = request.POST.get("id", "")
         errors = {}
@@ -65,14 +66,14 @@ def pets_form(request, id=None):
             return redirect(reverse("pets_repo"))
 
         return render(
-            request, "pets/form.html", {"errors": errors, "pet": request.POST}
+            request, "pets/form.html", {"errors": errors, "pet": request.POST, "breeds": breeds}
         )
 
     pet = None
     if id is not None:
         pet = get_object_or_404(Pet, pk=id)
 
-    return render(request, "pets/form.html", {"pet": pet})
+    return render(request, "pets/form.html", {"pet": pet, "breeds": breeds})
 
 
 def pets_delete(request):
