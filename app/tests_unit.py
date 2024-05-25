@@ -78,7 +78,7 @@ class PetModelTest(TestCase):
         self.assertIn("birthday", errors)
         self.assertEqual(errors["birthday"], "La fecha de nacimiento no puede ser mayor o igual a la fecha actual")
 
-    def test_birthday_past_dat(self):
+    def test_birthday_past_date(self):
 
         #Creo el setup
         pet_data = {
