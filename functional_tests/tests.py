@@ -259,6 +259,37 @@ class AddMedicine(PlaywrightTestCase):
         expect(self.page.get_by_text("Para dolores de cabeza")).to_be_visible()
         expect(self.page.get_by_text("1")).to_be_visible()
 
+class AddPet(PlaywrightTestCase):
+    def test_add_new_pet(self):
+        self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Cachito")
+        self.page.get_by_label("Raza").fill("Una Raza")
+        self.page.get_by_label("Cumpleaños").fill("2024-05-05")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        self.page.goto(f"{self.live_server_url}{reverse('pets_repo')}")
+        expect(self.page.get_by_text("Cachito")).to_be_visible()
+        expect(self.page.get_by_text("Una Raza")).to_be_visible()
+
+    def test_add_new_empy_pet(self):
+        self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("")
+        self.page.get_by_label("Raza").fill("")
+        self.page.get_by_label("Cumpleaños").fill("")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese la raza")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una fecha")).to_be_visible()
+
 class AddProduct(PlaywrightTestCase):
     def test_add_new_product(self):
         self.page.goto(f"{self.live_server_url}{reverse('product_form')}")
