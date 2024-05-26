@@ -1,5 +1,5 @@
 from django.test import TestCase
-from app.models import Client
+from app.models import Client, Medicine
 
 
 class ClientModelTest(TestCase):
@@ -57,3 +57,55 @@ class ClientModelTest(TestCase):
         client_updated = Client.objects.get(pk=1)
 
         self.assertEqual(client_updated.phone, "221555232")
+
+class MedicineModelTest(TestCase):
+    def test_can_create_and_get_medicine(self):
+        Medicine.save_medicine(
+            {
+                "name": "ibuprofeno",
+                "description": "analgesico",
+                "dose": "4",
+            }
+        )
+        medicines = Medicine.objects.all()
+        self.assertEqual(len(medicines), 1)
+
+        self.assertEqual(medicines[0].name, "ibuprofeno")
+        self.assertEqual(medicines[0].description, "analgesico")
+        self.assertEqual(medicines[0].dose, 4)
+
+    def test_can_update_medicine(self):
+        Medicine.save_medicine(
+            {
+                "name": "ibuprofeno",
+                "description": "analgesico",
+                "dose": "4",
+            }
+        )
+        medicine = Medicine.objects.get(pk=1)
+
+        self.assertEqual(medicine.description, "analgesico")
+
+        medicine.update_medicine({"description": "analgesico"})
+
+        medicine_updated = Medicine.objects.get(pk=1)
+
+        self.assertEqual(medicine_updated.description, "analgesico")
+
+    def test_update_medicine_with_error(self):
+        Medicine.save_medicine(
+            {
+                "name": "ibuprofeno",
+                "description": "analgesico",
+                "dose": "4",
+            }
+        )
+        medicine = Medicine.objects.get(pk=1)
+
+        self.assertEqual(medicine.description, "analgesico")
+
+        medicine.update_medicine({"description": ""})
+
+        medicine_updated = Medicine.objects.get(pk=1)
+
+        self.assertEqual(medicine_updated.description, "analgesico")
