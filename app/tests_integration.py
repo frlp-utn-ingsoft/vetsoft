@@ -164,6 +164,8 @@ class MedicinesTest(TestCase):
             data={
                 "id": medicine.id,
                 "name": "Ubuprofendog",
+                "desc": "Este medicamento es para vomitos caninos",
+                "dose": "8",
             },
         )
 

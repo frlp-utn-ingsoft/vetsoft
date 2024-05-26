@@ -302,10 +302,10 @@ class Med(models.Model):
 
         if len(errors.keys()) > 0:
             return False, errors
-        
-        self.name = med_data.get("name","") or self.name
-        self.desc = med_data.get("desc","") or self.desc
-        self.dose = med_data.get("dose","") or self.dose
+        else:
+            self.name = med_data.get("name", "") or self.name
+            self.desc = med_data.get("desc", "") or self.desc
+            self.dose = med_data.get("dose", "") or self.dose
 
-        self.save()
-        return True, None
+            self.save()
+            return True, None
