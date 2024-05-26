@@ -17,6 +17,7 @@
                 <th>Nombre</th>
                 <th>Raza</th>
                 <th>Fecha de cumpleaños</th>
+                <th>Peso</th>
                 <th></th>
             </tr>
         </thead>
@@ -27,6 +28,7 @@
                     <td>{{pet.name}}</td>
                     <td>{{pet.breed}}</td>
                     <td>{{pet.birthday}}</td>
+                    <td>{{pet.weight}}</td>
                     <td class="d-flex gap-2">
                         <a class="btn btn-outline-primary"
                            href="{% url 'pets_edit' id=pet.id %}"
@@ -40,6 +42,7 @@
                             <button class="btn btn-outline-danger"><i class="bi bi-trash"></i></button>
                         </form>
                     </td>
+
             </tr>
             {% empty %}
                 <tr>

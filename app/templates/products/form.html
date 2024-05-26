@@ -10,7 +10,7 @@
 
     <div class="row">
         <div class="col-lg-6 offset-lg-3">
-            <form class="vstack gap-3 {% if errors %}was-validated{% endif %}"
+            <form class="vstack gap-3"
                 aria-label="Formulario de creación de producto"
                 method="POST"
                 action="{% url 'products_create' %}"
@@ -25,10 +25,9 @@
                     <input type="text"
                         id="name"
                         name="name"
-                        value="{{product.name}}"
-                        class="form-control"
+                        value="{{ product.name }}"
+                        class="form-control {% if errors.name %}is-invalid{% endif %}"
                         required/>
-
                     {% if errors.name %}
                         <div class="invalid-feedback">
                             {{ errors.name }}
@@ -40,10 +39,9 @@
                     <input type="text"
                         id="type"
                         name="type"
-                        class="form-control"
-                        value="{{product.type}}"
+                        class="form-control {% if errors.type %}is-invalid{% endif %}"
+                        value="{{ product.type }}"
                         required/>
-
                     {% if errors.type %}
                         <div class="invalid-feedback">
                             {{ errors.type }}
@@ -55,10 +53,9 @@
                     <input type="number"
                         id="price"
                         name="price"
-                        class="form-control"
+                        class="form-control {% if errors.price %}is-invalid{% endif %}"
                         value="{{ product.price }}"
                         required/>
-
                     {% if errors.price %}
                         <div class="invalid-feedback">
                             {{ errors.price }}

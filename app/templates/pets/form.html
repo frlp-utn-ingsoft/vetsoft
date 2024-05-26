@@ -65,11 +65,24 @@
                         </div>
                     {% endif %}
                 </div>
-
+                <div>
+                    <label for="weight" class="form-label">Peso</label>
+                    <input type="number"
+                        id="weight"
+                        name="weight"
+                        step="0.1"
+                        class="form-control {% if errors.weight %}is-invalid{% endif %}"
+                        value="{{ pet.weight }}"
+                        required/>
+                    {% if errors.weight %}
+                        <div class="invalid-feedback">
+                            {{ errors.weight }}
+                        </div>
+                    {% endif %}
+                </div>
                 <button class="btn btn-primary">Guardar</button>
             </form>
         </div>
     </div>
 </div>
 {% endblock %}
-
