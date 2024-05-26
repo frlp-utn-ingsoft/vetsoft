@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.shortcuts import reverse
 from app.models import Client
+from app.models import Provider
 
 
 class HomePageTest(TestCase):
@@ -8,6 +9,26 @@ class HomePageTest(TestCase):
         response = self.client.get(reverse("home"))
         self.assertTemplateUsed(response, "home.html")
 
+class ProviderTest(TestCase):
+
+    def test_can_create_provider(self):
+            response = self.client.post(
+                reverse("providers_form"),
+                data={
+                "name": "Pepe Gonzales",
+                "email": "pepe@hotmail.com",
+                "address": "7 entre 13 y 44",
+            },
+            )
+            provider = Provider.objects.all()
+
+            self.assertEqual(len(provider), 1)
+            self.assertEqual(provider[0].name, "Pepe Gonzales")
+            self.assertEqual(provider[0].email, "pepe@hotmail.com")
+            self.assertEqual(provider[0].address, "7 entre 13 y 44")
+
+            self.assertRedirects(response, reverse("providers_repo"))
+   
 
 class ClientsTest(TestCase):
     def test_repo_use_repo_template(self):
