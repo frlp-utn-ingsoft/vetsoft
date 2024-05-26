@@ -139,12 +139,12 @@ class ProductModelTest(TestCase):
 
 class PetModelTest(TestCase):
     def test_can_create_pet_with_breed_options(self):
-        past_birthday = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d")
+        pet_birthday = (date(2021, 1, 1)).strftime("%Y-%m-%d")
         Pet.save_pet(
             {
                 "name": "Benita",
                 "breed": "Perro",
-                "birthday": past_birthday,
+                "birthday": pet_birthday,
             }
         )
 
@@ -152,15 +152,15 @@ class PetModelTest(TestCase):
         self.assertEqual(len(pets), 1)
         self.assertEqual(pets[0].name, "Benita")
         self.assertEqual(pets[0].breed, "Perro")
-        self.assertEqual(pets[0].birthday, date(2024,5,24))
+        self.assertEqual(pets[0].birthday, date(2021, 1, 1))
 
     def test_can_update_pet_breed(self):
-        past_birthday = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d")
+        pet_birthday = (date(2021, 1, 1)).strftime("%Y-%m-%d")
         Pet.save_pet(
             {
                 "name": "Benita",
                 "breed": "Perro",
-                "birthday": past_birthday,
+                "birthday": pet_birthday,
             }
         )
 
@@ -171,12 +171,12 @@ class PetModelTest(TestCase):
         self.assertEqual(pet_updated.breed, "Gato")
 
     def test_update_pet_with_error(self):
-        past_birthday = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d")
+        pet_birthday = (date(2021, 1, 1)).strftime("%Y-%m-%d")
         Pet.save_pet(
             {
                 "name": "Benita",
                 "breed": "Perro",
-                "birthday": past_birthday,
+                "birthday": pet_birthday,
             }
         )
 
