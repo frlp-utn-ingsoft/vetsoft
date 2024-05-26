@@ -80,7 +80,15 @@ class ProvidersRepoTestCase(PlaywrightTestCase):
 
         expect(self.page.get_by_text("Pepe Gonzales")).to_be_visible()
         expect(self.page.get_by_text("pepe@hotmail.com")).to_be_visible()
-        expect(self.page.get_by_text("7 entre 13 y 44")).to_be_visible()   
+        expect(self.page.get_by_text("7 entre 13 y 44")).to_be_visible()
+
+    def test_should_show_add_provider_action(self):
+        self.page.goto(f"{self.live_server_url}{reverse('providers_repo')}")
+
+        add_provider_action = self.page.get_by_role(
+            "link", name="Nuevo Proveedor", exact=False
+        )
+        expect(add_provider_action).to_have_attribute("href", reverse("providers_form"))    
 
 
 class ClientsRepoTestCase(PlaywrightTestCase):
