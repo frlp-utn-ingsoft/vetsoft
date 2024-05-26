@@ -2,6 +2,7 @@ import os
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from playwright.sync_api import sync_playwright, expect, Browser
+from datetime import datetime, timedelta
 
 from django.urls import reverse
 
@@ -289,6 +290,20 @@ class AddPet(PlaywrightTestCase):
         expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese la raza")).to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese una fecha")).to_be_visible()
+
+    def test_add_new_empy_pet(self):
+        self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Cachito")
+        self.page.get_by_label("Raza").fill("Una Raza")
+        hoy = datetime.now().date()
+        day = hoy + timedelta(days=1)
+        self.page.get_by_label("Cumpleaños").fill(day)
+
+        self.page.get_by_role("button", name="Guardar").click()
+        expect(self.page.get_by_text("La fecha de cumpleaños no puede ser mayor al dia actual")).to_be_visible()
 
 class AddProduct(PlaywrightTestCase):
     def test_add_new_product(self):
