@@ -1,9 +1,7 @@
 from django.test import TestCase
 from django.shortcuts import reverse
-from app.models import Client
-from .models import Provider
+from app.models import Client, Provider, Pet
 from django.urls import reverse
-
 
 class HomePageTest(TestCase):
     def test_use_home_template(self):
@@ -178,3 +176,90 @@ class ProvidersTest(TestCase):
         self.assertEqual(edited_provider.name, "Proveedor Actualizado")
         self.assertEqual(edited_provider.email, provider.email)
         self.assertEqual(edited_provider.address, provider.address)
+
+# TEST DE PET
+class PetsTest(TestCase):
+    
+    # creacion de mascota
+    def test_can_create_pet(self):
+            response = self.client.post(
+                reverse("pets_form"),
+                data={
+                    "name": "Roma",
+                    "breed": "Labrador",
+                    "birthday": "2021-10-10",
+                    "weight": 10
+                },
+            )
+            pets = Pet.objects.all()
+
+            self.assertEqual(len(pets), 1)
+            # verificamos coincidencias
+            self.assertEqual(pets[0].name, "Roma")
+            self.assertEqual(pets[0].breed, "Labrador")
+            self.assertEqual(pets[0].birthday.strftime('%Y-%m-%d'), "2021-10-10") # formateo la fecha de cumple para comparar
+            self.assertEqual(pets[0].weight, 10)
+
+            # verifico si existe en la base de datos
+            self.assertTrue(Pet.objects.filter(name="Roma").exists())
+            # verifico si redirige a la url correcta
+            self.assertRedirects(response, reverse("pets_repo"))
+
+
+
+    # validar de que el peso no puede ser negativo
+    def test_validation_errors_weight_less_than_zero(self):
+        response = self.client.post(
+                reverse("pets_form"),
+                data={
+                    "name": "Roma",
+                    "breed": "Labrador",
+                    "birthday": "2021-10-10",
+                    "weight": -10
+                },
+            )
+        # Verifico si el peso es negativo y muestra un mensaje de error
+        self.assertContains(response, "El peso debe ser un número mayor a cero")
+
+
+class ProductsTest(TestCase):
+    def test_validation_invalid_price(self):
+        # client es un objeto que proporciona Django para simular solicitudes HTTP en tus tests.
+        response = self.client.post(
+            reverse("products_form"),
+            data={
+                "name": "Paracetamol",
+                "description": "Medicamento para el dolor",
+                "price": 0,
+            },
+        )
+
+        self.assertContains(response, "El precio debe ser mayor que cero")
+        
+class MedicinesTest(TestCase):
+    def test_validation_invalid_dose(self):
+        # client es un objeto que proporciona Django para simular solicitudes HTTP en tus tests.
+        response = self.client.post(
+            reverse("medicines_form"),
+            data={
+                "name": "Diclofenac",
+                "description": "Calma el dolor muscular",
+                "dose": 0,
+            },
+        )
+
+        self.assertContains(response, "La dosis debe estar en un rango de 1 a 10")
+
+class PetsTest(TestCase):
+    def test_validation_invalid_birthday(self):
+        
+        response = self.client.post(
+            reverse("pets_form"),
+            data = {
+            "name": "Pepe",
+            "breed": "Labrador",
+            "birthday": "2026-01-01",
+        }
+        )
+
+        self.assertContains(response, "La fecha de nacimiento no puede ser mayor o igual a la fecha actual")
