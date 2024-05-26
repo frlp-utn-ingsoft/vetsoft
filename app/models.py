@@ -1,5 +1,19 @@
 from django.db import models
+from enum import Enum
 from django.shortcuts import get_object_or_404
+
+class Specialty(Enum):
+    GENERAL = "General"
+    SURGERY = "Cirugía"
+    DERMATOLOGY = "Dermatología"
+    ORTHOPEDICS = "Ortopedia"
+    CARDIOLOGY = "Cardiología"
+    OPHTHALMOLOGY = "Oftalmología"
+    NEUROLOGY = "Neurología"
+
+    @classmethod
+    def choices(cls):
+        return [(key.value, key.value) for key in cls]
 
 def validate_client(data):
     errors = {}
@@ -36,6 +50,66 @@ def validate_provider(data):
         errors["email"] = "Por favor ingrese un email valido"
 
     return errors
+
+def validate_vet(data):
+    errors = {}
+
+    name = data.get("name", "")
+    phone = data.get("phone", "")
+    email = data.get("email", "")
+    specialty = data.get("specialty", "")
+
+    if name == "":
+        errors["name"] = "Por favor ingrese un nombre"
+
+    if phone == "":
+        errors["phone"] = "Por favor ingrese un teléfono"
+
+    if email == "":
+        errors["email"] = "Por favor ingrese un email"
+    elif email.count("@") == 0:
+        errors["email"] = "Por favor ingrese un email valido"
+    
+    if specialty == "":
+        errors["specialty"] = "Por favor ingrese una especialidad"
+    elif specialty not in [key.value for key in Specialty]:
+        errors["specialty"] = "Por favor ingrese una especialidad valida"
+
+    return errors
+
+
+class Vet(models.Model):
+    name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=15)
+    email = models.EmailField()
+    specialty = models.CharField(max_length=50, choices=Specialty.choices(), default=Specialty.GENERAL.value)
+
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def save_vet(vet, vet_data):
+        errors = validate_vet(vet_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+
+        Vet.objects.create(
+            name=vet_data.get("name"),
+            phone=vet_data.get("phone"),
+            email=vet_data.get("email"),
+            specialty=vet_data.get("specialty"),
+        )
+
+        return True, None
+
+    def update_vet(self, vet_data):
+        self.name = vet_data.get("name", "") or self.name
+        self.email = vet_data.get("email", "") or self.email
+        self.phone = vet_data.get("phone", "") or self.phone
+        self.specialty = vet_data.get("specialty", "") or self.specialty
+
+        self.save()
 
 def validate_product(data):
     errors = {}
@@ -75,6 +149,7 @@ def validate_pet(data):
     cliente = data.get("client", "")
     breed = data.get("breed", "")
     birthday = data.get("birthday","")
+    weight = data.get("weight","")
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
@@ -86,6 +161,17 @@ def validate_pet(data):
         errors["breed"] = "Por favor ingrese una raza"
     if birthday == "":
         errors["birthday"] = "Por favor ingrese la fecha de cumpleaños"
+    if weight == "":
+        errors["weight"] = "Por favor ingrese un peso"
+    try:
+        float_weight = float(weight)
+        if float_weight<=0:
+            errors["weight"] = "Por favor ingrese un peso mayor que 0"
+        decimal_part = str(float_weight).split(".")
+        if len(decimal_part)>2:
+            errors["weight"] = "Por favor ingrese un peso con maximo 2 decimales"
+    except ValueError:
+        errors["weight"] = "Por favor ingrese un peso valido"
     return errors
                 
 class Provider(models.Model):
@@ -187,11 +273,42 @@ class Client(models.Model):
 
         self.save()
 
+def validate_medicine(data):
+    errors = {}
+
+    name = data.get("name", "")
+    description = data.get("description", "")
+    dose = data.get("dose", "")
+
+    if name == "":
+        errors["name"] = "Por favor ingrese un nombre"
+
+    if description == "":
+        errors["description"] = "Por favor ingrese una descripcion"
+
+    if dose == "":
+        errors["dose"] = "Por favor ingrese una dosis"
+    else:
+        try:
+            float_dose = float(dose)
+            if float_dose <= 0:
+                errors["dose"] = "Por favor ingrese una dosis mayor que 0"
+            elif float_dose < 1 or float_dose > 10:
+                errors["dose"] = "Por favor ingrese una dosis entre 1 y 10"
+            else:
+                integer_part, decimal_part = str(float_dose).split(".")
+                if len(decimal_part) > 2:
+                    errors["dose"] = "Por favor ingrese una dosis con maximo 2 decimales"
+        except ValueError:
+            errors["dose"] = "Por favor ingrese una dosis valida"
+
+    return errors
+
 
 class Medicine(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
-    dose = models.IntegerField()
+    dose = models.FloatField()
 #    pets = models.ManyToManyField('Pet', related_name='medicines')
 
     def __str__(self):
@@ -199,6 +316,11 @@ class Medicine(models.Model):
 
     @classmethod
     def save_medicine(cls, medicine_data):
+        errors = validate_medicine(medicine_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+        
         Medicine.objects.create(
             name=medicine_data.get("name"),
             description=medicine_data.get("description"),
@@ -218,8 +340,10 @@ class Pet(models.Model):
     name=models.CharField(max_length=100)
     breed=models.CharField(max_length=100)
     birthday=models.DateField(verbose_name="Fecha de Cumpleaños")
+    weight=models.FloatField()
     client = models.ForeignKey(Client,on_delete=models.CASCADE, null=True)
     medicines = models.ManyToManyField(Medicine)
+    vets = models.ManyToManyField(Vet)
 
     def __str__(self):
         return self.name
@@ -235,6 +359,7 @@ class Pet(models.Model):
             name = pet_data.get("name"),
             breed= pet_data.get("breed"),
             birthday = pet_data.get("birthday"),
+            weight = pet_data.get("weight"),
             client = client2
         )
 
@@ -244,57 +369,9 @@ class Pet(models.Model):
         self.name = pet_data.get("name","") or self.name
         self.breed = pet_data.get("breed", "") or self.breed
         self.birthday = pet_data.get("birthday", "") or self.birthday
+        self.weight = pet_data.get("weight", "") or self.weight
 
         self.save()    
 
 
-def validate_vet(data):
-    errors = {}
 
-    name = data.get("name", "")
-    phone = data.get("phone", "")
-    email = data.get("email", "")
-
-    if name == "":
-        errors["name"] = "Por favor ingrese un nombre"
-
-    if phone == "":
-        errors["phone"] = "Por favor ingrese un teléfono"
-
-    if email == "":
-        errors["email"] = "Por favor ingrese un email"
-    elif email.count("@") == 0:
-        errors["email"] = "Por favor ingrese un email valido"
-
-    return errors
-
-
-class Vet(models.Model):
-    name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=15)
-    email = models.EmailField()
-
-    def __str__(self):
-        return self.name
-
-    @classmethod
-    def save_vet(vet, vet_data):
-        errors = validate_vet(vet_data)
-
-        if len(errors.keys()) > 0:
-            return False, errors
-
-        Vet.objects.create(
-            name=vet_data.get("name"),
-            phone=vet_data.get("phone"),
-            email=vet_data.get("email"),
-        )
-
-        return True, None
-
-    def update_vet(self, vet_data):
-        self.name = vet_data.get("name", "") or self.name
-        self.email = vet_data.get("email", "") or self.email
-        self.phone = vet_data.get("phone", "") or self.phone
-
-        self.save()

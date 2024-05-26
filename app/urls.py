@@ -37,10 +37,11 @@ urlpatterns = [
     path("mascotas/eliminar", view=views.pets_delete, name="pets_delete"),
 
     path("mascotas/agregar-medicina/<int:id>/", view=views.pets_add_medicine, name="pets_add_medicine"),
-    path("mascotas/seleccionar-medicinas/", views.select_medicines_to_delete, name="select_medicines_to_delete"),
-    path("mascotas/eliminar-medicinas/", views.delete_selected_medicines, name="delete_selected_medicines"),
+    path("mascotas/seleccionar-medicinas/", view=views.select_medicines_to_delete, name="select_medicines_to_delete"),
+    path("mascotas/eliminar-medicinas/", view=views.delete_selected_medicines, name="delete_selected_medicines"),
 
-    path("mascotas/agregar-veterinario/<int:id>/", view=views.pets_add_vets, name="pets_add_vets"),
-    path("mascotas/seleccionar-veterinarios/", views.select_vets_to_delete, name="select_vets_to_delete"),
-    path("mascotas/eliminar-veterinarios/", views.delete_selected_vets, name="delete_selected_vets"),
+    path("mascotas/agregar-veterinario/<int:id>/", view=views.pets_add_vet, name="pets_add_vet"),
+    path("mascotas/seleccionar-veterinarios/", view=views.select_vets_to_delete, name="select_vets_to_delete"),
+    path("mascotas/eliminar-veterinarios/", view=views.delete_selected_vets, name="delete_selected_vets"),
+
 ]
