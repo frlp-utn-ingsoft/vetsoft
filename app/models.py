@@ -413,6 +413,10 @@ def validate_medicine(data):
         errors["dose"] = "Por favor ingrese una dosis"
     elif not dose.isdigit():
         errors["dose"] = "La dosis debe ser un número entero"
+    else:
+        dose_value = int(dose)
+        if dose_value < 1 or dose_value > 10:
+            errors["dose"] = "La dosis debe estar entre 1 a 10"
 
     return errors
 
