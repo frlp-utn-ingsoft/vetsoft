@@ -27,20 +27,18 @@ def validate_provider(data):
 
     name = data.get("name", "")
     email = data.get("email", "")
-    phone = data.get("phone", "")
+    address = data.get("address", "")
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
-
-    if phone == "":
-        errors["phone"] = "Por favor ingrese un teléfono"
-    elif not phone.isdigit():
-        errors["phone"] = "Por favor ingrese un teléfono"
 
     if email == "":
         errors["email"] = "Por favor ingrese un email"
     elif email.count("@") == 0:
         errors["email"] = "Por favor ingrese un email válido"
+
+    if address == "":
+        errors["address"] = "Por favor ingrese una direccion"
 
     return errors
 
@@ -231,27 +229,35 @@ def update_pet(self, pet_data):
 class Provider(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
+    address = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
     @classmethod
     def save_provider(cls, provider_data):
-        errors = validate_provider(provider_data)
 
+        errors = validate_provider(provider_data)
         if len(errors.keys()) > 0:
             return False, errors
 
         Provider.objects.create(
             name=provider_data.get("name"),
             email=provider_data.get("email"),
+            address=provider_data.get("address"),
         )
 
         return True, None
 
     def update_provider(self, provider_data):
+
+        errors = validate_provider(provider_data)
+        if len(errors.keys()) > 0:
+            return False, errors
+        
         self.name = provider_data.get("name", "") or self.name
         self.email = provider_data.get("email", "") or self.email
+        self.address = provider_data.get("address", "") or self.address
 
         self.save()
 
