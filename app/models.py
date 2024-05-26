@@ -249,7 +249,7 @@ def validate_provider(data):
 class Provider(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(max_length=254)
-    address = models.CharField(max_length=100, blank=True)
+    address = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
@@ -272,8 +272,12 @@ class Provider(models.Model):
     def update_provider(self, provider_data):
         self.name = provider_data.get("name", "") or self.name
         self.email = provider_data.get("email", "") or self.email
-        self.address = provider_data.get("address", "") or self.address
-
+        new_address = provider_data.get("address", "")
+        
+        if new_address == "":
+            raise ValueError("Por favor ingrese una dirección")
+        
+        self.address = new_address
         self.save()
 
 
