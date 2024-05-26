@@ -61,7 +61,7 @@ def validate_medicine(data):
     if description == "":
         errors["description"] = "Por favor, ingrese una descripcion de la medicina"
     
-    if dose == "":
+    if dose is None or dose == "":
         errors["dose"] = "Por favor, ingrese una cantidad de la dosis de la medicina"
     elif not (isinstance(dose, str) and dose.isdigit()):
         errors["dose"] = "La dosis debe ser un numero entero"
