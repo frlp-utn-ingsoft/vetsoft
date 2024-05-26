@@ -20,6 +20,28 @@
 
                 <input type="hidden" value="{{ pet.id }}" name="id" />
 
+                <tbody>
+                    {% for pet in pets %}
+                    <tr>
+                        <td>{{pet.name}}</td>
+                        <td>{{pet.breed}}</td>
+                        <td>{{pet.birthday}}</td>
+                        <td>
+                            <a class="btn btn-outline-primary"
+                                href="{% url 'pets_edit' id=pet.id %}"
+                            >Editar</a>
+                            <form method="POST"
+                                action="{% url 'pets_delete' %}"
+                                aria-label="Formulario de eliminación de mascota">
+                                {% csrf_token %}
+        
+                                <input type="hidden" name="pet_id" value="{{ pet.id }}" />
+                                <button class="btn btn-outline-danger">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
                 <div>
                     <lab for="name" class="form-label">Cliente</lab>
                     <select name="client" class="form-control" required>

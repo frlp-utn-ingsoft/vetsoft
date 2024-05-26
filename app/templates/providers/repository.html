@@ -2,12 +2,12 @@
 
 {% block main %}
 <div class="container">
-    <h1 class="mb-4">Productos</h1>
+    <h1 class="mb-4">Proveedores</h1>
 
     <div class="mb-2">
-        <a href="{% url 'products_form' %}" class="btn btn-primary">
+        <a href="{% url 'providers_form' %}" class="btn btn-primary">
             <i class="bi bi-plus"></i>
-            Nuevo Producto
+            Nuevo Proveedor
         </a>
     </div>
 
@@ -15,30 +15,26 @@
         <thead>
             <tr>
                 <th>Nombre</th>
-                <th>Tipo</th>
-                <th>Precio</th>
-                <th>Proveedor</th>
+                <th>Email</th>
                 <th></th>
             </tr>
         </thead>
 
         <tbody>
-            {% for product in products%}
+            {% for provider in providers%}
             <tr>
-                    <td>{{product.name}}</td>
-                    <td>{{product.type}}</td>
-                    <td>{{product.price}}</td>
-                    <td>{{product.provider.name}}</td>
+                    <td>{{provider.name}}</td>
+                    <td>{{provider.email}}</td>
                     <td>
                         <a class="btn btn-outline-primary"
-                           href="{% url 'products_edit' id=product.id %}"
+                           href="{% url 'providers_edit' id=provider.id %}"
                         >Editar</a>
                         <form method="POST"
-                            action="{% url 'products_delete' %}"
-                            aria-label="Formulario de eliminación de producto">
+                            action="{% url 'providers_delete' %}"
+                            aria-label="Formulario de eliminación de proveedores">
                             {% csrf_token %}
 
-                            <input type="hidden" name="product_id" value="{{ product.id }}" />
+                            <input type="hidden" name="provider_id" value="{{ provider.id }}" />
                             <button class="btn btn-outline-danger">Eliminar</button>
                         </form>
                     </td>
@@ -46,7 +42,7 @@
             {% empty %}
                 <tr>
                     <td colspan="5" class="text-center">
-                        No existen productos
+                        No existen proveedores
                     </td>
                 </tr>
             {% endfor %}
