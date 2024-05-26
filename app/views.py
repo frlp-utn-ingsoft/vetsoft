@@ -59,7 +59,7 @@ def pets_form(request, id=None):
         if not birthday:
             errors["birthday"] = "El campo de Nacimiento no puede estar vacio."
             return render(
-                request, "pets/form.html", {"errors": errors, "product": request.POST}
+                request, "pets/form.html", {"errors": errors, "pet": request.POST}
             )
 
         try:
@@ -67,7 +67,7 @@ def pets_form(request, id=None):
         except ValueError as e:
             errors["birthday"] = "Formato de fecha invalido. Utilice el formato YYYY-MM-DD"
             return render(
-                request, "pets/form.html", {"errors": errors, "product": request.POST}
+                request, "pets/form.html", {"errors": errors, "pet": request.POST}
             )
 
         if pet_id == "":
