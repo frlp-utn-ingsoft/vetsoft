@@ -5,7 +5,7 @@ from playwright.sync_api import sync_playwright, expect, Browser
 
 from django.urls import reverse
 
-from app.models import Client
+from app.models import Client, Product
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 playwright = sync_playwright().start()
@@ -258,3 +258,22 @@ class AddMedicine(PlaywrightTestCase):
         expect(self.page.get_by_text("Bayaspirina")).to_be_visible()
         expect(self.page.get_by_text("Para dolores de cabeza")).to_be_visible()
         expect(self.page.get_by_text("1")).to_be_visible()
+
+class AddProduct(PlaywrightTestCase):
+    def test_add_new_product(self):
+        self.page.goto(f"{self.live_server_url}{reverse('product_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Producto1")
+        self.page.get_by_label("Tipo").fill("Tipo1")
+        self.page.get_by_label("Precio").fill("10")
+        self.page.get_by_label("Stock").fill("15")
+        
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Producto1")).to_be_visible()
+        expect(self.page.get_by_text("Tipo1")).to_be_visible()
+        expect(self.page.get_by_text("10")).to_be_visible()
+        expect(self.page.get_by_text("15")).to_be_visible()
