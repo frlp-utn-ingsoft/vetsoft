@@ -5,7 +5,7 @@ from playwright.sync_api import sync_playwright, expect, Browser
 
 from django.urls import reverse
 
-from app.models import Client
+from app.models import Client, Provider
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 playwright = sync_playwright().start()
@@ -241,4 +241,163 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         edit_action = self.page.get_by_role("link", name="Editar")
         expect(edit_action).to_have_attribute(
             "href", reverse("clients_edit", kwargs={"id": client.id})
+        )
+
+class ProvidersRepoTestCase(PlaywrightTestCase):
+    def test_should_show_message_if_table_is_empty(self):
+        self.page.goto(f"{self.live_server_url}{reverse('providers_repo')}")
+
+        expect(self.page.get_by_text("No existen proveedores")).to_be_visible()
+
+    def test_should_show_providers_data(self):
+        Provider.objects.create(
+            name="katerina mariescurrena",
+            email="katy@gmail.com",
+            address="17 y 166",
+        )
+
+        Provider.objects.create(
+            name="Bruno Santillan",
+            email="bsantillan@gmail.com",
+            address="16 y 50",
+        )
+
+        self.page.goto(f"{self.live_server_url}{reverse('providers_repo')}")
+
+        expect(self.page.get_by_text("No existen providers")).not_to_be_visible()
+
+        expect(self.page.get_by_text("katerina mariescurrena")).to_be_visible()
+        expect(self.page.get_by_text("katy@gmail.com")).to_be_visible()
+        expect(self.page.get_by_text("17 y 166")).to_be_visible()
+
+        expect(self.page.get_by_text("Bruno Santillan")).to_be_visible()
+        expect(self.page.get_by_text("bsantillan@gmail.com")).to_be_visible()
+        expect(self.page.get_by_text("16 y 50")).to_be_visible()
+
+    def test_should_show_add_provider_action(self):
+        self.page.goto(f"{self.live_server_url}{reverse('providers_repo')}")
+
+        add_provider_action = self.page.get_by_role(
+            "link", name="Nuevo proveedor", exact=False
+        )
+        expect(add_provider_action).to_have_attribute("href", reverse("providers_form"))
+
+    def test_should_show_provider_edit_action(self):
+        provider = Provider.objects.create(
+            name="katerina mariescurrena",
+            email="katy@gmail.com",
+            address="17 y 166",
+        )
+
+        self.page.goto(f"{self.live_server_url}{reverse('providers_repo')}")
+
+        edit_action = self.page.get_by_role("link", name="Editar")
+        expect(edit_action).to_have_attribute(
+            "href", reverse("providers_edit", kwargs={"id": provider.id})
+        )
+
+    def test_should_show_provider_delete_action(self):
+        provider = Provider.objects.create(
+            name="katerina mariescurrena",
+            email="katy@gmail.com",
+            address="17 y 166",
+        )
+
+        self.page.goto(f"{self.live_server_url}{reverse('providers_repo')}")
+
+        edit_form = self.page.get_by_role(
+            "form", name="Formulario de eliminación de proveedor"
+        )
+        provider_id_input = edit_form.locator("input[name=provider_id]")
+
+        expect(edit_form).to_be_visible()
+        expect(edit_form).to_have_attribute("action", reverse("providers_delete"))
+        expect(provider_id_input).not_to_be_visible()
+        expect(provider_id_input).to_have_value(str(provider.id))
+        expect(edit_form.get_by_role("button", name="Eliminar")).to_be_visible()
+
+    def test_should_can_be_able_to_delete_a_provider(self):
+        Provider.objects.create(
+            name="katerina mariescurrena",
+            email="katy@gmail.com",
+            address="17 y 166",
+        )
+
+        self.page.goto(f"{self.live_server_url}{reverse('providers_repo')}")
+
+        expect(self.page.get_by_text("katerina mariescurrena")).to_be_visible()
+
+        def is_delete_response(response):
+            return response.url.find(reverse("providers_delete"))
+
+        # verificamos que el envio del formulario fue exitoso
+        with self.page.expect_response(is_delete_response) as response_info:
+            self.page.get_by_role("button", name="Eliminar").click()
+
+        response = response_info.value
+        self.assertTrue(response.status < 400)
+
+        expect(self.page.get_by_text("katerina mariescurrena")).not_to_be_visible()
+
+
+class ProviderCreateEditTestCase(PlaywrightTestCase):
+    def test_should_be_able_to_create_a_new_provider(self):
+        self.page.goto(f"{self.live_server_url}{reverse('providers_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("katerina mariescurrena")
+        self.page.get_by_label("Email").fill("katy@gmail.com")
+        self.page.get_by_label("Dirección").fill("17 y 166")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("katerina mariescurrena")).to_be_visible()
+        expect(self.page.get_by_text("katy@gmail.com")).to_be_visible()
+        expect(self.page.get_by_text("17 y 166")).to_be_visible()
+
+    def test_should_view_errors_if_form_is_invalid(self):
+        self.page.goto(f"{self.live_server_url}{reverse('providers_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("katerina mariescurrena")
+        self.page.get_by_label("Email").fill("katy@gmail.com")
+        self.page.get_by_label("Dirección").fill("17 y 166")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+
+    def test_should_be_able_to_edit_a_provider(self):
+        provider = Provider.objects.create(
+            name="katerina mariescurrena",
+            address="17 y 166",
+            email="katy@gmail.com",
+        )
+
+        path = reverse("providers_edit", kwargs={"id": provider.id})
+        self.page.goto(f"{self.live_server_url}{path}")
+
+        self.page.get_by_label("Nombre").fill("Bruno Santillan")
+        self.page.get_by_label("Email").fill("bsantillan@gmail.com")
+        self.page.get_by_label("Dirección").fill("16 y 50")
+            
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("katerina mariescurrena")).not_to_be_visible()
+        expect(self.page.get_by_text("katy@gmail.com")).not_to_be_visible()
+        expect(self.page.get_by_text("17 y 166")).not_to_be_visible()
+
+        expect(self.page.get_by_text("Bruno Santillan")).to_be_visible()
+        expect(self.page.get_by_text("bsantillan@gmail.com")).to_be_visible()
+        expect(self.page.get_by_text("16 y 50")).to_be_visible()
+
+        edit_action = self.page.get_by_role("link", name="Editar")
+        expect(edit_action).to_have_attribute(
+            "href", reverse("providers_edit", kwargs={"id": provider.id})
         )
