@@ -305,15 +305,19 @@ def providers_form(request, id=None):
             saved, errors = Provider.save_provider(request.POST)
         else:
             provider = get_object_or_404(Provider, pk=provider_id)
-            provider.update_provider(request.POST)
+            try:
+                provider.update_provider(request.POST)
+            except ValueError as ve:
+                errors["address"] = str(ve)
+                saved = False
 
         if saved:
             return redirect(reverse("providers_repo"))
 
-        return render(
-            request, "providers/form.html", {"errors": errors, "provider": request.POST}
-        )
+        # Si no se guardó correctamente, renderiza el formulario con los errores
+        return render(request, "providers/form.html", {"errors": errors, "provider": request.POST})
 
+    # Método GET: cargar formulario para crear nuevo proveedor o editar existente
     provider = None
     if id is not None:
         provider = get_object_or_404(Provider, pk=id)
