@@ -226,6 +226,7 @@ class Provider(models.Model):
     phone = models.CharField(max_length=15)
     email = models.EmailField()
     address = models.CharField(max_length=100, blank=True)
+    floor_apartament = models.CharField(max_length=100, blank=True) #1. Agregar un atributo para la dirección en la clase Provider. agrego localidad.
 
     def __str__(self):
         return self.name
@@ -238,6 +239,7 @@ class Provider(models.Model):
         phone = data.get("phone", "")
         email = data.get("email", "")
         address = data.get("address", "")
+        floor_apartament = data.get("floor_apartament", "")
 
         if name == "":
             errors["name"] = "Por favor ingrese un nombre"
@@ -253,6 +255,9 @@ class Provider(models.Model):
         if address == "":
             errors["address"] = "Por favor ingrese una dirección"
 
+        if floor_apartament == "":
+            errors["floor_apartament"] = "Por favor ingrese si es una casa o el numero de piso del departamento"
+
         return errors
 
     @classmethod
@@ -267,6 +272,7 @@ class Provider(models.Model):
             phone=provider_data.get("phone"),
             email=provider_data.get("email"),
             address=provider_data.get("address"),
+            floor_apartament=provider_data.get("floor_apartament"),
         )
 
         return True, None
@@ -276,6 +282,7 @@ class Provider(models.Model):
         self.email = provider_data.get("email", "") or self.email
         self.phone = provider_data.get("phone", "") or self.phone
         self.address = provider_data.get("address", "") or self.address
+        self.floor_apartament = provider_data.get("floor_apartament", "") or self.floor_apartament
 
         self.save()
         return True, None

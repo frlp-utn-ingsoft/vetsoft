@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.shortcuts import reverse
-from app.models import Client, Medicine, Pet, Product, Vet
+from app.models import Client, Medicine, Pet, Product, Vet, Provider
 
 
 class HomePageTest(TestCase):
@@ -106,3 +106,55 @@ class ClientsTest(TestCase):
         self.assertEqual(editedClient.phone, client.phone)
         self.assertEqual(editedClient.address, client.address)
         self.assertEqual(editedClient.email, client.email)
+
+
+##### PROVEDOR #####
+
+class ProviderIntegrationTest(TestCase):
+    def test_can_create_provider_with_address(self):
+        response = self.client.post(
+            reverse("providers_form"),
+            data={
+                "name": "Proveedor XYZ",
+                "phone": "987654321",
+                "email": "proveedor@ejemplo.com",
+                "address": "Calle 123",
+                "floor_apartament": "casa",
+            },
+        )
+        providers = Provider.objects.all()
+        self.assertEqual(len(providers), 1)
+
+        self.assertEqual(providers[0].name, "Proveedor XYZ")
+        self.assertEqual(providers[0].phone, "987654321")
+        self.assertEqual(providers[0].email, "proveedor@ejemplo.com")
+        self.assertEqual(providers[0].address, "Calle 123")
+        self.assertEqual(providers[0].floor_apartament, "casa")
+
+        self.assertRedirects(response, reverse("providers_repo"))
+
+    def test_validation_errors_create_provider(self):
+        response = self.client.post(
+            reverse("providers_form"),
+            data={},
+        )
+
+        self.assertContains(response, "Por favor ingrese un nombre")
+        self.assertContains(response, "Por favor ingrese un teléfono")
+        self.assertContains(response, "Por favor ingrese un email")
+        self.assertContains(response, "Por favor ingrese una dirección")
+        self.assertContains(response, "Por favor ingrese si es una casa o el numero de piso del departamento")
+
+    def test_validation_invalid_email(self):
+        response = self.client.post(
+            reverse("providers_form"),
+            data={
+                "name": "Proveedor XYZ",
+                "phone": "987654321",
+                "email": "proveedorejemplo.com",  # Email inválido
+                "address": "Calle 123",
+                "floor_apartament": "casa",
+            },
+        )
+
+        self.assertContains(response, "Por favor ingrese un email valido")

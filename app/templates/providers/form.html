@@ -79,7 +79,22 @@
                             {{ errors.address }}
                         </div>
                     {% endif %}
-                </div>                
+                </div>
+                <div>
+                    <label for="floor_apartament" class="form-label">Piso/Departamento</label>
+                    <input type="text"
+                        id="floor_apartament"
+                        name="floor_apartament"
+                        value="{{ provider.floor_apartament }}"
+                        class="form-control"
+                        required/>
+                
+                    {% if errors.floor_apartament %}
+                        <div class="invalid-feedback">
+                            {{ errors.floor_apartament }}
+                        </div>
+                    {% endif %}
+                </div>                               
 
                 <button class="btn btn-primary">Guardar</button>
             </form>

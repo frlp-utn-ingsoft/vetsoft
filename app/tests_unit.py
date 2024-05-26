@@ -1,6 +1,6 @@
 from django.forms import ValidationError
 from django.test import TestCase
-from app.models import Client, Medicine, Pet, Product
+from app.models import Client, Medicine, Pet, Product, Provider
 
 class ClientModelTest(TestCase):
     def test_can_create_and_get_client(self):
@@ -58,6 +58,67 @@ class ClientModelTest(TestCase):
 
         self.assertEqual(client_updated.phone, "221555232")
 
+##### PROVEDOR #####
+class ProviderModelTest(TestCase):
+    def test_can_create_and_get_provider(self):
+        Provider.save_provider(
+            {
+                "name": "Proveedor ABC",
+                "phone": "123456789",
+                "email": "proveedor@example.com",
+                "address": "Calle 123",
+                "floor_apartament": "Piso 3c",
+            }
+        )
+        providers = Provider.objects.all()
+        self.assertEqual(len(providers), 1)
+
+        self.assertEqual(providers[0].name, "Proveedor ABC")
+        self.assertEqual(providers[0].phone, "123456789")
+        self.assertEqual(providers[0].email, "proveedor@example.com")
+        self.assertEqual(providers[0].address, "Calle 123")
+        self.assertEqual(providers[0].floor_apartament, "Piso 3c")
+
+    def test_can_update_provider(self):
+        Provider.save_provider(
+            {
+                "name": "Proveedor ABC",
+                "phone": "123456789",
+                "email": "proveedor@example.com",
+                "address": "Calle 123",
+                "floor_apartament": "Piso 3c",
+            }
+        )
+        provider = Provider.objects.get(pk=1)
+
+        self.assertEqual(provider.floor_apartament, "Piso 3c")
+
+        provider.update_provider({"floor_apartament": "casa"})
+
+        provider_updated = Provider.objects.get(pk=1)
+
+        self.assertEqual(provider_updated.floor_apartament, "casa")
+
+    def test_update_provider_with_error(self):
+        Provider.save_provider(
+            {
+                "name": "Proveedor ABC",
+                "phone": "123456789",
+                "email": "proveedor@example.com",
+                "address": "Calle 123",
+                "floor_apartament": "Piso 3c",
+            }
+        )
+        provider = Provider.objects.get(pk=1)
+
+        self.assertEqual(provider.floor_apartament, "Piso 3c")
+
+        provider.update_provider({"floor_apartament": ""})
+
+        provider_updated = Provider.objects.get(pk=1)
+
+        self.assertEqual(provider_updated.floor_apartament, "Piso 3c")
+        
 class ProductModelTest(TestCase):
     def test_invalid_price(self):
         result, errors = Product.save_product({
