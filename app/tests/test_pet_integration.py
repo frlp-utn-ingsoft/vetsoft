@@ -1,17 +1,21 @@
 from django.test import TestCase
 from django.urls import reverse
 from app.models import Pet
-from datetime import datetime
+from datetime import datetime, timedelta
 
-class PetViewsTest(TestCase):
+class PetIntegrationTest(TestCase):
 
-    def test_pet_form_view(self):
+    def test_pet_form_empty_pet_view(self):
+        hoy = datetime.now().date()
+        day = hoy + timedelta(days=1)
         response = self.client.post(
             reverse("pets_form"),
             data={
-                "name": "Test Pet",
-                "breed": "Test Breed",
-                "birthday": datetime.strptime("2024-06-06", "%Y-%m-%d").date()
+                "name": "",
+                "breed": "",
+                "birthday": ""
             }
         )
         self.assertContains(response, "Por favor ingrese una fecha")
+        self.assertContains(response, "Por favor ingrese un nombre")
+        self.assertContains(response, "Por favor ingrese la raza")
