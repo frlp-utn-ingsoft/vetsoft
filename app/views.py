@@ -213,20 +213,21 @@ def meds_form(request, id=None):
             saved, errors = Med.save_med(request.POST)
         else:
             med = get_object_or_404(Med, pk=med_id)
-            med.update_med(request.POST)
+            saved, errors = med.update_med(request.POST)
 
         if saved:
             return redirect(reverse("meds_repo"))
 
-        return render(
-            request, "meds/form.html", {"errors": errors, "med": request.POST}
-        )
+        return render(request, "meds/form.html", {"errors": errors, "med": request.POST})
 
     med = None
     if id is not None:
         med = get_object_or_404(Med, pk=id)
+    else:
+        med = {"name": "", "desc": "", "dose": ""} 
 
     return render(request, "meds/form.html", {"med": med})
+
 
 def meds_delete(request):
     med_id = request.POST.get("med_id")
@@ -234,3 +235,4 @@ def meds_delete(request):
     med.delete()
 
     return redirect(reverse("meds_repo"))
+
