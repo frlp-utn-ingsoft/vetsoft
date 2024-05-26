@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.shortcuts import reverse
-from app.models import Client, Medicine, Pet, Product
+from app.models import Client, Medicine, Pet, Product, Vet
 
 
 class HomePageTest(TestCase):
@@ -10,14 +10,17 @@ class HomePageTest(TestCase):
 
 class FormPagesTest(TestCase):
     def test_forms_template(self):
+
         response_clients_form = self.client.get(reverse("clients_form"))
-        response_vets_form = self.vets.get(reverse("vets_form"))
-        response_providers_form = self.providers.get(reverse("providers_form"))
-        response_pets_form = self.pets.get(reverse("pets_form"))
-        self.assertTemplateUsed(response_clients_form, "clients_form")
-        self.assertTemplateUsed(response_vets_form, "vets_form")
-        self.assertTemplateUsed(response_providers_form, "providers_form")
-        self.assertTemplateUsed(response_pets_form, "pets_form")
+        response_vets_form = self.client.get(reverse("vets_form"))
+        response_providers_form = self.client.get(reverse("providers_form"))
+        response_pets_form = self.client.get(reverse("pets_form"))
+
+        # verifico los templates usados
+        self.assertTemplateUsed(response_clients_form, "clients/form.html")
+        self.assertTemplateUsed(response_vets_form, "vets/form.html")
+        self.assertTemplateUsed(response_providers_form, "providers/form.html")
+        self.assertTemplateUsed(response_pets_form, "pets/form.html")
 
 class ClientsTest(TestCase):
     def test_repo_use_repo_template(self):
