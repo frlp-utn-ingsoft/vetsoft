@@ -1,5 +1,6 @@
 from django.test import TestCase
-from app.models import Client, Product
+from app.models import Client, Product, Pet
+from datetime import date, timedelta
 
 
 class ClientModelTest(TestCase):
@@ -135,3 +136,52 @@ class ProductModelTest(TestCase):
         product.update_product({"stock":""})
         product_updated = Product.objects.get(pk=1)
         self.assertEqual(product_updated.stock, 50)
+
+class PetModelTest(TestCase):
+    def test_can_create_pet_with_breed_options(self):
+        pet_birthday = (date(2021, 1, 1)).strftime("%Y-%m-%d")
+        Pet.save_pet(
+            {
+                "name": "Benita",
+                "breed": "Perro",
+                "birthday": pet_birthday,
+            }
+        )
+
+        pets = Pet.objects.all()
+        self.assertEqual(len(pets), 1)
+        self.assertEqual(pets[0].name, "Benita")
+        self.assertEqual(pets[0].breed, "Perro")
+        self.assertEqual(pets[0].birthday, date(2021, 1, 1))
+
+    def test_can_update_pet_breed(self):
+        pet_birthday = (date(2021, 1, 1)).strftime("%Y-%m-%d")
+        Pet.save_pet(
+            {
+                "name": "Benita",
+                "breed": "Perro",
+                "birthday": pet_birthday,
+            }
+        )
+
+        pet = Pet.objects.get(pk=1)
+        self.assertEqual(pet.breed, "Perro")
+        pet.update_pet({"breed": "Gato"})
+        pet_updated = Pet.objects.get(pk=1)
+        self.assertEqual(pet_updated.breed, "Gato")
+
+    def test_update_pet_with_error(self):
+        pet_birthday = (date(2021, 1, 1)).strftime("%Y-%m-%d")
+        Pet.save_pet(
+            {
+                "name": "Benita",
+                "breed": "Perro",
+                "birthday": pet_birthday,
+            }
+        )
+
+        pet = Pet.objects.get(pk=1)
+        self.assertEqual(pet.breed, "Perro")
+        pet.update_pet({"breed": ""})
+        pet_updated = Pet.objects.get(pk=1)
+        self.assertEqual(pet_updated.breed, "Perro")

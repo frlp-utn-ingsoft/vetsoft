@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.shortcuts import reverse
-from app.models import Client, Product
+from app.models import Client, Product, Pet
+from datetime import date, timedelta
 
 
 class HomePageTest(TestCase):
@@ -183,3 +184,75 @@ class ProductsTest(TestCase):
         self.assertEqual(editedProduct.type, product.type)
         self.assertEqual(editedProduct.price, product.price)
         self.assertEqual(editedProduct.stock, 50)
+    
+    class PetsTest(TestCase):
+        def test_repo_use_repo_template(self):
+            response = self.client.get(reverse("pets_repo"))
+            self.assertTemplateUsed(response, "pets/repository.html")
+
+        def test_form_use_form_template(self):
+            response = self.client.get(reverse("pets_form"))
+            self.assertTemplateUsed(response, "pets/form.html")
+
+    def test_can_create_pet(self):
+        pet_birthday = (date(2021, 1, 1)).strftime("%Y-%m-%d")
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": "Benita",
+                "breed": "Perro",
+                "birthday": pet_birthday,
+            },
+        )
+        pets = Pet.objects.all()
+        self.assertEqual(len(pets), 1)
+
+        self.assertEqual(pets[0].name, "Benita")
+        self.assertEqual(pets[0].breed, "Perro")
+        self.assertEqual(pets[0].birthday, date(2021, 1, 1))
+
+        self.assertRedirects(response, reverse("pets_repo"))
+    
+    def test_can_update_pet_breed(self):
+        pet_birthday = (date(2021, 1, 1)).strftime("%Y-%m-%d")
+        pet = Pet.objects.create(
+            name= "Benita",
+            breed = "Perro",
+            birthday = pet_birthday,
+        )
+        
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "id": pet.id,
+                "breed": "Conejo",
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+
+        editedPet = Pet.objects.get(pk=pet.id)
+        self.assertEqual(editedPet.name, pet.name)
+        self.assertEqual(editedPet.birthday, date(2021, 1, 1)) # No se puede modificar la fecha de nacimiento sin parsear o convertir al mismo.
+        self.assertEqual(editedPet.breed, "Conejo")
+    
+    def test_validation_errors_create_pet(self):
+        response = self.client.post(
+            reverse("pets_form"),
+            data={},
+        )
+
+        self.assertContains(response, "Por favor ingrese un nombre")
+        self.assertContains(response, "Por favor ingrese una raza")
+        self.assertContains(response, "Por favor ingrese una fecha de nacimiento")
+
+    def test_validation_error_create_pet_without_breed(self):
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": "Benita",
+                "breed": "",
+                "birthday": "2021-01-01",
+            },
+        )
+
+        self.assertContains(response, "Por favor ingrese una raza")

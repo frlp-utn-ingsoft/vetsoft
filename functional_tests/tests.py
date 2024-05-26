@@ -5,7 +5,8 @@ from playwright.sync_api import sync_playwright, expect, Browser
 
 from django.urls import reverse
 
-from app.models import Client, Product
+from app.models import Client, Product, Pet
+from datetime import date
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 playwright = sync_playwright().start()
@@ -260,7 +261,7 @@ class productCreateEditTestCase(PlaywrightTestCase):
         expect(self.page.get_by_text("Limpieza")).to_be_visible()
         expect(self.page.get_by_text("100")).to_be_visible()
         expect(self.page.get_by_text("50")).to_be_visible()
-    
+
     def test_increase_stock_product_by_touching_button(self):
         product = Product.objects.create(
             name="Lavandina",
@@ -268,18 +269,18 @@ class productCreateEditTestCase(PlaywrightTestCase):
             price=100,
             stock=50,
         )
-        
+
         self.page.goto(f"{self.live_server_url}{reverse('products_repo')}")
         expect(self.page.get_by_text("Lavandina")).to_be_visible()
         expect(self.page.get_by_text("Limpieza")).to_be_visible()
         expect(self.page.get_by_text("100")).to_be_visible()
         expect(self.page.get_by_text("50")).to_be_visible()
-        
+
         self.page.get_by_role("button", name="+").click()
-        
+
         expect(self.page.get_by_text("50")).not_to_be_visible()
         expect(self.page.get_by_text("51")).to_be_visible()
-        
+
     def test_edit_form_should_be_able_to_throw_an_error_if_negative_stock(self):
         product = Product.objects.create(
             name="Lavandina",
@@ -287,19 +288,19 @@ class productCreateEditTestCase(PlaywrightTestCase):
             price=100,
             stock=50,
         )
-        
+
         self.page.goto(f"{self.live_server_url}{reverse('products_repo')}")
         expect(self.page.get_by_text("Lavandina")).to_be_visible()
         expect(self.page.get_by_text("Limpieza")).to_be_visible()
         expect(self.page.get_by_text("100")).to_be_visible()
         expect(self.page.get_by_text("50")).to_be_visible()
-        
+
         self.page.get_by_role("link", name="Editar").click()
         expect(self.page.get_by_label("Nombre")).to_have_value("Lavandina")
         expect(self.page.get_by_label("Tipo")).to_have_value("Limpieza")
         expect(self.page.get_by_label("Precio")).to_have_value("100.0")
         expect(self.page.get_by_label("Stock")).to_have_value("50")
-        
+
         self.page.evaluate("document.querySelector('input[name=stock]').value = '-100'")
         self.page.get_by_role("button", name="Guardar").click()
         expect(self.page.get_by_label("Nombre")).to_have_value("Lavandina")
@@ -307,3 +308,72 @@ class productCreateEditTestCase(PlaywrightTestCase):
         expect(self.page.get_by_label("Precio")).to_have_value("100.0")
         expect(self.page.get_by_label("Stock")).to_have_value("-100")
         expect(self.page.get_by_text("El stock no puede ser negativo."))
+
+class PetCreateEditTestCase(PlaywrightTestCase):
+    def test_should_show_message_if_table_is_empty(self):
+        self.page.goto(f"{self.live_server_url}{reverse('clients_repo')}")
+        expect(self.page.get_by_text("No existen clientes")).to_be_visible()
+
+    def test_should_be_able_to_create_a_new_pet(self):
+        self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Benita")
+        self.page.get_by_label("Raza").select_option("Perro")
+        self.page.get_by_label("Nacimiento").fill("2021-01-01")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Benita")).to_be_visible()
+        expect(self.page.get_by_text("Perro")).to_be_visible()
+        expect(self.page.get_by_text("Jan. 1, 2021")).to_be_visible()
+    
+    def test_should_view_errors_if_form_pet_is_invalid(self):
+        self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una raza")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una fecha de nacimiento")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Benita")
+        self.page.get_by_label("Raza").select_option("")
+        self.page.get_by_label("Nacimiento").fill("2021-01-01")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una raza")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una fecha de nacimiento")).not_to_be_visible()
+    
+    def test_should_be_able_to_edit_a_pet(self):
+        pet_birthday = (date(2021, 1, 1)).strftime("%Y-%m-%d")
+        pet = Pet.objects.create(
+            name="Benita",
+            breed="Perro",
+            birthday=pet_birthday,
+        )
+
+        path = reverse("pets_edit", kwargs={"id": pet.id})
+        self.page.goto(f"{self.live_server_url}{path}")
+
+        self.page.get_by_label("Nombre").fill("Rocco")
+        self.page.get_by_label("Raza").select_option("Gato")
+        self.page.get_by_label("Nacimiento").fill("2016-02-02")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Benita")).not_to_be_visible()
+        expect(self.page.get_by_text("Perro")).not_to_be_visible()
+        expect(self.page.get_by_text("Jan. 1, 2021")).not_to_be_visible()
+
+        expect(self.page.get_by_text("Rocco")).to_be_visible()
+        expect(self.page.get_by_text("Gato")).to_be_visible()
+        expect(self.page.get_by_text("Feb. 2, 2016")).to_be_visible()
+
+        edit_action = self.page.get_by_role("link", name="Editar")
+        expect(edit_action).to_have_attribute("href", reverse("pets_edit", kwargs={"id": pet.id}))

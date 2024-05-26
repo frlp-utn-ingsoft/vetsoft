@@ -37,13 +37,18 @@
                 </div>
                 <div>
                     <label for="breed" class="form-label">Raza</label>
-                    <input type="text"
-                        id="breed"
-                        name="breed"
-                        class="form-control"
-                        value="{{pet.breed}}"
-                        required/>
-
+                    <select name="breed" 
+                    id="breed"
+                    class="form-select" 
+                    required>
+                        <option value="" disabled selected hidden>Seleccionar raza...</option>
+                        {% for key, value in breeds.items %}
+                        <option value="{{ key }}" {% if key == pet.breed %}selected{% endif %}>
+                            {{ value }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    
                     {% if errors.breed %}
                         <div class="invalid-feedback">
                             {{ errors.breed }}
