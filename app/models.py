@@ -324,14 +324,19 @@ class Product(models.Model):
 
         return True, None
 
+# class Speciality(models.TextChoices):
+#     GENERAL = 'General', 'General'
+#     SURGEON = 'Surgeon', 'Surgeon'
+#     DENTIST = 'Dentist', 'Dentist'
+#     CARDIOLOGIST = 'Cardiologist', 'Cardiologist'
+
 def validate_vet(data):
     errors = {}
 
     name = data.get("name", "")
     phone = data.get("phone", "")
     email = data.get("email", "")
-    opening_time = data.get("opening_time", "")
-    closing_time = data.get("closing_time", "")
+    speciality = data.get("especialidad", "")
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
@@ -346,6 +351,11 @@ def validate_vet(data):
     elif "@" not in email:  # Agreo una verificacion para saber si hay al menos un "@" en el email
         errors["email"] = "Por favor ingrese un email válido"
 
+    if speciality == "":
+        errors["especialidad"] = "Por favor seleccione una especialidad"
+    # elif speciality not in [choice[0] for choice in Speciality.choices]:
+    #     errors["speciality"] = "Especialidad no válida"
+
     return errors
 
 
@@ -354,6 +364,7 @@ class Vet(models.Model):
     phone = models.CharField(max_length=15)
     email = models.EmailField()
     address = models.CharField(max_length=100, blank=True)
+    speciality = models.CharField(max_length=15)
 
     def __str__(self):
         return self.name
@@ -370,6 +381,7 @@ class Vet(models.Model):
             phone=vet_data.get("phone"),
             email=vet_data.get("email"),
             address=vet_data.get("address"),
+            speciality=vet_data.get("especialidad"),
 
         )
 
@@ -385,7 +397,8 @@ class Vet(models.Model):
         self.email = vet_data.get("email", "") or self.email
         self.phone = vet_data.get("phone", "") or self.phone
         self.address = vet_data.get("address", "") or self.address
-
+        self.speciality = vet_data.get("especialidad", "") or self.speciality
+        
         self.save()
 
         return True, None

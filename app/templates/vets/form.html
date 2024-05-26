@@ -72,6 +72,22 @@
                         La dirección es opcional
                     </div>
                 </div>
+                <div>
+                    <label for="vet_especialidad" class="form-label">Especialidad</label>
+                    <input type="text"
+                        id="vet_especialidad"
+                        name="especialidad"
+                        value="{{vet.speciality}}"
+                        class="form-control"
+                        required/>
+
+                    {% if vet_errors.especialidad %}
+                        <div class="invalid-feedback">
+                            {{ vet_errors.especialidad }}
+                        </div>
+                    {% endif %}
+                </div>
+                
                 
 
                 <button class="btn btn-primary">Guardar</button>
