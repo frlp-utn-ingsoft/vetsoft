@@ -269,3 +269,31 @@ class PetCreateEditTestCase(PlaywrightTestCase):
         expect(self.page.get_by_text("Por favor ingrese un raza")).not_to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese un fecha de nacimiento")).not_to_be_visible()
         expect(self.page.get_by_text("La fecha no puede ser mayor al dia de hoy")).to_be_visible()
+
+class ProductCreateEditTestCase(PlaywrightTestCase):
+    def test_should_view_errors_if_form_is_invalid(self):
+        self.page.goto(f"{self.live_server_url}{reverse('products_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un tipo")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un precio")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Producto X")
+        self.page.get_by_label("Tipo").fill("Tipo 1")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un precio válido")).to_be_visible()
+
+        self.page.get_by_label("Precio").fill("10.99")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un tipo")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un precio")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un precio válido")).not_to_be_visible()
