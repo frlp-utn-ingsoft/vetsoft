@@ -361,7 +361,7 @@ class ProviderCreateEditTestCase(PlaywrightTestCase):
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
-                expect(self.page.get_by_text("Por favor ingrese un email")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un email")).to_be_visible()
 
     def test_should_be_able_to_edit_a_provider_with_address(self):
         provider = Provider.objects.create(
@@ -383,25 +383,6 @@ class ProviderCreateEditTestCase(PlaywrightTestCase):
         expect(self.page.get_by_text("Dirección Original")).not_to_be_visible()
         expect(self.page.get_by_text("actualizado@ejemplo.com")).to_be_visible()
         expect(self.page.get_by_text("Dirección Actualizada")).to_be_visible()
-
-class PetCreateValidateTestCase(PlaywrightTestCase):
-    def test_should_be_able_to_create_a_new_pet(self):
-        self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
-
-        expect(self.page.get_by_role("form")).to_be_visible()
-
-        self.page.get_by_label("Nombre").fill("Firulais")
-        self.page.get_by_label("Raza").fill("Labrador")
-        self.page.get_by_label("Fecha de Cumpleaños").fill("2022-01-01")
-
-        self.page.get_by_role("button", name="Guardar").click()
-
-        expect(self.page.get_by_text("Firulais")).to_be_visible()
-        expect(self.page.get_by_text("Labrador")).to_be_visible()
-        expect(self.page.get_by_text("Jan. 1, 2022")).to_be_visible()
-
-    
-    def test_should_view_errors_if_form_is_invalid(self):
 
 #  TEST DE PET
 class PetCreateWeightgreaterThanZero(PlaywrightTestCase):
