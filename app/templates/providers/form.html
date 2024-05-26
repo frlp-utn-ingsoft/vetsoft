@@ -4,7 +4,11 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-6 offset-lg-3">
-            <h1>Nuevo Proveedor</h1>
+            {% if provider %}
+                <h1>Editar Proveedor</h1>
+            {% else %}
+                <h1>Nuevo Proveedor</h1>
+            {% endif %}
         </div>
     </div>
 
@@ -56,7 +60,8 @@
                         id="address"
                         name="address"
                         value="{{ provider.address }}"
-                        class="form-control" />
+                        class="form-control"
+                        required />
 
                     {% if errors.address %}
                         <div class="invalid-feedback">
