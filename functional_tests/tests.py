@@ -6,6 +6,7 @@ from playwright.sync_api import sync_playwright, expect, Browser
 from django.urls import reverse
 
 from app.models import Client
+from app.models import Provider
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 playwright = sync_playwright().start()
@@ -59,6 +60,13 @@ class HomeTestCase(PlaywrightTestCase):
         expect(home_clients_link).to_be_visible()
         expect(home_clients_link).to_have_text("Clientes")
         expect(home_clients_link).to_have_attribute("href", reverse("clients_repo"))
+
+
+class ProvidersRepoTestCase(PlaywrightTestCase):
+
+    def test_should_show_message_if_table_is_empty(self):
+        self.page.goto(f"{self.live_server_url}{reverse('providers_repo')}")
+        expect(self.page.get_by_text("No existen proveedores")).to_be_visible()   
 
 
 class ClientsRepoTestCase(PlaywrightTestCase):
