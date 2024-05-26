@@ -90,6 +90,12 @@ def validate_medicines(data):
         
         if dose == "":
             errors["dose"] = "Por favor, ingrese una dosis para la medicina"
+        try:
+            dose = int(dose)
+            if (dose < 1) or (dose > 10):
+                errors["dose"] = "La dosis debe ser entre 1 y 10"
+        except ValueError:
+            errors["dose"] = "La dosis debe ser un número entero"
 
         return errors
 
@@ -98,7 +104,7 @@ def validate_medicines(data):
 class Medicine(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
-    dose = models.CharField(max_length=50)
+    dose = models.IntegerField()
 
     def __str__(self):
         return self.name
