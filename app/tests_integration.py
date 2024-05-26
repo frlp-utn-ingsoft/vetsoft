@@ -145,4 +145,4 @@ class MedicinesTest(TestCase):
                 "dose": "-5",
             },
         )
-        self.assertContains(response, "La dosis debe ser un número entero")
+        self.assertContains(response, "La dosis debe ser un número entero positivo")
