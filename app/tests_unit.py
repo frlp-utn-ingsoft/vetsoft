@@ -1,5 +1,5 @@
 from django.test import TestCase
-from app.models import Client, Pet, validate_pet, Vet, Speciality, Provider, validate_provider, Medicine, validate_medicine
+from app.models import Client, Pet, validate_pet, Vet, Speciality, Provider, validate_provider, validate_product, Medicine, validate_medicine
 import datetime
 
 
@@ -65,6 +65,37 @@ class ClientModelTest(TestCase):
         self.assertEqual(client_updated.phone, "221555232")
 
 
+class TestValidateProduct(TestCase):
+
+    def test_valid_price(self):
+        data = {
+            "name": "ampicilina",
+            "type": "antibiotico",
+            "price": "100"
+        }
+        errors = validate_product(data)
+        self.assertNotIn("price", errors)
+    
+    def test_price_equal_zero(self):
+        data = {
+            "name": "ampicilina",
+            "type": "antibiotico",
+            "price": "0"
+        }
+        errors = validate_product(data)
+        self.assertIn("price", errors)
+        self.assertEqual(errors["price"], "Por favor ingrese un precio mayor a cero")
+
+    def test_price_missing(self):
+        data = {
+            "name": "ampicilina",
+            "type": "antibiotico",
+            "price": ""
+        }
+        errors = validate_product(data)
+        self.assertIn("price", errors)
+        self.assertEqual(errors["price"], "Por favor ingrese un precio")
+
 class PetModelTest(TestCase):
     def test_can_create_and_get_pet(self):
         Pet.save_pet(
@@ -76,7 +107,6 @@ class PetModelTest(TestCase):
         )
         pets = Pet.objects.all()
         self.assertEqual(len(pets), 1)
-
     def test_can_update_pet(self):
         Pet.save_pet(
             {
@@ -86,19 +116,14 @@ class PetModelTest(TestCase):
             }
         )
         pet = Pet.objects.get(pk=1)
-
         self.assertEqual(pet.name, "gatito")
-
         pet.update_pet({
             "name": "gato",
             "breed": "orange",
             "birthday": "2024-05-18",
         })
-
         pet_updated = Pet.objects.get(pk=1)
-
         self.assertEqual(pet_updated.name, "gato")
-
     def test_update_pet_with_error(self): 
         Pet.save_pet(
             {
@@ -108,64 +133,48 @@ class PetModelTest(TestCase):
             }
         )
         pet = Pet.objects.get(pk=1)
-
         self.assertEqual(pet.name, "gatito")
-
         pet.update_pet({"name": ""})
-
         pet_updated = Pet.objects.get(pk=1)
-
         self.assertEqual(pet_updated.name, "gatito")
-
     def test_validate_pet_all_ok(self):
         data = {
                 "name": "gatito",
                 "breed": "orange",
                 "birthday": "2024-05-18",
             }
-
         result = validate_pet(data)
         self.assertDictEqual(result,{})
-
     def test_validate_pet_empty_data(self):
         data = {
                 "name": "",
                 "breed": "",
                 "birthday": "",
             }
-
         result = validate_pet(data)
         self.assertIn("Por favor ingrese una fecha de nacimiento valida y anterior a la de hoy",result.values())
         self.assertIn("Por favor ingrese un nombre",result.values())
         self.assertIn("Por favor ingrese una raza",result.values())
-
     def test_validate_pet_invalid_birthday_today(self):
         date_now = datetime.date.today().strftime("%Y-%m-%d")
-
         data = {
             "name": "gatito",
                 "breed": "orange",
                 "birthday": date_now,
         }
-
         result = validate_pet(data)
         self.assertIn("Por favor ingrese una fecha de nacimiento valida y anterior a la de hoy",result.values())
-
     def test_validate_pet_invalid_birthday_date_later_than_today(self):
         date_now = datetime.date.today()
         date_later = date_now + datetime.timedelta(days=1)
         date = date_later.strftime("%Y-%m-%d")
-
         data = {
             "name": "gatito",
             "breed": "orange",
             "birthday": date,
         }
-
         result = validate_pet(data)
         self.assertIn("Por favor ingrese una fecha de nacimiento valida y anterior a la de hoy",result.values())
-
-
 class VetModelTest(TestCase):
     def test_can_create_and_get_vet(self):
         speciality = "Urgencias"
@@ -180,12 +189,10 @@ class VetModelTest(TestCase):
         )
         vets = Vet.objects.all()
         self.assertEqual(len(vets), 1)
-
         self.assertEqual(vets[0].name, "Juan Sebastian Veron")
         self.assertEqual(vets[0].email, "brujita75@hotmail.com")
         self.assertEqual(vets[0].phone, "221555232")
         self.assertEqual(vets[0].speciality, "Urgencias")
-
     def test_can_update_vet(self):
         Vet.save_vet(
             {
@@ -196,20 +203,15 @@ class VetModelTest(TestCase):
             }
         )
         vet = Vet.objects.get(pk=1)
-
         self.assertEqual(vet.phone, "221555232")
-
         vet.update_vet({
             "name": "Juan Sebastian Veron",
             "email": "brujita75@hotmail.com",
             "phone": "221555233",
             "speciality": "Urgencias",
             })
-
         vet_updated = Vet.objects.get(pk=1)
-
         self.assertEqual(vet_updated.phone, "221555233")
-
     def test_update_vet_with_error(self):
         Vet.save_vet(
             {
@@ -220,13 +222,9 @@ class VetModelTest(TestCase):
             }
         )
         vet = Vet.objects.get(pk=1)
-
         self.assertEqual(vet.phone, "221555232")
-
         vet.update_vet({"phone": ""})
-
         vet_updated = Vet.objects.get(pk=1)
-
         self.assertEqual(vet_updated.phone, "221555232")
 
     def is_valid_speciality(self, speciality):
@@ -289,7 +287,7 @@ class ProviderModelTest(TestCase):
                 "address":"Calle falsa 123"
             }
         )
-        
+
         provider = Provider.objects.get(pk=1)
 
         self.assertEqual(provider.name, "Demian")

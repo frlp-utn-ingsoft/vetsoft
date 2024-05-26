@@ -1,0 +1,12 @@
+# Configuración de la base de datos
+DB_ENGINE="motorBD"
+DB_NAME="nombreBD"
+
+# Configuración de Django
+DEBUG="Bool"
+SECRET_KEY="unaClave"
+ALLOWED_HOSTS="puertos permitidos"
+
+# configuración de aplicación
+LANGUAGE_CODE="chino mandarin"
+TIME_ZONE="-10"
