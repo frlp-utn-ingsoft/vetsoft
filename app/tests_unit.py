@@ -1,7 +1,6 @@
 from django.test import TestCase
-from app.models import Client, validate_product, validate_medicine, validate_pet
-
-
+from app.models import Client, validate_pet, validate_product,validate_medicine, validate_pet
+from datetime import date
 
 class ClientModelTest(TestCase):
     def test_can_create_and_get_client(self):
@@ -151,3 +150,36 @@ class ProductModelTest(TestCase):
         self.assertIn("price", errors)
         self.assertEqual(errors["price"], "El precio debe ser mayor que cero")
 
+class PetModelTest(TestCase):
+    def test_birthday_today_date(self):
+
+        today = date.today().isoformat()
+
+        # Creo un setup
+        pet_data = {
+            "name": "Pepe",
+            "breed": "Labrador",
+            "birthday": today,
+            "client": 1,
+        }
+
+        errors = validate_pet(pet_data)
+
+        # Compruebo que hay error en el campo de birthday
+        self.assertIn("birthday", errors)
+        self.assertEqual(errors["birthday"], "La fecha de nacimiento no puede ser mayor o igual a la fecha actual")
+
+    def test_birthday_past_date(self):
+
+        #Creo el setup
+        pet_data = {
+            "name": "Pepe",
+            "breed": "Labrador",
+            "birthday": "2020-01-01",
+            "client": 1,
+        }
+
+        errors = validate_pet(pet_data)
+
+        #Compruebo que no hay error en el campo de birthday
+        self.assertNotIn("birthday", errors, "La fecha ingresada es correcta, no debe haber error")
