@@ -60,7 +60,8 @@
                         id="birthday"
                         name="birthday"
                         class="form-control"
-                        value="{{ pet.birthday|date:"Y-m-d" }}"
+                        value="{{ pet.birthday }}"
+                        max="{{ today }}"
                         required/>
 
                     {% if errors.birthday %}

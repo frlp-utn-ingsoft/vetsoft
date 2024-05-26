@@ -1,8 +1,8 @@
+from datetime import date, datetime
 from django.test import TestCase
 from django.shortcuts import reverse
-from app.models import Client
-from app.models import Pet
-from datetime import date
+from app.models import Client, Pet
+
 
 class HomePageTest(TestCase):
     def test_use_home_template(self):
@@ -111,7 +111,7 @@ class PetsTest(TestCase):
     def test_form_use_form_template(self):
         response = self.client.get(reverse("pets_form"))
         self.assertTemplateUsed(response, "pets/form.html")
-
+    
     def test_can_create_pet(self):
         response = self.client.post(
             reverse("pets_form"),
@@ -186,3 +186,33 @@ class PetsTest(TestCase):
         self.assertEqual(editedpet.name, "Luffy")
         self.assertEqual(editedpet.breed, pet.breed)
         self.assertEqual(editedpet.weight, pet.weight)
+
+        self.assertRedirects(response, reverse("pets_repo"))
+    
+    def test_validate_date_of_birthday(self):
+        future_date = (datetime.today().year + 1, 5, 22)
+        date_str = datetime(*future_date).strftime('%Y-%m-%d')
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": "Manolo",
+                "breed": "golden",
+                "birthday": date_str,
+                "weight": 30,
+            },
+        )
+
+        self.assertContains(response, "La fecha no puede ser mayor al dia de hoy")
+
+    def test_validate_invalid_date_of_birthday(self):
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": "Manolo",
+                "breed": "golden",
+                "birthday": 'not-a-date',
+                "weight": 30,
+            },
+        )
+
+        self.assertContains(response, "Formato de fecha incorrecto")

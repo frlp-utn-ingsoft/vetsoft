@@ -9,5 +9,8 @@
             "src": "/(.*)",
             "dest": "vetsoft/wsgi.py"
         }
-    ]
+    ],
+    "git": {
+        "deploymentEnabled": false
+    }
 }

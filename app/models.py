@@ -1,20 +1,34 @@
 from django.db import models
+from datetime import datetime
 
 def validate_fields(data, required_fields):
     errors = {}
 
     for key, value in required_fields.items():
         field_value = data.get(key, "")
-        print(field_value)
+
         if field_value == "":
             errors[key] = f"Por favor ingrese un {value}"
         elif key == 'email' and field_value.count("@") == 0:
             errors["email"] = "Por favor ingrese un email valido"
         elif key == 'weight' and int(field_value) < 0:
             errors["weight"] = "El peso de la mascota no puede ser negativo"
+        elif key == 'birthday':
+            birthday_error = validate_date_of_birthday(field_value)
+            if birthday_error:
+                errors["birthday"] = birthday_error
 
     return errors
 
+def validate_date_of_birthday(date_str):
+    try:
+        birth_date = datetime.strptime(date_str, '%Y-%m-%d')
+        today = datetime.today()
+        if birth_date > today:
+            return "La fecha no puede ser mayor al dia de hoy"
+        return None
+    except ValueError:
+        return "Formato de fecha incorrecto"
 
 class Client(models.Model):
     name = models.CharField(max_length=100)

@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
@@ -246,7 +247,7 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         )
 
 
-class PetCreateEditTestCaseWeight(PlaywrightTestCase):
+class PetCreateEditTestCase(PlaywrightTestCase):
     def test_should_view_errors_if_form_is_invalid(self):
         self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
 
@@ -258,7 +259,6 @@ class PetCreateEditTestCaseWeight(PlaywrightTestCase):
         expect(self.page.get_by_text("Por favor ingrese un raza")).to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese un fecha de nacimiento")).to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese un peso")).to_be_visible()
-
         self.page.get_by_label("Nombre").fill("Manolo")
         self.page.get_by_label("Raza").fill("golden")
 
@@ -267,7 +267,6 @@ class PetCreateEditTestCaseWeight(PlaywrightTestCase):
         self.page.get_by_label("Fecha de nacimiento").fill(date_str)
 
         self.page.get_by_label("Peso").fill("-30")
-
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
@@ -275,3 +274,4 @@ class PetCreateEditTestCaseWeight(PlaywrightTestCase):
         expect(self.page.get_by_text("Por favor ingrese un fecha de nacimiento")).not_to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese un peso")).not_to_be_visible()
         expect(self.page.get_by_text("El peso de la mascota no puede ser negativo")).to_be_visible()
+        expect(self.page.get_by_text("La fecha no puede ser mayor al dia de hoy")).to_be_visible()
