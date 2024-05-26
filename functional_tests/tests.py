@@ -6,6 +6,7 @@ from playwright.sync_api import sync_playwright, expect, Browser
 from django.urls import reverse
 
 from app.models import Client
+from app.models import Vet
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 playwright = sync_playwright().start()
@@ -242,3 +243,54 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         expect(edit_action).to_have_attribute(
             "href", reverse("clients_edit", kwargs={"id": client.id})
         )
+
+#Test de Vet
+class VetsRepoTestCase(PlaywrightTestCase):
+    def test_should_show_vets_data(self):
+        Vet.objects.create(
+            name="Dr. Michael Smith",
+            address="789 Oak St",
+            phone="555123456",
+            email="michael@example.com",
+            speciality="general"
+        )
+
+        Vet.objects.create(
+            name="Dr. Emily Johnson",
+            address="101 Pine St",
+            phone="555987654",
+            email="emily@example.com",
+            speciality="dentista"
+        )
+
+        self.page.goto(f"{self.live_server_url}{reverse('vets_repo')}")
+
+        expect(self.page.get_by_text("No existen veterinarios")).not_to_be_visible()
+
+        expect(self.page.get_by_text("Dr. Michael Smith")).to_be_visible()
+        expect(self.page.get_by_text("789 Oak St")).to_be_visible()
+        expect(self.page.get_by_text("555123456")).to_be_visible()
+        expect(self.page.get_by_text("michael@example.com")).to_be_visible()
+
+        expect(self.page.get_by_text("Dr. Emily Johnson")).to_be_visible()
+        expect(self.page.get_by_text("101 Pine St")).to_be_visible()
+        expect(self.page.get_by_text("555987654")).to_be_visible()
+        expect(self.page.get_by_text("emily@example.com")).to_be_visible()
+
+    def test_should_not_be_able_to_create_a_especialidad_vacio(self):
+        self.page.goto(f"{self.live_server_url}{reverse('vets_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Eduardo")
+        self.page.get_by_label("Dirección").fill("La Plata")
+        self.page.get_by_label("Teléfono").fill("23145553")
+        self.page.get_by_label("Email").fill("eduardola@gmail.com")
+        self.page.get_by_label("Especialidad").fill("")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un teléfono")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un email")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor seleccione una especialidad")).to_be_visible()
