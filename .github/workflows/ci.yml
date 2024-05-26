@@ -27,8 +27,8 @@ jobs:
               run: ruff check
 
             - name: Run unit and integration tests
-              run: python manage test app
+              run: python manage.py test app
 
             - name: Run e2e tests
-              run: python manage test functional_tests
+              run: python manage.py test functional_tests
 
