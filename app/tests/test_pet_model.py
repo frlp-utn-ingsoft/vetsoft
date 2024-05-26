@@ -1,8 +1,8 @@
 from django.test import TestCase
 from app.models import Pet
-from datetime import datetime
+from datetime import datetime, timedelta
 
-class PetBirthdayTest(TestCase):
+class PetModelTest(TestCase):
 
     def test_create_pet(self):
         pet = Pet.objects.create(name="Test Pet", breed="Test Breed", birthday=datetime.strptime("2024-05-06", "%Y-%m-%d").date())
@@ -22,9 +22,10 @@ class PetBirthdayTest(TestCase):
         self.assertTrue(pet.birthday < datetime.now().date(), "La fecha de cumpleaños no puede ser mayor al dia actual.")
 
     def test_validate_birthday_date_more_than_today (self):
-        pet_birthday = datetime.strptime("2024-05-30", "%Y-%m-%d").date()
-        pet = Pet.objects.create(name="Test Pet", breed="Test Breed", birthday=pet_birthday)
+        hoy = datetime.now().date()
+        day = hoy + timedelta(days=1)
+        pet = Pet.objects.create(name="Test Pet", breed="Test Breed", birthday=day)
         self.assertEqual(pet.name, "Test Pet")
         self.assertEqual(pet.breed, "Test Breed")
-        self.assertEqual(pet.birthday, pet_birthday)
+        self.assertEqual(pet.birthday, day)
         self.assertFalse(pet.birthday < datetime.now().date(), "La fecha de cumpleaños no puede ser mayor al dia actual.")
