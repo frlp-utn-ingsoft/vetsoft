@@ -29,6 +29,7 @@ if DEBUG:
 else:
     SECRET_KEY = os.environ.get('SECRET_KEY')
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    ALLOWED_HOSTS = ",".split(os.environ.get('ALLOWED_HOSTS'))
 
 # Application definition
 
