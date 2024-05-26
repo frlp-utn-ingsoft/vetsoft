@@ -1,3 +1,4 @@
+from datetime import date
 import os
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
@@ -242,6 +243,28 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         expect(edit_action).to_have_attribute(
             "href", reverse("clients_edit", kwargs={"id": client.id})
         )
+    
+class PetCreateEditTestCase(PlaywrightTestCase):
+    def test_should_be_able_to_create_a_new_client(self):
+        self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Cliente").fill("Juan Sebastian Veron")
+        self.page.get_by_label("Nombre").fill("Loki")
+        self.page.get_by_label("Raza").fill("Border Collie")
+        self.page.get_by_label("Cumpleaños").fill(date(2024,5,5))
+        self.page.get_by_label("Peso").fill(10)
+
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Loki")).to_be_visible()
+        expect(self.page.get_by_text("Border Collie")).to_be_visible()
+        expect(self.page.get_by_text(date(2024,5,5))).to_be_visible()
+        expect(self.page.get_by_text(10)).to_be_visible()
+        expect(self.page.get_by_text("Juan Sebastian Veron")).to_be_visible()
+        expect(self.page.get_by_text("Sin Medicinas")).to_be_visible()
 
 class MedicineRepoTestCase(PlaywrightTestCase):
     def test_should_show_message_if_table_is_empty(self):

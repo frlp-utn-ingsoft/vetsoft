@@ -28,6 +28,7 @@
                 <th>Nombre</th>
                 <th>Raza</th>
                 <th>Fecha de Cumpleaños</th>
+                <th>Peso</th>
                 <th>Cliente</th>
                 <th>Medicinas</th>
                 <th>Veterinario</th>
@@ -37,19 +38,34 @@
 
         <tbody>
             {% for pet in pets %}
-                <tr>
-                    <td>{{pet.name}}</td>
-                    <td>{{pet.breed}}</td>
-                    <td>{{pet.birthday}}</td>
-                    <td>{{pet.client.name}}</td>
-                    
-                    <td>
-                        {% for medicine in pet.medicines.all %}
-                            {{medicine.name}} ,
-                        {% empty %}
-                            Sin Medicinas
-                        {% endfor %}
-                    </td>
+
+            <tr>
+                <td>{{pet.name}}</td>
+                <td>{{pet.breed}}</td>
+                <td>{{pet.birthday}}</td>
+                <td>{{pet.weight}}</td>
+                <td>{{pet.client.name}}</td>
+                
+                <td>
+                    {% for medicine in pet.medicines.all %}
+                        {{medicine.name}} ,
+                    {% empty %}
+                        Sin Medicinas
+                    {% endfor %}
+                </td>
+                
+                <td>
+                    <a class="btn btn-outline-primary"
+                       href="{% url 'pets_edit' id=pet.id %}"
+                    >Editar</a>
+                    <form method="POST"
+                        action="{% url 'pets_delete' %}"
+                        aria-label="Formulario de eliminación de mascota">
+                        {% csrf_token %}
+
+                        <input type="hidden" name="pet_id" value="{{ pet.id }}" />
+                        <button class="btn btn-outline-danger">Eliminar</button>
+                    </form>
                     
                     <td>
                         {% for vets in pet.vets.all %}
