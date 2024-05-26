@@ -1,6 +1,6 @@
 from datetime import date
 from django.test import TestCase
-from app.models import Client, Vet, Specialty, Medicine, Pet
+from app.models import Client, Provider, Vet, Specialty, Medicine, Pet
 
 class ClientModelTest(TestCase):
     def test_can_create_and_get_client(self):
@@ -56,6 +56,59 @@ class ClientModelTest(TestCase):
 
         client_updated = Client.objects.get(pk=1)
         self.assertEqual(client_updated.phone, "221555232")
+
+class ProviderModelTest(TestCase):
+    def test_can_create_and_get_provider(self):
+        Provider.save_provider(
+            {
+                "name": "katerina mariescurrena",
+                "email": "katy@gmail.com",
+                "address": "17 y 166",
+            }
+        )
+        providers = Provider.objects.all()
+        self.assertEqual(len(providers), 1)
+
+        self.assertEqual(providers[0].name, "katerina mariescurrena")
+        self.assertEqual(providers[0].email, "katy@gmail.com")
+        self.assertEqual(providers[0].address, "17 y 166")
+
+
+    def test_can_update_provider(self):
+        Provider.save_provider(
+            {
+                "name": "katerina mariescurrena",
+                "email": "katy@gmail.com",
+                "address": "17 y 166",
+            }
+        )
+        provider = Provider.objects.get(pk=1)
+
+        self.assertEqual(provider.address, "17 y 166")
+
+        provider.update_provider({"address": "44 y 30"})
+
+        provider_updated = Provider.objects.get(pk=1)
+
+        self.assertEqual(provider_updated.address, "44 y 30")
+
+    def test_update_provider_with_error(self):
+        Provider.save_provider(
+            {
+                "name": "katerina mariescurrena",
+                "email": "katy@gmail.com",
+                "address": "17 y 166",
+            }
+        )
+        provider = Provider.objects.get(pk=1)
+
+        self.assertEqual(provider.address, "17 y 166")
+
+        provider.update_provider({"address": ""})
+
+        provider_updated = Provider.objects.get(pk=1)
+
+        self.assertEqual(provider_updated.address, "17 y 166")
 
 class VetModelTest(TestCase):
     def test_can_create_and_get_vet(self):
