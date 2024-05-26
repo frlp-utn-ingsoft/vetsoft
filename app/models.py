@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from datetime import date
 
 import re
-
+##---------clients----------   
 def validate_client(data):
     errors = {}
 
@@ -26,7 +26,6 @@ def validate_client(data):
         errors["email"] = "Por favor ingrese un email valido"
 
     return errors
-
 
 class Client(models.Model):
     name = models.CharField(max_length=100)
@@ -62,6 +61,9 @@ class Client(models.Model):
         self.save()
 
  ##---------medicine----------   
+
+
+##---------medicines----------   
 def validate_medicine(data):
     errors = {}
 
@@ -116,6 +118,8 @@ class Medicine(models.Model):
     
 
  ##---------pets----------   
+
+##---------pets----------   
 def validate_pet(data):
     errors = {}
 
@@ -151,8 +155,7 @@ def validate_pet(data):
         except ValueError:
             errors["weight"] = "El peso debe ser un número válido"
     return errors
-    
-    
+       
 class Pet(models.Model):
     name = models.CharField(max_length=100)
     breed = models.CharField(max_length=50)
@@ -174,19 +177,21 @@ class Pet(models.Model):
 
         Pet.objects.create(
             name=pet_data.get("name"),
-            breed=pet_data.get("breed"),
+            breed=pet_data.get("breed", ""),
             birthday=pet_data.get("birthday"),
-             weight=pet_data.get("weight"),
+            weight=pet_data.get("weight"),
         )
 
         return True, None
     
     def update_pet(self, pet_data):
         self.name = pet_data.get("name", "") or self.name
-        self.breed = pet_data.get("breed", "") or self.breed
+        self.breed = pet_data.get("breed", 0) or self.breed
         self.birthday = pet_data.get("birthday", "") or self.birthday
         self.weight = pet_data.get("weight", "") or self.weight
         self.save()
+
+
 
 ##---------products----------   
 def validate_product(data):
@@ -212,7 +217,6 @@ def validate_product(data):
         except ValueError:
             errors["price"] = "El precio debe ser un número válido"
     return errors
-
 
 class Product(models.Model):
     name = models.CharField(max_length=50)
@@ -264,7 +268,6 @@ def validate_provider(data):
 
     return errors
 
-
 class Provider(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(max_length=254)
@@ -293,6 +296,8 @@ class Provider(models.Model):
         self.save()
 
  ##---------vets----------   
+
+##---------vets----------   
 def validate_vet(data):
     errors = {}
 
@@ -344,3 +349,7 @@ class Vet(models.Model):
         self.phone = vet_data.get("phone", "") or self.phone
 
         self.save()
+
+
+
+    

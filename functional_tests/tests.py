@@ -1,10 +1,7 @@
 import os
-
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from playwright.sync_api import sync_playwright, expect, Browser
-
 from django.urls import reverse
-
 from app.models import Client, Pet
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
@@ -261,6 +258,12 @@ class PetCreateValidateTestCase(PlaywrightTestCase):
 
     
     def test_should_view_errors_if_form_is_invalid(self):
+
+#  TEST DE PET
+class PetCreateWeightgreaterThanZero(PlaywrightTestCase):
+
+    # crear una nueva mascota con peso mayor a cero
+    def test_should_be_able_to_create_a_new_pet(self):
         self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
 
         expect(self.page.get_by_role("form")).to_be_visible()
@@ -334,6 +337,26 @@ class PetCreateValidateTestCase(PlaywrightTestCase):
 
         expect(self.page.get_by_role("form")).to_be_visible()
 
+        self.page.get_by_label("Nombre").fill("Mora")
+        self.page.get_by_label("Raza").fill("Beagle")
+        self.page.get_by_label("Fecha de Cumpleaños").fill("2024-11-30")
+        self.page.get_by_label("Peso").fill("130");
+
+        self.page.get_by_role("button", name="Guardar").click()
+        
+        expect(self.page.get_by_text("Mora")).to_be_visible()
+        expect(self.page.get_by_text("Beagle")).to_be_visible()
+        expect(self.page.get_by_text("Nov. 30, 2024")).to_be_visible()
+        expect(self.page.get_by_text("130")).to_be_visible()
+
+     # test para verificar que el formulario sea invalido y advertencia del precio menor a cero   
+    def test_should_view_errors_if_form_is_invalid_with_weight_less_than_zero(self):
+        self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
+
+       
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        #formulario vacio
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
@@ -381,6 +404,21 @@ class PetCreateValidateTestCase(PlaywrightTestCase):
             "href", reverse("pets_edit", kwargs={"id": pet.id})
         )
 
+        expect(self.page.get_by_text("Por favor ingrese un peso")).to_be_visible()
+        
+        # peso menor a cero
+        self.page.get_by_label("Nombre").fill("Roma")
+        self.page.get_by_label("Raza").fill("Dogo Argentino")
+        self.page.get_by_label("Fecha de Cumpleaños").fill("2024-11-30")
+        self.page.get_by_label("Peso").fill("-200")
+        
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(
+            self.page.get_by_text("El peso debe ser un número mayor a cero")
+        ).to_be_visible()
+
 class ProductCreatePriceGreaterThanZeroTestCase(PlaywrightTestCase):
     def test_should_be_able_to_create_a_new_product(self):
         self.page.goto(f"{self.live_server_url}{reverse('products_form')}")
@@ -418,7 +456,6 @@ class ProductCreatePriceGreaterThanZeroTestCase(PlaywrightTestCase):
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
-
         expect(
             self.page.get_by_text("Por favor ingrese un tipo")
         ).not_to_be_visible()
@@ -486,3 +523,4 @@ class MedicineCreateDoseRangeOneToTen(PlaywrightTestCase):
         expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese una descripcion")).not_to_be_visible()
         expect(self.page.get_by_text("La dosis debe estar en un rango de 1 a 10")).to_be_visible()
+
