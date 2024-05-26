@@ -28,6 +28,15 @@ class ProviderTest(TestCase):
             self.assertEqual(provider[0].address, "7 entre 13 y 44")
 
             self.assertRedirects(response, reverse("providers_repo"))
+
+    def test_validation_errors_create_provider(self):
+        response = self.client.post(
+            reverse("providers_form"),
+            data={},
+        )
+        self.assertContains(response, "Por favor ingrese un nombre")
+        self.assertContains(response, "Por favor ingrese un email") 
+        self.assertContains(response, "Por favor ingrese una direccion")
    
 
 class ClientsTest(TestCase):
