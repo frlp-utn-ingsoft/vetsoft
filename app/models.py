@@ -149,6 +149,7 @@ def validate_pet(data):
     cliente = data.get("client", "")
     breed = data.get("breed", "")
     birthday = data.get("birthday","")
+    weight = data.get("weight","")
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
@@ -160,6 +161,17 @@ def validate_pet(data):
         errors["breed"] = "Por favor ingrese una raza"
     if birthday == "":
         errors["birthday"] = "Por favor ingrese la fecha de cumpleaños"
+    if weight == "":
+        errors["weight"] = "Por favor ingrese un peso"
+    try:
+        float_weight = float(weight)
+        if float_weight<=0:
+            errors["weight"] = "Por favor ingrese un peso mayor que 0"
+        decimal_part = str(float_weight).split(".")
+        if len(decimal_part)>2:
+            errors["weight"] = "Por favor ingrese un peso con maximo 2 decimales"
+    except ValueError:
+        errors["weight"] = "Por favor ingrese un peso valido"
     return errors
                 
 class Provider(models.Model):
@@ -273,17 +285,22 @@ def validate_medicine(data):
 
     if dose == "":
         errors["dose"] = "Por favor ingrese una dosis"
-    try:
-        float_dose = float(dose)
-        if float_dose <= 0:
-            errors["dose"] = "Por favor ingrese una dosis mayor que 0"
-        integer_part, decimal_part = str(float_dose).split(".")
-        if len(decimal_part) > 2:
-            errors["dose"] = "Por favor ingrese una dosis con maximo 2 decimales"
-    except ValueError:
-        errors["dose"] = "Por favor ingrese una dosis valida"
+    else:
+        try:
+            float_dose = float(dose)
+            if float_dose <= 0:
+                errors["dose"] = "Por favor ingrese una dosis mayor que 0"
+            elif float_dose < 1 or float_dose > 10:
+                errors["dose"] = "Por favor ingrese una dosis entre 1 y 10"
+            else:
+                integer_part, decimal_part = str(float_dose).split(".")
+                if len(decimal_part) > 2:
+                    errors["dose"] = "Por favor ingrese una dosis con maximo 2 decimales"
+        except ValueError:
+            errors["dose"] = "Por favor ingrese una dosis valida"
 
     return errors
+
 
 class Medicine(models.Model):
     name = models.CharField(max_length=100)
@@ -320,6 +337,7 @@ class Pet(models.Model):
     name=models.CharField(max_length=100)
     breed=models.CharField(max_length=100)
     birthday=models.DateField(verbose_name="Fecha de Cumpleaños")
+    weight=models.FloatField()
     client = models.ForeignKey(Client,on_delete=models.CASCADE, null=True)
     medicines = models.ManyToManyField(Medicine)
     vets = models.ManyToManyField(Vet)
@@ -338,6 +356,7 @@ class Pet(models.Model):
             name = pet_data.get("name"),
             breed= pet_data.get("breed"),
             birthday = pet_data.get("birthday"),
+            weight = pet_data.get("weight"),
             client = client2
         )
 
@@ -347,6 +366,7 @@ class Pet(models.Model):
         self.name = pet_data.get("name","") or self.name
         self.breed = pet_data.get("breed", "") or self.breed
         self.birthday = pet_data.get("birthday", "") or self.birthday
+        self.weight = pet_data.get("weight", "") or self.weight
 
         self.save()    
 
