@@ -96,18 +96,6 @@ from app.models import Medicine
 
 
 class MedicinesTest(TestCase):
-    # def test_repo_use_repo_template(self):
-    #      response = self.medicine.get(reverse("medicines_repo"))
-    #      self.assertTemplateUsed(response, "medicines/repository.html")
-
-    # def test_repo_display_all_clients(self):
-    #      response = self.medicine.get(reverse("medicines_repo"))
-    #      self.assertTemplateUsed(response, "medicines/repository.html")
-
-    # def test_form_use_form_template(self):
-    #      response = self.client.get(reverse("clients_form"))
-    #      self.assertTemplateUsed(response, "clients/form.html")
-
     def test_can_create_medicine(self):
         response = self.client.post(
             reverse("medicines_form"),
