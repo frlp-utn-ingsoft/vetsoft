@@ -66,7 +66,21 @@ class ProvidersRepoTestCase(PlaywrightTestCase):
 
     def test_should_show_message_if_table_is_empty(self):
         self.page.goto(f"{self.live_server_url}{reverse('providers_repo')}")
-        expect(self.page.get_by_text("No existen proveedores")).to_be_visible()   
+        expect(self.page.get_by_text("No existen proveedores")).to_be_visible()
+
+    def test_should_show_provider_data(self):
+        Provider.objects.create(
+            name="Pepe Gonzales",
+            email="pepe@hotmail.com",
+            address="7 entre 13 y 44",
+        )
+        self.page.goto(f"{self.live_server_url}{reverse('providers_repo')}")
+
+        expect(self.page.get_by_text("No existen proveedores")).not_to_be_visible()
+
+        expect(self.page.get_by_text("Pepe Gonzales")).to_be_visible()
+        expect(self.page.get_by_text("pepe@hotmail.com")).to_be_visible()
+        expect(self.page.get_by_text("7 entre 13 y 44")).to_be_visible()   
 
 
 class ClientsRepoTestCase(PlaywrightTestCase):
