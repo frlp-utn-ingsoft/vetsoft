@@ -29,3 +29,11 @@ Nombre de los integrantes:
 
 `python manage.py runserver`
 
+## Instrucciones Docker
+    - El dockerfile esta creado con la imagen python:3.12-slim como base
+    
+    - Se agregó al requirements.txt la dependencia dotenv para poder importar los datos vulnerables ocultos en variables de entorno 
+
+    - Al bajar el Dockerfile, agregar los valores de cada quien en la sección de ENV (Esta todo comentado). NO HACER PUSH DEL DOCKERFILE CON LOS VALORES
+
+    - Correr la imagen creada indicando el puerto 8000 (docker run -p 8000:8000 imagen:version)
