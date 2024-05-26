@@ -138,8 +138,14 @@ def validate_products(data):
     if type == "":
         errors["type"] = "Ingrese el tipo de producto"
     
-    if price == "":
+    if price == "" :
         errors["price"] = "Ingrese el precio del producto"
+    try:
+        price = float(price)
+        if price < 0:
+            errors["price"] = "El precio no puede ser negativo"
+    except ValueError:
+        errors["price"] = "El precio debe ser un número valido"       
 
     try:
         stock = int(stock)
@@ -176,19 +182,21 @@ class Product(models.Model):
         return True, None
     
     def update_product(self, product_data):
+        errors = validate_products(product_data)
+        if len(errors.keys()) > 0:
+            return False, errors
+
         self.name = product_data.get("name", "") or self.name
         self.type = product_data.get("type", "") or self.type
         self.price = product_data.get("price", "") or self.price
-        
+
         if "stock" in product_data:
             try:
                 self.stock = int(product_data["stock"])
             except ValueError:
                 pass 
-
         self.save()
 
-        
 class Pet(models.Model):
     name = models.CharField(max_length=100)
     breed = models.CharField(max_length=300)
