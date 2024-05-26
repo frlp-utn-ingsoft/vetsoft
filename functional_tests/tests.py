@@ -1,11 +1,8 @@
 import os
-
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from playwright.sync_api import sync_playwright, expect, Browser
-
 from django.urls import reverse
-
-from app.models import Client
+from app.models import Client, Pet
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 playwright = sync_playwright().start()
@@ -242,3 +239,288 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         expect(edit_action).to_have_attribute(
             "href", reverse("clients_edit", kwargs={"id": client.id})
         )
+
+class PetCreateValidateTestCase(PlaywrightTestCase):
+    def test_should_be_able_to_create_a_new_pet(self):
+        self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Firulais")
+        self.page.get_by_label("Raza").fill("Labrador")
+        self.page.get_by_label("Fecha de Cumpleaños").fill("2022-01-01")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Firulais")).to_be_visible()
+        expect(self.page.get_by_text("Labrador")).to_be_visible()
+        expect(self.page.get_by_text("Jan. 1, 2022")).to_be_visible()
+
+    
+    def test_should_view_errors_if_form_is_invalid(self):
+
+#  TEST DE PET
+class PetCreateWeightgreaterThanZero(PlaywrightTestCase):
+
+    # crear una nueva mascota con peso mayor a cero
+    def test_should_be_able_to_create_a_new_pet(self):
+        self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una raza")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una fecha de nacimiento")).to_be_visible()
+        
+
+        self.page.get_by_label("Nombre").fill("Firulais")
+        self.page.get_by_label("Raza").fill("Labrador")
+        self.page.get_by_label("Fecha de Cumpleaños").fill("2026-01-01")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una raza")).not_to_be_visible()
+        expect(self.page.get_by_text("La fecha de nacimiento no puede ser mayor o igual a la fecha actual")).to_be_visible()
+
+
+    def test_should_be_able_to_edit_a_pet(self):
+        pet = Pet.objects.create(
+            name="Firulais",
+            breed="Labrador",
+            birthday="2022-01-01"
+        )
+
+        path = reverse("pets_edit", kwargs={"id": pet.id})
+        self.page.goto(f"{self.live_server_url}{path}")
+
+        self.page.get_by_label("Nombre").fill("Pepito")
+        self.page.get_by_label("Raza").fill("Beagle")
+        self.page.get_by_label("Fecha de Cumpleaños").fill("2002-10-10")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Firulais")).not_to_be_visible()
+        expect(self.page.get_by_text("Labrador")).not_to_be_visible()
+        expect(self.page.get_by_text("Jan. 1, 2022")).not_to_be_visible()
+
+        expect(self.page.get_by_text("Pepito")).to_be_visible()
+        expect(self.page.get_by_text("Beagle")).to_be_visible()
+        expect(self.page.get_by_text("Oct. 10, 2002")).to_be_visible()
+
+        edit_action = self.page.get_by_role("link", name="Editar")
+        expect(edit_action).to_have_attribute(
+            "href", reverse("pets_edit", kwargs={"id": pet.id})
+        )
+
+class PetCreateValidateTestCase(PlaywrightTestCase):
+    def test_should_be_able_to_create_a_new_pet(self):
+        self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Firulais")
+        self.page.get_by_label("Raza").fill("Labrador")
+        self.page.get_by_label("Fecha de Cumpleaños").fill("2022-01-01")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Firulais")).to_be_visible()
+        expect(self.page.get_by_text("Labrador")).to_be_visible()
+        expect(self.page.get_by_text("Jan. 1, 2022")).to_be_visible()
+
+    
+    def test_should_view_errors_if_form_is_invalid(self):
+        self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Mora")
+        self.page.get_by_label("Raza").fill("Beagle")
+        self.page.get_by_label("Fecha de Cumpleaños").fill("2024-11-30")
+        self.page.get_by_label("Peso").fill("130");
+
+        self.page.get_by_role("button", name="Guardar").click()
+        
+        expect(self.page.get_by_text("Mora")).to_be_visible()
+        expect(self.page.get_by_text("Beagle")).to_be_visible()
+        expect(self.page.get_by_text("Nov. 30, 2024")).to_be_visible()
+        expect(self.page.get_by_text("130")).to_be_visible()
+
+     # test para verificar que el formulario sea invalido y advertencia del precio menor a cero   
+    def test_should_view_errors_if_form_is_invalid_with_weight_less_than_zero(self):
+        self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
+
+       
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        #formulario vacio
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una raza")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una fecha de nacimiento")).to_be_visible()
+        
+
+        self.page.get_by_label("Nombre").fill("Firulais")
+        self.page.get_by_label("Raza").fill("Labrador")
+        self.page.get_by_label("Fecha de Cumpleaños").fill("2026-01-01")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una raza")).not_to_be_visible()
+        expect(self.page.get_by_text("La fecha de nacimiento no puede ser mayor o igual a la fecha actual")).to_be_visible()
+
+
+    def test_should_be_able_to_edit_a_pet(self):
+        pet = Pet.objects.create(
+            name="Firulais",
+            breed="Labrador",
+            birthday="2022-01-01"
+        )
+
+        path = reverse("pets_edit", kwargs={"id": pet.id})
+        self.page.goto(f"{self.live_server_url}{path}")
+
+        self.page.get_by_label("Nombre").fill("Pepito")
+        self.page.get_by_label("Raza").fill("Beagle")
+        self.page.get_by_label("Fecha de Cumpleaños").fill("2002-10-10")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Firulais")).not_to_be_visible()
+        expect(self.page.get_by_text("Labrador")).not_to_be_visible()
+        expect(self.page.get_by_text("Jan. 1, 2022")).not_to_be_visible()
+
+        expect(self.page.get_by_text("Pepito")).to_be_visible()
+        expect(self.page.get_by_text("Beagle")).to_be_visible()
+        expect(self.page.get_by_text("Oct. 10, 2002")).to_be_visible()
+
+        edit_action = self.page.get_by_role("link", name="Editar")
+        expect(edit_action).to_have_attribute(
+            "href", reverse("pets_edit", kwargs={"id": pet.id})
+        )
+
+        expect(self.page.get_by_text("Por favor ingrese un peso")).to_be_visible()
+        
+        # peso menor a cero
+        self.page.get_by_label("Nombre").fill("Roma")
+        self.page.get_by_label("Raza").fill("Dogo Argentino")
+        self.page.get_by_label("Fecha de Cumpleaños").fill("2024-11-30")
+        self.page.get_by_label("Peso").fill("-200")
+        
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(
+            self.page.get_by_text("El peso debe ser un número mayor a cero")
+        ).to_be_visible()
+
+class ProductCreatePriceGreaterThanZeroTestCase(PlaywrightTestCase):
+    def test_should_be_able_to_create_a_new_product(self):
+        self.page.goto(f"{self.live_server_url}{reverse('products_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Amoxicilina")
+        self.page.get_by_label("Tipo").fill("Antibiotico")
+        self.page.get_by_label("Precio").fill("100");
+
+        self.page.get_by_role("button", name="Guardar").click()
+        
+        expect(self.page.get_by_text("Amoxicilina")).to_be_visible()
+        expect(self.page.get_by_text("Antibiotico")).to_be_visible()
+        #expect(self.page.get_by_text("Proveedor 1")).to_be_visible()
+        expect(self.page.get_by_text("100")).to_be_visible()
+
+    def test_should_view_errors_if_form_is_invalid_with_price_less_than_zero(self):
+        self.page.goto(f"{self.live_server_url}{reverse('products_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+
+        expect(self.page.get_by_text("Por favor ingrese un tipo")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un precio")).to_be_visible()
+        
+
+        self.page.get_by_label("Nombre").fill("Amoxicilina")
+        self.page.get_by_label("Tipo").fill("Antibiótico")
+        self.page.get_by_label("Precio").fill("-10")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(
+            self.page.get_by_text("Por favor ingrese un tipo")
+        ).not_to_be_visible()
+
+        expect(
+            self.page.get_by_text("El precio debe ser mayor que cero")
+        ).to_be_visible()
+
+class MedicineCreateDoseRangeOneToTen(PlaywrightTestCase):
+    def test_should_be_able_to_create_a_new_medicine(self):
+        self.page.goto(f"{self.live_server_url}{reverse('medicines_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Diclofenaco")
+        self.page.get_by_label("Descripción").fill("Calma el dolor")
+        self.page.get_by_label("Dosis").fill("3");
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Diclofenaco")).to_be_visible()
+        expect(self.page.get_by_text("Calma el dolor")).to_be_visible()
+        expect(self.page.get_by_text("3")).to_be_visible()
+
+    def test_should_view_errors_if_form_is_invalid_with_price_greater_than_ten(self):
+        self.page.goto(f"{self.live_server_url}{reverse('medicines_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una descripción")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una dosis")).to_be_visible()
+
+
+        self.page.get_by_label("Nombre").fill("Diclofenaco")
+        self.page.get_by_label("Descripción").fill("Calma el dolor")
+        self.page.get_by_label("Dosis").fill("13")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una descripcion")).not_to_be_visible()
+        expect(self.page.get_by_text("La dosis debe estar en un rango de 1 a 10")).to_be_visible()
+    
+    def test_should_view_errors_if_form_is_invalid_with_price_less_than_one(self):
+        self.page.goto(f"{self.live_server_url}{reverse('medicines_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una descripción")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una dosis")).to_be_visible()
+
+
+        self.page.get_by_label("Nombre").fill("Diclofenaco")
+        self.page.get_by_label("Descripción").fill("Calma el dolor")
+        self.page.get_by_label("Dosis").fill("-3")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una descripcion")).not_to_be_visible()
+        expect(self.page.get_by_text("La dosis debe estar en un rango de 1 a 10")).to_be_visible()
+

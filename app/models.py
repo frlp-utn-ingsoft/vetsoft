@@ -1,8 +1,9 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from datetime import date
 
 import re
-
+##---------clients----------   
 def validate_client(data):
     errors = {}
 
@@ -25,7 +26,6 @@ def validate_client(data):
         errors["email"] = "Por favor ingrese un email valido"
 
     return errors
-
 
 class Client(models.Model):
     name = models.CharField(max_length=100)
@@ -61,6 +61,9 @@ class Client(models.Model):
         self.save()
 
  ##---------medicine----------   
+
+
+##---------medicines----------   
 def validate_medicine(data):
     errors = {}
 
@@ -73,11 +76,13 @@ def validate_medicine(data):
 
     if description == "":
         errors["description"] = "Por favor ingrese una descripción"
+    if dose == "":
+        errors["dose"] = "Por favor ingrese una dosis"
     else:
         try:
             int_dose = int(dose)
-            if int_dose <= 0:
-                errors["dose"] = "La dosis debe ser mayor que cero"
+            if int_dose < 1 or int_dose > 10:
+                errors["dose"] = "La dosis debe estar en un rango de 1 a 10"
         except ValueError:
             errors["dose"] = "La dosis debe ser un número entero válido"
     return errors
@@ -113,12 +118,15 @@ class Medicine(models.Model):
     
 
  ##---------pets----------   
+
+##---------pets----------   
 def validate_pet(data):
     errors = {}
 
     name = data.get("name", "")
     breed = data.get("breed", "")
     birthday = data.get("birthday", "")
+    weight = data.get("weight", None)
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
@@ -128,13 +136,31 @@ def validate_pet(data):
 
     if birthday == "":
         errors["birthday"] = "Por favor ingrese una fecha de nacimiento"
+    else:
+        try:
+            birth = date.fromisoformat(birthday)
+            if birth >= date.today():
+                errors["birthday"] = "La fecha de nacimiento no puede ser mayor o igual a la fecha actual"
+        except ValueError:
+            errors["birthday"] = "Formato de fecha inválido. Por favor ingrese la fecha en el formato correcto (YYYY-MM-DD)"
+
+
+    if weight == "": 
+        errors["weight"] = "Por favor ingrese un peso"
+    else:
+        try:
+                decimal_weight = float(weight)
+                if decimal_weight <= 0:
+                    errors["weight"] = "El peso debe ser un número mayor a cero"
+        except ValueError:
+            errors["weight"] = "El peso debe ser un número válido"
     return errors
-    
-    
+       
 class Pet(models.Model):
     name = models.CharField(max_length=100)
     breed = models.CharField(max_length=50)
     birthday = models.DateField()
+    weight = models.DecimalField(max_digits=8, decimal_places=3)  
     client = models.ForeignKey("Client", on_delete=models.CASCADE, null=True, blank=True)
     medicines = models.ManyToManyField(Medicine)
     vets = models.ManyToManyField("Vet", blank=True)
@@ -151,18 +177,21 @@ class Pet(models.Model):
 
         Pet.objects.create(
             name=pet_data.get("name"),
-            breed=pet_data.get("breed"),
+            breed=pet_data.get("breed", ""),
             birthday=pet_data.get("birthday"),
+            weight=pet_data.get("weight"),
         )
 
         return True, None
     
     def update_pet(self, pet_data):
         self.name = pet_data.get("name", "") or self.name
-        self.breed = pet_data.get("breed", "") or self.breed
+        self.breed = pet_data.get("breed", 0) or self.breed
         self.birthday = pet_data.get("birthday", "") or self.birthday
-
+        self.weight = pet_data.get("weight", "") or self.weight
         self.save()
+
+
 
 ##---------products----------   
 def validate_product(data):
@@ -180,8 +209,6 @@ def validate_product(data):
 
     if price == "": 
         errors["price"] = "Por favor ingrese un precio"
-    elif not price.isdigit():
-        errors["price"] = "El precio debe ser un número válido"
     else:
         try:
             float_price = float(price)
@@ -190,7 +217,6 @@ def validate_product(data):
         except ValueError:
             errors["price"] = "El precio debe ser un número válido"
     return errors
-
 
 class Product(models.Model):
     name = models.CharField(max_length=50)
@@ -246,6 +272,7 @@ def validate_provider(data):
 
     return errors
 
+
 class Provider(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(max_length=254)
@@ -282,6 +309,8 @@ class Provider(models.Model):
 
 
  ##---------vets----------   
+
+##---------vets----------   
 def validate_vet(data):
     errors = {}
 
@@ -333,3 +362,7 @@ class Vet(models.Model):
         self.phone = vet_data.get("phone", "") or self.phone
 
         self.save()
+
+
+
+    
