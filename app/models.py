@@ -99,14 +99,6 @@ def validate_med(data):
         except ValueError:
             errors["dose"] = "La dosis debe ser un número decimal"
 
-    else:
-        try:
-            dose = float(dose)
-            if dose < 1.0 or dose > 10.0:
-                errors["dose"] = "La dosis debe estar entre 1 y 10"
-        except ValueError:
-            errors["dose"] = "La dosis debe ser un número decimal"
-
     return errors
 
 class Client(models.Model):
