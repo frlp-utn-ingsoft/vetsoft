@@ -323,3 +323,5 @@ class AddProduct(PlaywrightTestCase):
         expect(self.page.get_by_text("Tipo1")).to_be_visible()
         expect(self.page.get_by_text("10")).to_be_visible()
         expect(self.page.get_by_text("15")).to_be_visible()
+
+
