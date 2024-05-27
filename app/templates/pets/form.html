@@ -37,12 +37,15 @@
                 </div>
                 <div>
                     <label for="breed" class="form-label">Raza</label>
-                    <input type="text"
-                        id="breed"
-                        name="breed"
-                        class="form-control"
-                        value="{{pet.breed}}"
-                        required/>
+                        <select id="breed" name="breed" class="form-select" required>
+                            <option value="">Seleccione una raza</option>
+                            {% for breed in breeds %}
+                                <option value="{{ breed.id }}" {% if breed.id == pet.breed.id %}selected{% endif %}>
+                                    {{ breed.name }}
+                                </option>
+                             {% endfor %}
+                        </select>
+
 
                     {% if errors.breed %}
                         <div class="invalid-feedback">
@@ -51,7 +54,7 @@
                     {% endif %}
                 </div>
                 <div>
-                    <label for="birthday" class="form-label">Fecha de cumpleaños</label>
+                    <label for="birthday" class="form-label">Fecha de nacimiento</label>
                     <input type="date"
                         id="birthday"
                         name="birthday"

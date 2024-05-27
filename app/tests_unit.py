@@ -1,6 +1,6 @@
 from django.forms import ValidationError
 from django.test import TestCase
-from app.models import Client, Medicine, Pet, Product, Provider
+from app.models import Breed, Client, Medicine, Pet, Product, Provider
 
 class ClientModelTest(TestCase):
     def test_can_create_and_get_client(self):
@@ -118,7 +118,7 @@ class ProviderModelTest(TestCase):
         provider_updated = Provider.objects.get(pk=1)
 
         self.assertEqual(provider_updated.floor_apartament, "Piso 3c")
-        
+
 class ProductModelTest(TestCase):
     def test_invalid_price(self):
         result, errors = Product.save_product({
@@ -176,11 +176,32 @@ class MedicineModelTest(TestCase):
         self.assertEqual(result, True)
         self.assertIsNone(errors)
 
+class BreedModelTest(TestCase):
+    def test_can_create_breed(self):
+        valid_name_1 = "Perro - Ovejero Aleman"
+        Breed.objects.create(
+            name = valid_name_1
+        )
+
+        valid_name_2 = "Gato - Persa"
+
+        Breed.objects.create(
+            name = valid_name_2
+        )
+
+        breeds = Breed.objects.all()
+        self.assertEqual(len(breeds), 2)
+
+        self.assertEqual(breeds[0].name, valid_name_1)
+        self.assertEqual(breeds[1].name, valid_name_2)
+
+
 class PetModelTest(TestCase):
     def test_invalid_weight(self):
+        Breed.objects.create(name='A')
         result, errors = Pet.save_pet({
             "name": "Mascota Invalida",
-            "breed": "Raza",
+            "breed": 1,
             "weight": -5.0,
             "birthday": "2024-05-20",
         })
@@ -188,9 +209,10 @@ class PetModelTest(TestCase):
         self.assertDictEqual(errors, {'weight': 'El peso debe ser mayor que 0'})
 
     def test_valid_weight(self):
+        Breed.objects.create(name='B')
         result, errors = Pet.save_pet({
             "name": "Mascota Valida",
-            "breed": "Raza",
+            "breed": 1,
             "weight": 5.0,
             "birthday": "2024-05-20",
         })

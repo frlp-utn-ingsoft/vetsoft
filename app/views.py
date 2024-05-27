@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.views.generic import TemplateView
 from django.views import View
-from .models import Client, Medicine, Product, Vet, Provider, Pet
+from .models import Breed, Client, Medicine, Product, Vet, Provider, Pet
 
 def home(request):
     buttonsHome = [
@@ -216,9 +216,10 @@ class PetFormView(View):
 
     def get(self, request, id=None):
         pet = None
+        breeds = Breed.objects.all()
         if id is not None:
             pet = get_object_or_404(Pet, pk=id)
-        return render(request, self.template_name, {"pet": pet})
+        return render(request, self.template_name, {"pet": pet, "breeds": breeds})
 
     def post(self, request, id=None):
         pet_id = request.POST.get("id", "")

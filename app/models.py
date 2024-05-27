@@ -290,11 +290,19 @@ class Provider(models.Model):
 
 ####################################################################################################
 
+############################################ BREED_PET #############################################
+class Breed(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    def _str_(self):
+        return self.name
+
+####################################################################################################
+
 ############################################### PET ################################################
 
 class Pet(models.Model):
     name = models.CharField(max_length=100)
-    breed = models.CharField(max_length=50, blank=True)
+    breed = models.ForeignKey(Breed, on_delete=models.CASCADE)
     weight = models.FloatField(default=0.0)
     birthday = models.DateField()
 
@@ -339,7 +347,7 @@ class Pet(models.Model):
 
         Pet.objects.create(
             name=pet_data.get("name"),
-            breed=pet_data.get("breed"),
+            breed=Breed.objects.get(pk=pet_data.get("breed")),
             birthday=pet_data.get("birthday"),
             weight=pet_data.get("weight")
         )
@@ -348,12 +356,11 @@ class Pet(models.Model):
 
     def update_pet(self, pet_data):
         self.name = pet_data.get("name", "") or self.name
-        self.breed = pet_data.get("breed", "") or self.breed
+        self.breed = Breed.objects.get(pk=pet_data.get("breed")) or self.breed
         self.birthday = pet_data.get("birthday", "") or self.birthday
 
         self.save()
         return True, None
-
 
     def __str__(self):
         return self.name
