@@ -1,5 +1,5 @@
 from django.test import TestCase
-from app.models import Client, validate_pet, validate_product,validate_medicine, validate_pet
+from app.models import Client, Provider, validate_pet, validate_product,validate_medicine, validate_pet
 from datetime import date
 
 class ClientModelTest(TestCase):
@@ -58,6 +58,54 @@ class ClientModelTest(TestCase):
 
         self.assertEqual(client_updated.phone, "221555232")
 
+
+class ProviderModelTest(TestCase):
+    
+    def test_create_provider_with_address(self):
+        # Datos de prueba
+        provider_data = {
+            "name": "Pedro Perez",
+            "email": "PedroP012@hotmail.com",
+            "address": "Calle 142 723"
+        }
+
+        # Crear proveedor
+        success, errors = Provider.save_provider(provider_data)
+
+        # Verificar que no hubo errores y que la creación fue exitosa
+        self.assertTrue(success)
+        self.assertIsNone(errors)
+
+        # Recuperar el proveedor de la base de datos
+        provider = Provider.objects.get(email="PedroP012@hotmail.com")
+
+        # Verificar que los datos se guardaron correctamente
+        self.assertEqual(provider.name, "Pedro Perez")
+        self.assertEqual(provider.email, "PedroP012@hotmail.com")
+        self.assertEqual(provider.address, "Calle 142 723")
+
+    def test_update_provider_with_address(self):
+        # Datos de prueba iniciales
+        provider = Provider.objects.create(
+            name="Proveedor Original",
+            email="original@ejemplo.com",
+            address="Dirección Original"
+        )
+
+        # Datos de prueba para actualización
+        update_data = {
+            "name": "Proveedor Actualizado",
+            "email": "actualizado@ejemplo.com",
+            "address": "Dirección Actualizada"
+        }
+
+        # Actualizar proveedor
+        provider.update_provider(update_data)
+
+        # Verificar que los datos se actualizaron correctamente
+        self.assertEqual(provider.name, "Proveedor Actualizado")
+        self.assertEqual(provider.email, "actualizado@ejemplo.com")
+        self.assertEqual(provider.address, "Dirección Actualizada")
 
 # TEST DE PET
 class PetModelTest(TestCase):
@@ -184,3 +232,4 @@ class ProductModelTest(TestCase):
         # Comprobar que hay un error de validación en el campo 'price'
         self.assertIn("price", errors)
         self.assertEqual(errors["price"], "El precio debe ser mayor que cero")
+
