@@ -421,3 +421,44 @@ class PetsTest(TestCase):
         )
 
         self.assertContains(response, "Por favor ingrese una raza")
+
+    def test_should_response_with_404_status_if_pet_doesnt_exists(self):
+        response = self.client.get(reverse("pets_edit", kwargs={"id": 100}))
+        self.assertEqual(response.status_code, 404)    
+
+    def test_validation_invalid_birthday(self):
+        response = self.client.post(
+        reverse("pets_form"),
+        data={
+            "name": "Paco",
+            "breed": "Caniche",
+            "birthday": "2028-05-20",
+        },
+    )
+
+        self.assertContains(response, "La fecha de nacimiento no puede ser posterior al día actual.")
+
+    def test_edit_user_with_valid_data(self):
+        pet = Pet.objects.create(
+            name="Paco",
+            breed="Caniche",
+            birthday="2015-05-20",
+        )
+
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "id": pet.id,
+                "name": "Maguile",
+                "breed": "Caniche",
+                "birthday": "2015-05-20",
+            },
+        )
+
+
+        self.assertEqual(response.status_code, 302)
+
+        editedPet = Pet.objects.get(pk=pet.id)
+        self.assertEqual(editedPet.name, "Maguile")
+        self.assertEqual(editedPet.breed, pet.breed)
+        self.assertEqual(str(editedPet.birthday), "2015-05-20")

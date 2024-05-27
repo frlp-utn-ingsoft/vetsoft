@@ -1,5 +1,5 @@
 from django.test import TestCase
-from app.models import Client, Product, Pet, Med, Provider
+from app.models import Client, Product, Pet, Med, validate_pet, Provider
 from datetime import date, timedelta
 
 
@@ -298,3 +298,16 @@ class PetModelTest(TestCase):
         pet.update_pet({"breed": ""})
         pet_updated = Pet.objects.get(pk=1)
         self.assertEqual(pet_updated.breed, "Perro")
+    
+    def test_cant_invalidate_birthday(self):
+        future_birthday = (date.today() + timedelta(days=1)).strftime("%Y-%m-%d")
+        pet_data = {
+            "name": "Paco",
+            "breed": "Perro",
+            "birthday": future_birthday
+        }
+        errors = validate_pet(pet_data)
+        self.assertIn("birthday", errors)
+        self.assertEqual(errors["birthday"], "La fecha de nacimiento no puede ser posterior al día actual.")
+    
+    

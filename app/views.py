@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from .models import Client, Product , Med, Provider, Veterinary, Pet
 from django.contrib import messages
-
+from datetime import date, datetime
 def decrement_stock(request, id):
     product = get_object_or_404(Product, pk=id)
 
@@ -69,12 +69,21 @@ def pets_form(request, id=None):
         pet_id = request.POST.get("id", "")
         errors = {}
         saved = True
+        birthday = request.POST.get("birthday")
 
         if pet_id == "":
             saved, errors = Pet.save_pet(request.POST)
         else:
             pet = get_object_or_404(Pet, pk=pet_id)
             pet.update_pet(request.POST)
+        if birthday:
+            try:
+                birthday_format = datetime.strptime(birthday, "%Y-%m-%d").date()
+                if (birthday_format > date.today()):
+                    saved = False
+                    errors["birthday"] = "La fecha de nacimiento no puede ser posterior al día actual."
+            except ValueError as e:
+                errors["birthday"] = "Formato de fecha invalido. Utilice el formato YYYY-MM-DD"
 
         if saved:
             return redirect(reverse("pets_repo"))
@@ -88,7 +97,6 @@ def pets_form(request, id=None):
         pet = get_object_or_404(Pet, pk=id)
 
     return render(request, "pets/form.html", {"pet": pet, "breeds": breeds})
-
 
 def pets_delete(request):
     pet_id = request.POST.get("pet_id")
