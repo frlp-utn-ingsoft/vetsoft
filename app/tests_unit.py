@@ -1,5 +1,5 @@
 from django.test import TestCase
-from app.models import Client, Product, Pet, Med, validate_pet
+from app.models import Client, Product, Pet, Med, validate_pet, Provider
 from datetime import date, timedelta
 
 
@@ -58,6 +58,61 @@ class ClientModelTest(TestCase):
         client_updated = Client.objects.get(pk=1)
 
         self.assertEqual(client_updated.phone, "221555232")
+
+class ProviderModelTest(TestCase):
+    def test_can_create_and_get_provider(self):
+        Provider.save_provider(
+            {
+                "name": "Farmacity S.A",
+                "email": "moltito@hotmail.com",
+                "address": "Rio negro 2265",
+
+            }
+        )
+        providers = Provider.objects.all()
+        self.assertEqual(len(providers), 1)
+
+        self.assertEqual(providers[0].name, "Farmacity S.A")
+        self.assertEqual(providers[0].email, "moltito@hotmail.com")
+        self.assertEqual(providers[0].address, "Rio negro 2265")
+
+    def test_can_update_provider(self):
+        Provider.save_provider(
+            {
+                "name": "Farmacity S.A",
+                "email": "moltito@hotmail.com",
+                "address": "Rio negro 2265",
+
+            }
+        )
+        provider = Provider.objects.get(pk=1)
+
+        self.assertEqual(provider.address, "Rio negro 2265")
+
+        provider.update_provider({"address": "Cardenal pironio 2265"})
+
+        provider_updated = Provider.objects.get(pk=1)
+
+        self.assertEqual(provider_updated.address, "Cardenal pironio 2265")
+
+    def test_update_provider_with_error(self):
+        Provider.save_provider(
+            {
+                "name": "Farmacity S.A",
+                "email": "moltito@hotmail.com",
+                "address": "Rio negro 2265",
+            }
+        )
+        provider = Provider.objects.get(pk=1)
+
+        self.assertEqual(provider.address, "Rio negro 2265")
+
+        provider.update_provider({"address": ""})
+
+        provider_updated = Provider.objects.get(pk=1)
+
+        self.assertEqual(provider_updated.address, "Rio negro 2265")
+
 
 class MedicineModelTest(TestCase):
     def test_can_create_and_get_medicine(self):
@@ -243,7 +298,7 @@ class PetModelTest(TestCase):
         pet.update_pet({"breed": ""})
         pet_updated = Pet.objects.get(pk=1)
         self.assertEqual(pet_updated.breed, "Perro")
-
+    
     def test_cant_invalidate_birthday(self):
         future_birthday = (date.today() + timedelta(days=1)).strftime("%Y-%m-%d")
         pet_data = {
@@ -254,3 +309,5 @@ class PetModelTest(TestCase):
         errors = validate_pet(pet_data)
         self.assertIn("birthday", errors)
         self.assertEqual(errors["birthday"], "La fecha de nacimiento no puede ser posterior al día actual.")
+    
+    
