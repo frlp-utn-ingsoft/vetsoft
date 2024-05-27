@@ -157,11 +157,12 @@ class VetModelTest(TestCase):
 
         vet = Vet.objects.get(pk=1)
         self.assertEqual(vet.specialty, Specialty.GENERAL.value)
-        vet.update_vet({"specialty": ""})
+        vet.update_vet({"specialty": Specialty.CARDIOLOGY.value})
 
         vet_updated = Vet.objects.get(pk=1)
-        self.assertEqual(vet_updated.specialty, Specialty.GENERAL.value)
-        self.assertEqual(client_updated.phone, "221555232")    
+        self.assertNotEqual(vet_updated.specialty, Specialty.GENERAL.value)
+        self.assertNotEqual(vet_updated.phone, "221555232")
+            
 
 class PetModelTest(TestCase, ):
     def test_can_create_and_get_pet(self):

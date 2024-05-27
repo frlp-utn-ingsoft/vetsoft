@@ -43,8 +43,9 @@
                     {% endfor %}
                 </tbody>
                 <div>
-                    <lab for="name" class="form-label">Cliente</lab>
+                    <label for="client" class="form-label">Cliente</lab>
                     <select name="client" class="form-control" required>
+                        <option value="">Seleccione un cliente</option>
                         {% for client in clients %}
                         <option value="{{client.id}}">{{client.name}}</option>
                         {% endfor %}

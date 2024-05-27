@@ -397,8 +397,7 @@ class ProviderCreateEditTestCase(PlaywrightTestCase):
         expect(self.page.get_by_text("16 y 50")).to_be_visible()
 
         edit_action = self.page.get_by_role("link", name="Editar")
-        expect(edit_action).to_have_attribute(
-            "href", reverse("providers_edit", kwargs={"id": provider.id})
+        expect(edit_action).to_have_attribute("href", reverse("providers_edit", kwargs={"id": provider.id}))
 
 class VetsRepoTestCase(PlaywrightTestCase):
     
@@ -502,24 +501,29 @@ class VetsRepoTestCase(PlaywrightTestCase):
 
     
 class PetCreateEditTestCase(PlaywrightTestCase):
-    def test_should_be_able_to_create_a_new_client(self):
+    def test_should_be_able_to_create_a_new_pet(self):
+        client = Client.objects.create(
+        name="Juan Sebastian Veron",
+        email="juan.veron@example.com",
+        phone="123456789"
+        )
         self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
 
         expect(self.page.get_by_role("form")).to_be_visible()
-
-        self.page.get_by_label("Cliente").fill("Juan Sebastian Veron")
+        self.page.select_option("select[name=client]", str(client.id))
         self.page.get_by_label("Nombre").fill("Loki")
         self.page.get_by_label("Raza").fill("Border Collie")
-        self.page.get_by_label("Cumpleaños").fill(date(2024,5,5))
-        self.page.get_by_label("Peso").fill(10)
+        fecha_nacimiento = date(2024, 5, 5).strftime('%Y-%m-%d')
+        self.page.get_by_label("Cumpleaños").fill(fecha_nacimiento)
+        self.page.locator('input[type="number"][name="weight"]').fill('10')
 
 
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("Loki")).to_be_visible()
         expect(self.page.get_by_text("Border Collie")).to_be_visible()
-        expect(self.page.get_by_text(date(2024,5,5))).to_be_visible()
-        expect(self.page.get_by_text(10)).to_be_visible()
+        expect(self.page.get_by_text("May 5, 2024")).to_be_visible()
+        expect(self.page.get_by_text("10")).to_be_visible()
         expect(self.page.get_by_text("Juan Sebastian Veron")).to_be_visible()
         expect(self.page.get_by_text("Sin Medicinas")).to_be_visible()
 
@@ -611,7 +615,7 @@ class MedicineRepoTestCase(PlaywrightTestCase):
             return response.url.find(reverse("medicine_delete"))
 
         # verificamos que el envio del formulario fue exitoso
-         with self.page.expect_response(is_delete_response) as response_info:
+        with self.page.expect_response(is_delete_response) as response_info:
           self.page.get_by_role("button", name="Eliminar").click()
 
         response = response_info.value
@@ -639,7 +643,7 @@ class VetCreateEditTestCase(PlaywrightTestCase):
 
     def test_should_view_errors_if_form_is_invalid(self):
         self.page.goto(f"{self.live_server_url}{reverse('vets_form')}")
-         expect(self.page.get_by_role("form")).to_be_visible()
+        expect(self.page.get_by_role("form")).to_be_visible()
 
         self.page.get_by_role("button", name="Guardar").click()
 
@@ -660,7 +664,7 @@ class VetCreateEditTestCase(PlaywrightTestCase):
         expect(self.page.get_by_text("Por favor ingrese un email valido")).to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese una especialidad")).not_to_be_visible()
         
-     def test_should_be_able_to_edit_a_vet(self):
+    def test_should_be_able_to_edit_a_vet(self):
         vet = Vet.objects.create(
             name="Carlos Chaplin",
             phone="2284563542",
@@ -711,6 +715,9 @@ class MedicineCreateEditTestCase(PlaywrightTestCase):
 
     def test_should_view_errors_if_form_is_invalid(self):
         self.page.goto(f"{self.live_server_url}{reverse('medicine_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+        self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("Por favor ingrese una descripcion")).to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese una dosis")).to_be_visible()

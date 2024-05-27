@@ -292,7 +292,9 @@ class MedicineTest(TestCase):
     def test_validation_errors_create_medicie(self):
         response = self.client.post(
             reverse("medicine_form"),
-            self.assertContains(response, "Por favor ingrese una descripcion")
+            data={},
+        )
+        self.assertContains(response, "Por favor ingrese una descripcion")
         self.assertContains(response, "Por favor ingrese una dosis")
 
     def test_should_response_with_404_status_if_medicine_doesnt_exists(self):
@@ -335,7 +337,7 @@ class MedicineTest(TestCase):
         self.assertEqual(editedMedicine.dose, medicine.dose)
  
           
- class PetsTest(TestCase):
+class PetsTest(TestCase):
     def test_can_create_pet(self):
 
         Client.save_client(
