@@ -146,7 +146,7 @@ class MedicinesTest(TestCase):
             },
         )
         self.assertContains(response, "La dosis debe ser un número entero positivo")
-=======
+
 from app.models import Client, Pet, Breed  # agregue pet para mis test
 
 # cambios para actividad 3 punto 5 de TEST

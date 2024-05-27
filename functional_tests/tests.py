@@ -440,7 +440,10 @@ class MedicineCreateTestCase(PlaywrightTestCase):
         self.page.get_by_label("Descripción").fill("Antibiotico de amplio espectro")
         self.page.get_by_label("Dosis").fill("-5")
 
+        self.page.get_by_role("button", name="Guardar").click()
+
+
         expect(self.page.get_by_text("Por favor ingrese una descripción")).not_to_be_visible()
-        expect(self.page.get_by_text("La dosis debe ser un número entero")).to_be_visible()
+        expect(self.page.get_by_text("La dosis debe ser un número entero positivo")).to_be_visible()
 
 
