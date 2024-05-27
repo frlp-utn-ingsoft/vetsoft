@@ -29,3 +29,6 @@ jobs:
                   file: ./Dockerfile
                   push: true
                   tags: ${{ secrets.DOCKERHUB_USERNAME }}/vetsoft:latest
+
+            - name: Deploy
+              runs: curl ${{ secrets.RENDER_HOOK }}
