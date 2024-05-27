@@ -1,0 +1,13 @@
+.git
+.gitignore
+.vscode
+coverage
+.env
+Dockerfile
+README.md
+venv
+db.sqlite3
+**/__pycache__
+locustfile
+functional_tests
+test_*.py
