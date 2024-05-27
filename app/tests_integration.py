@@ -166,6 +166,8 @@ class ProvidersTest(TestCase):
             data={
                 "id": provider.id,
                 "name": "Proveedor Actualizado",
+                "address": provider.address,
+                "email": provider.email,
             },
         )
 
