@@ -257,7 +257,7 @@ class PetCreateWeightgreaterThanZero(PlaywrightTestCase):
         self.page.get_by_label("Peso").fill("130");
 
         self.page.get_by_role("button", name="Guardar").click()
-
+        
         expect(self.page.get_by_text("Mora")).to_be_visible()
         expect(self.page.get_by_text("Beagle")).to_be_visible()
         expect(self.page.get_by_text("Nov. 30, 2024")).to_be_visible()
@@ -267,7 +267,7 @@ class PetCreateWeightgreaterThanZero(PlaywrightTestCase):
     def test_should_view_errors_if_form_is_invalid_with_weight_less_than_zero(self):
         self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
 
-
+       
         expect(self.page.get_by_role("form")).to_be_visible()
 
         #formulario vacio
@@ -277,13 +277,13 @@ class PetCreateWeightgreaterThanZero(PlaywrightTestCase):
         expect(self.page.get_by_text("Por favor ingrese una raza")).to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese una fecha de nacimiento")).to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese un peso")).to_be_visible()
-
+        
         # peso menor a cero
         self.page.get_by_label("Nombre").fill("Roma")
         self.page.get_by_label("Raza").fill("Dogo Argentino")
         self.page.get_by_label("Fecha de Cumpleaños").fill("2024-11-30")
         self.page.get_by_label("Peso").fill("-200")
-
+        
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
@@ -300,12 +300,15 @@ class PetCreateValidateTestCase(PlaywrightTestCase):
         self.page.get_by_label("Nombre").fill("Firulais")
         self.page.get_by_label("Raza").fill("Labrador")
         self.page.get_by_label("Fecha de Cumpleaños").fill("2022-01-01")
+        self.page.get_by_label("Peso").fill("130")
+        
 
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("Firulais")).to_be_visible()
         expect(self.page.get_by_text("Labrador")).to_be_visible()
         expect(self.page.get_by_text("Jan. 1, 2022")).to_be_visible()
+        expect(self.page.get_by_text("130")).to_be_visible()
 
 
     def test_should_view_errors_if_form_is_invalid(self):
@@ -318,24 +321,28 @@ class PetCreateValidateTestCase(PlaywrightTestCase):
         expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese una raza")).to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese una fecha de nacimiento")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un peso")).to_be_visible()
 
 
         self.page.get_by_label("Nombre").fill("Firulais")
         self.page.get_by_label("Raza").fill("Labrador")
         self.page.get_by_label("Fecha de Cumpleaños").fill("2026-01-01")
+        self.page.get_by_label("Peso").fill("130")
 
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese una raza")).not_to_be_visible()
         expect(self.page.get_by_text("La fecha de nacimiento no puede ser mayor o igual a la fecha actual")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un peso")).not_to_be_visible()
 
 
     def test_should_be_able_to_edit_a_pet(self):
         pet = Pet.objects.create(
             name="Firulais",
             breed="Labrador",
-            birthday="2022-01-01"
+            birthday="2022-01-01",
+            weight="150"
         )
 
         path = reverse("pets_edit", kwargs={"id": pet.id})
@@ -344,6 +351,7 @@ class PetCreateValidateTestCase(PlaywrightTestCase):
         self.page.get_by_label("Nombre").fill("Pepito")
         self.page.get_by_label("Raza").fill("Beagle")
         self.page.get_by_label("Fecha de Cumpleaños").fill("2002-10-10")
+        self.page.get_by_label("Peso").fill("150")
 
         self.page.get_by_role("button", name="Guardar").click()
 
@@ -354,6 +362,7 @@ class PetCreateValidateTestCase(PlaywrightTestCase):
         expect(self.page.get_by_text("Pepito")).to_be_visible()
         expect(self.page.get_by_text("Beagle")).to_be_visible()
         expect(self.page.get_by_text("Oct. 10, 2002")).to_be_visible()
+        expect(self.page.get_by_text("150")).to_be_visible()
 
         edit_action = self.page.get_by_role("link", name="Editar")
         expect(edit_action).to_have_attribute(
