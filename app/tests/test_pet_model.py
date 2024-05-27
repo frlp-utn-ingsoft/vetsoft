@@ -3,7 +3,7 @@ from app.models import Pet
 from datetime import datetime, timedelta
 
 class PetModelTest(TestCase):
-
+  
     def test_create_pet(self):
         pet = Pet.objects.create(name="Test Pet", breed="Test Breed", birthday=datetime.strptime("2024-05-06", "%Y-%m-%d").date())
         self.assertEqual(pet.name, "Test Pet")
