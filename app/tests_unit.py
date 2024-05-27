@@ -1,5 +1,6 @@
 from django.test import TestCase
 from app.models import Client, Med
+from app.models import Client, Med
 
 
 class ClientModelTest(TestCase):
@@ -79,19 +80,14 @@ class MedicineModelTest(TestCase):
             {
                 "name": "Paracetamoldog",
                 "desc": "Este medicamento es para vomitos caninos",
-                "dose": "8",
+                "dose": 8,
             }
         )
         medicine = Med.objects.get(pk=1)
 
         self.assertEqual(medicine.dose, 8)
 
-        medicine.update_med({
-            "name": "Paracetamoldog",
-            "desc": "Este medicamento es para vomitos caninos",
-            "dose": 9,
-            }
-        )
+        medicine.update_med({"dose": 9})
 
         medicine_updated = Med.objects.get(pk=1)
 

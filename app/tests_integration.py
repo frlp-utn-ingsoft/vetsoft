@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.shortcuts import reverse
-from app.models import Client, Med
+from app.models import Client, Med, Med
 
 
 class HomePageTest(TestCase):
@@ -164,8 +164,6 @@ class MedicinesTest(TestCase):
             data={
                 "id": medicine.id,
                 "name": "Ubuprofendog",
-                "desc": "Este medicamento es para vomitos caninos",
-                "dose": "8",
             },
         )
 
