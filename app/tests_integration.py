@@ -1,7 +1,56 @@
 from django.test import TestCase
 from django.shortcuts import reverse
-from app.models import Client
-from app.models import Vet
+from app.models import Client, Product, Provider, Vet
+
+
+class HomePageTest(TestCase):
+    def test_use_home_template(self):
+        response = self.client.get(reverse("home"))
+        self.assertTemplateUsed(response, "home.html")
+
+class ProviderTest(TestCase):
+    def test_can_create_provider(self):
+            response = self.client.post(
+                reverse("providers_form"),
+                data={
+                "name": "Pepe Gonzales",
+                "email": "pepe@hotmail.com",
+                "address": "7 entre 13 y 44",
+            },
+            )
+            provider = Provider.objects.all()
+
+            self.assertEqual(len(provider), 1)
+            self.assertEqual(provider[0].name, "Pepe Gonzales")
+            self.assertEqual(provider[0].email, "pepe@hotmail.com")
+            self.assertEqual(provider[0].address, "7 entre 13 y 44")
+
+            self.assertRedirects(response, reverse("providers_repo"))
+
+    def test_validation_errors_create_provider(self):
+        response = self.client.post(
+            reverse("providers_form"),
+            data={},
+        )
+        self.assertContains(response, "Por favor ingrese un nombre")
+        self.assertContains(response, "Por favor ingrese un email") 
+        self.assertContains(response, "Por favor ingrese una direccion")
+   
+
+#class ClientsTest(TestCase):
+#    def test_repo_use_repo_template(self):
+#        response = self.client.get(reverse("clients_repo"))
+#        self.assertTemplateUsed(response, "clients/repository.html")
+
+#    def test_repo_display_all_clients(self):
+#        response = self.client.get(reverse("clients_repo"))
+#        self.assertTemplateUsed(response, "clients/repository.html")
+
+#    def test_form_use_form_template(self):
+#        response = self.client.get(reverse("clients_form"))
+#        self.assertTemplateUsed(response, "clients/form.html")
+
+#    def test_can_create_client(self):
 
 
 # class HomePageTest(TestCase):
@@ -132,3 +181,44 @@ class VetsTest(TestCase):
             )
 
             self.assertContains(response, "Por favor seleccione una especialidad")
+
+class ProductsTest(TestCase):
+    def test_can_create_product(self):
+        response = self.client.post(
+            reverse("products_form"),
+            data={
+                "name": "NombreProducto",
+                "type": "TipoProducto",
+                "price": 8,
+            },
+        )
+        products = Product.objects.all()
+        self.assertEqual(len(products), 1)
+
+        self.assertEqual(products[0].name, "NombreProducto")
+        self.assertEqual(products[0].type, "TipoProducto")
+        self.assertEqual(products[0].price, 8)
+
+        self.assertRedirects(response, reverse("products_repo"))
+
+    def test_create_product_negative_product(self):
+        response = self.client.post(
+            reverse("products_form"),
+            data={
+                "name": "NombreProducto",
+                "type": "TipoProducto",
+                "price": -8,
+            },
+        )
+        self.assertContains(response, "Por favor ingrese un precio")
+
+    def test_create_product_no_product(self):
+        response = self.client.post(
+            reverse("products_form"),
+            data={
+                "name": "NombreProducto",
+                "type": "TipoProducto",
+                "price": 0,
+            },
+        )
+        self.assertContains(response, "Por favor ingrese un precio")
