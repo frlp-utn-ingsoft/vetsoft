@@ -91,13 +91,13 @@ class MedicineModelTest(TestCase):
             {
                 "name": "Paracetamoldog",
                 "desc": "Este medicamento es para vomitos caninos",
-                "dose": 9,
+                "dose": 7,
             }
         )
 
         medicine_updated = Med.objects.get(pk=1)
 
-        self.assertEqual(medicine_updated.dose, 9)
+        self.assertEqual(medicine_updated.dose, 7)
 
     def test_update_medicine_with_error(self):
         Med.save_med(
