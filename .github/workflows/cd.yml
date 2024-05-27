@@ -31,4 +31,4 @@ jobs:
                   tags: ${{ secrets.DOCKERHUB_USERNAME }}/vetsoft:latest
 
             - name: Deploy
-              runs: curl ${{ secrets.RENDER_HOOK }}
+              run: curl ${{ secrets.RENDER_HOOK }}
