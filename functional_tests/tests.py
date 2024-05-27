@@ -8,6 +8,8 @@ from django.urls import reverse
 
 from app.models import Client
 
+from datetime import datetime
+
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 playwright = sync_playwright().start()
 headless = os.environ.get("HEADLESS", 1) == 1
@@ -244,6 +246,7 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
             "href", reverse("clients_edit", kwargs={"id": client.id})
         )
 
+
 class PetCreateEditTestCase(PlaywrightTestCase):
     def test_should_view_errors_if_form_is_invalid(self):
         self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
@@ -255,7 +258,7 @@ class PetCreateEditTestCase(PlaywrightTestCase):
         expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese un raza")).to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese un fecha de nacimiento")).to_be_visible()
-
+        expect(self.page.get_by_text("Por favor ingrese un peso")).to_be_visible()
         self.page.get_by_label("Nombre").fill("Manolo")
         self.page.get_by_label("Raza").fill("golden")
 
@@ -263,6 +266,7 @@ class PetCreateEditTestCase(PlaywrightTestCase):
         date_str = datetime(*future_date).strftime('%Y-%m-%d')
         self.page.get_by_label("Fecha de nacimiento").fill(date_str)
 
+        self.page.get_by_label("Peso").fill("-30")
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
@@ -295,3 +299,4 @@ class ProductCreateEditTestCase(PlaywrightTestCase):
         expect(self.page.get_by_text("Por favor ingrese un tipo")).not_to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese un precio")).not_to_be_visible()
         expect(self.page.get_by_text("El precio debe ser mayor a cero")).to_be_visible()
+
