@@ -6,6 +6,7 @@ from playwright.sync_api import sync_playwright, expect, Browser
 from django.urls import reverse
 
 from app.models import Client
+from app.models import Provider
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 playwright = sync_playwright().start()
@@ -82,7 +83,42 @@ class PlaywrightTestCase(StaticLiveServerTestCase):
 #             email="goleador@gmail.com",
 #         )
 
+
+class ProvidersRepoTestCase(PlaywrightTestCase):
+
+    def test_should_show_message_if_table_is_empty(self):
+        self.page.goto(f"{self.live_server_url}{reverse('providers_repo')}")
+        expect(self.page.get_by_text("No existen proveedores")).to_be_visible()
+
+    def test_should_show_provider_data(self):
+        Provider.objects.create(
+            name="Pepe Gonzales",
+            email="pepe@hotmail.com",
+            address="7 entre 13 y 44",
+        )
+        self.page.goto(f"{self.live_server_url}{reverse('providers_repo')}")
+
+        expect(self.page.get_by_text("No existen proveedores")).not_to_be_visible()
+
+        expect(self.page.get_by_text("Pepe Gonzales")).to_be_visible()
+        expect(self.page.get_by_text("pepe@hotmail.com")).to_be_visible()
+        expect(self.page.get_by_text("7 entre 13 y 44")).to_be_visible()
+
+    def test_should_show_add_provider_action(self):
+        self.page.goto(f"{self.live_server_url}{reverse('providers_repo')}")
+
+        add_provider_action = self.page.get_by_role(
+            "link", name="Nuevo Proveedor", exact=False
+        )
+        expect(add_provider_action).to_have_attribute("href", reverse("providers_form"))    
+
+
+#class ClientsRepoTestCase(PlaywrightTestCase):
+#    def test_should_show_message_if_table_is_empty(self):
+#        self.page.goto(f"{self.live_server_url}{reverse('clients_repo')}")
+
 #         self.page.goto(f"{self.live_server_url}{reverse('clients_repo')}")
+
 
 #         expect(self.page.get_by_text("No existen clientes")).not_to_be_visible()
 
