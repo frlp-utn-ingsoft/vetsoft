@@ -220,6 +220,20 @@ class PetsTest(TestCase):
             )
         # Verifico si el peso es negativo y muestra un mensaje de error
         self.assertContains(response, "El peso debe ser un número mayor a cero")
+    
+    def test_validation_invalid_birthday(self):
+        
+        response = self.client.post(
+            reverse("pets_form"),
+            data = {
+            "name": "Pepe",
+            "breed": "Labrador",
+            "birthday": "2026-01-01",
+            "weight": 10
+        }
+        )
+
+        self.assertContains(response, "La fecha de nacimiento no puede ser mayor o igual a la fecha actual")
 
 
 class ProductsTest(TestCase):
@@ -250,16 +264,3 @@ class MedicinesTest(TestCase):
 
         self.assertContains(response, "La dosis debe estar en un rango de 1 a 10")
 
-class PetsTest(TestCase):
-    def test_validation_invalid_birthday(self):
-        
-        response = self.client.post(
-            reverse("pets_form"),
-            data = {
-            "name": "Pepe",
-            "breed": "Labrador",
-            "birthday": "2026-01-01",
-        }
-        )
-
-        self.assertContains(response, "La fecha de nacimiento no puede ser mayor o igual a la fecha actual")
