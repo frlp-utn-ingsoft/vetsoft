@@ -1,3 +1,4 @@
+from .models import Pet, Client, Breed
 from django.test import TestCase
 from app.models import Client, Product, Provider, Vet
 
@@ -151,6 +152,38 @@ class ProductModelTest(TestCase):
                 "price": 0,
             }
         )
-
+        
         products = Product.objects.all()
         self.assertEqual(len(products), 0)
+
+
+# Agrego test unitarios para punto 5 actividad 3
+# cambios por nueva rama  feature-agregaropcionesrazamascota
+class PetModelTest(TestCase):
+    def setUp(self):
+        # Crea un cliente para ser el dueño de la mascota
+        self.client = Client.objects.create(
+            name="Test Client", phone="221555232", email="test@test.com", address="13 y 44")
+
+    def test_create_pet(self):
+        # Crea una nueva mascota
+        pet = Pet.objects.create(
+            name="Test Pet", breed=Breed.DOG, birthday="2022-01-01", owner=self.client)
+
+        # Verifica que la mascota se haya guardado en la base de datos
+        self.assertEqual(Pet.objects.count(), 1)
+        self.assertEqual(Pet.objects.first(), pet)
+
+    def test_breed_choices(self):
+        # Crea mascotas con cada opción de raza
+        pet_dog = Pet.objects.create(
+            name="Dog Pet", breed=Breed.DOG, birthday="2022-01-01", owner=self.client)
+        pet_cat = Pet.objects.create(
+            name="Cat Pet", breed=Breed.CAT, birthday="2022-01-01", owner=self.client)
+        pet_bird = Pet.objects.create(
+            name="Bird Pet", breed=Breed.BIRD, birthday="2022-01-01", owner=self.client)
+
+        # Verifica que las mascotas se hayan guardado con las razas correctas
+        self.assertEqual(pet_dog.breed, Breed.DOG)
+        self.assertEqual(pet_cat.breed, Breed.CAT)
+        self.assertEqual(pet_bird.breed, Breed.BIRD)
