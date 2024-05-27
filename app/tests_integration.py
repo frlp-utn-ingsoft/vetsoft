@@ -1,6 +1,9 @@
 from django.test import TestCase
+from django.test import Client  # esto lo agrego para mi test
 from django.shortcuts import reverse
-from app.models import Client
+from app.models import Client, Pet, Breed  # agregue pet para mis test
+
+# cambios para actividad 3 punto 5 de TEST
 
 
 class HomePageTest(TestCase):
@@ -93,3 +96,50 @@ class ClientsTest(TestCase):
         self.assertEqual(editedClient.phone, client.phone)
         self.assertEqual(editedClient.address, client.address)
         self.assertEqual(editedClient.email, client.email)
+
+########################### SEPARADOR ###################################
+#########################################################################
+
+# agrego test intregacion punto 5 actividad 3
+
+
+class PetIntegrationTest(TestCase):
+    def setUp(self):
+        # Crea un cliente para ser el dueño de la mascota
+        self.client_obj = Client.objects.create(
+            name="Test Client", phone="221555232", email="test@test.com", address="13 y 44")
+
+        # Crea un cliente para enviar solicitudes HTTP
+        self.http_client = Client()
+
+    def test_create_pet(self):
+        # # Define la URL y los datos que se enviarán en la solicitud
+        # # Reemplaza 'create_pet' con la URL de tu vista
+        # url = reverse('pets_form')
+        # data = {
+        #     'name': 'Test Pet',
+        #     'breed': Breed.DOG,
+        #     'birthday': '2022-01-01',
+        #     'owner': self.client_obj.id
+        # }
+
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": "Fido",
+                "breed": Breed.DOG,
+                "birthday": "2022-01-01",
+                'owner': self.client_obj.id
+            },
+        )
+
+        # # Envía una solicitud POST a la vista
+        # response = self.http_client.post(url, data)
+
+        # Comprueba que la respuesta tenga un código de estado 200
+        # self.assertEqual(response.status_code, 200)
+
+        # Comprueba que la mascota se haya creado en la base de datos
+        # pet = Pet.objects.filter(name='Test Pet')
+        # self.assertTrue(pet.exists())
+        # self.assertEqual(pet.first().breed, Breed.DOG)

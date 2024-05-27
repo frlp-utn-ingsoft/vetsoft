@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
-from .models import Client, Pet
+from .models import Client, Pet, Breed
 from django.http import HttpResponseBadRequest
 from datetime import datetime
 
@@ -79,6 +79,9 @@ def pets_repository(request):
 #         return render(request, 'pets/form.html', {'clients': clients})
 
 def pets_form(request, id=None):
+
+    breeds = Breed.choices
+
     if id:
         pet = get_object_or_404(Pet, id=id)
     else:
@@ -107,7 +110,7 @@ def pets_form(request, id=None):
         return redirect('pets_repo')
     else:
         clients = Client.objects.all()
-        return render(request, 'pets/form.html', {'clients': clients, 'pet': pet})
+        return render(request, 'pets/form.html', {'clients': clients, 'pet': pet, "breeds": breeds})
 
 
 def pets_delete(request):

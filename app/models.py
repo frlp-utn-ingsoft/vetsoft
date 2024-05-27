@@ -82,10 +82,23 @@ def validate_pet(data):
 # creo modelo del pet
 #########################################################################
 
+# para actividad 3 test, hago el punto 5, agrego opciones al atributo breed
+
+
+class Breed(models.TextChoices):
+    DOG = 'Dog'
+    CAT = 'Cat'
+    BIRD = 'Bird'
+
 
 class Pet(models.Model):
+
     name = models.CharField(max_length=100)
-    breed = models.CharField(max_length=100)  # raza
+    breed = models.CharField(
+        max_length=100,
+        choices=Breed.choices,
+        default=Breed.DOG,
+    )
     birthday = models.DateField()
     owner = models.ForeignKey(Client, on_delete=models.CASCADE)
 
