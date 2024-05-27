@@ -287,7 +287,7 @@ class ProductCreateEditTestCase(PlaywrightTestCase):
 
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text("Por favor ingrese un precio válido")).to_be_visible()
+        expect(self.page.get_by_text("El precio debe ser mayor a cero")).to_be_visible()
 
         self.page.get_by_label("Precio").fill("10.99")
 
@@ -296,4 +296,4 @@ class ProductCreateEditTestCase(PlaywrightTestCase):
         expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese un tipo")).not_to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese un precio")).not_to_be_visible()
-        expect(self.page.get_by_text("Por favor ingrese un precio válido")).not_to_be_visible()
+        expect(self.page.get_by_text("El precio debe ser mayor a cero")).not_to_be_visible()
