@@ -185,12 +185,12 @@ class ProductsTest(TestCase):
         self.assertEqual(editedProduct.price, product.price)
         self.assertEqual(editedProduct.stock, 50)
     
-    class PetsTest(TestCase):
-        def test_repo_use_repo_template(self):
+class PetsTest(TestCase):
+    def test_repo_use_repo_template(self):
             response = self.client.get(reverse("pets_repo"))
             self.assertTemplateUsed(response, "pets/repository.html")
 
-        def test_form_use_form_template(self):
+    def test_form_use_form_template(self):
             response = self.client.get(reverse("pets_form"))
             self.assertTemplateUsed(response, "pets/form.html")
 
