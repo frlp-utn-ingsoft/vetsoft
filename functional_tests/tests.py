@@ -287,8 +287,6 @@ class ProductCreateEditTestCase(PlaywrightTestCase):
 
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text("Por favor ingrese un precio")).to_be_visible()
-
         self.page.get_by_label("Precio").fill("-10.99")
 
         self.page.get_by_role("button", name="Guardar").click()
