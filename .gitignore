@@ -154,3 +154,5 @@ cython_debug/
 
 # DB
 *.sqlite3
+
+# Migrations
