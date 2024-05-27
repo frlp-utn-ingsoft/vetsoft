@@ -28,8 +28,9 @@ if DEBUG:
     SECRET_KEY = "django-insecure-p)^5i@33!)v)l7*c#q)%j(g5d+**-yo%)6l*vg!gs_w-e=^_ig"
 else:
     SECRET_KEY = os.environ.get('SECRET_KEY')
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(",")
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Application definition
 
