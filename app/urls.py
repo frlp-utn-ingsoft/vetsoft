@@ -12,6 +12,8 @@ urlpatterns = [
     path("productos/nuevo/", view=views.products_form, name="products_form"),
     path("productos/editar/<int:id>/", view=views.products_form, name="products_edit"),
     path("productos/eliminar/", view=views.products_delete, name="products_delete"),
+    path("productos/incrementar/<int:id>/", view=views.increment_stock, name="increment_stock"),
+    path("productos/decrementar/<int:id>/", view=views.decrement_stock, name="decrement_stock"),
     path("proveedores/", view=views.providers_repository, name="providers_repo"),
     path("proveedores/nuevo/", view=views.providers_form, name="providers_form"),
     path("proveedores/editar/<int:id>/", view=views.providers_form, name="providers_edit"),
@@ -24,7 +26,6 @@ urlpatterns = [
     path("mascotas/nuevo/", view=views.pets_form, name="pets_form"),
     path("mascotas/editar/<int:id>/", view=views.pets_form, name="pets_edit"),
     path("mascotas/eliminar/", view=views.pets_delete, name="pets_delete"),
-
     path("medicinas/", view=views.meds_repository, name="meds_repo"),
     path("medicinas/nuevo/", view=views.meds_form, name="meds_form"),
     path("medicinas/editar/<int:id>/", view=views.meds_form, name="meds_edit"),

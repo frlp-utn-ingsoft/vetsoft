@@ -1,5 +1,19 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from .models import Client, Product , Med, Provider, Veterinary, Pet
+from django.contrib import messages
+
+def decrement_stock(request, id):
+    product = get_object_or_404(Product, pk=id)
+
+    if product.stock > 0:
+        product.stock -= 1
+        product.save()
+    else:
+        # Si el stock es 0, muestra un mensaje de error
+        messages.error(request, f'El stock del producto "{product.name}" ya es 0 y no puede ser decrementado más.')
+
+    return redirect('products_repo')
+
 
 def home(request):
     return render(request, "home.html")
@@ -50,6 +64,7 @@ def pets_repository(request):
 
 
 def pets_form(request, id=None):
+    breeds = dict(Pet.Breed.choices)
     if request.method == "POST":
         pet_id = request.POST.get("id", "")
         errors = {}
@@ -65,14 +80,14 @@ def pets_form(request, id=None):
             return redirect(reverse("pets_repo"))
 
         return render(
-            request, "pets/form.html", {"errors": errors, "pet": request.POST}
+            request, "pets/form.html", {"errors": errors, "pet": request.POST, "breeds": breeds}
         )
 
     pet = None
     if id is not None:
         pet = get_object_or_404(Pet, pk=id)
 
-    return render(request, "pets/form.html", {"pet": pet})
+    return render(request, "pets/form.html", {"pet": pet, "breeds": breeds})
 
 
 def pets_delete(request):
@@ -85,6 +100,9 @@ def pets_delete(request):
 
 def products_repository(request):
     products = Product.objects.all()
+    for product in products:
+        if product.stock == 0:
+            messages.warning(request, f'El stock del producto "{product.name}" es 0.')
     return render(request, "products/repository.html", {"products": products})
 
 
@@ -93,9 +111,22 @@ def products_form(request, id=None):
         product_id = request.POST.get("id", "")
         errors = {}
         saved = True
+        stock = request.POST.get("stock")
 
-        if product_id == "":
+        try:
+            int(stock)
+        except Exception as e:
+            errors["stock"] = "El campo de stock no puede estar vacio."
+            return render(
+            request, "products/form.html", {"errors": errors, "product": request.POST}
+            )
+        
+        if (product_id == "" and int(stock) >= 0):
+            stock = int(request.POST.get("stock"))
             saved, errors = Product.save_product(request.POST)
+        elif (int(stock) < 0):
+            saved = False
+            errors["stock"] = "El stock no puede ser negativo."
         else:
             product = get_object_or_404(Product, pk=product_id)
             product.update_product(request.POST)
@@ -121,7 +152,25 @@ def products_delete(request):
 
     return redirect(reverse("products_repo"))
 
+def increment_stock(request, id):
+    product = get_object_or_404(Product, pk=id)
 
+    product.stock += 1
+
+    product.save()
+
+    return redirect('products_repo')
+
+def decrement_stock(request, id):
+    product = get_object_or_404(Product, pk=id)
+
+    if (product.stock > 0):
+        product.stock -= 1
+        product.save()
+        return redirect('products_repo')
+    else:
+        return redirect('products_repo')
+    
 
 def providers_repository(request):
     providers = Provider.objects.all()
