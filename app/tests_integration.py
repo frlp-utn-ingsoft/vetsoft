@@ -1,7 +1,7 @@
 from django.test import TestCase
+from app.models import Client, Product, Provider, Vet, Medicine
+from django.test import Client  # esto lo agrego para mi test
 from django.shortcuts import reverse
-# from app.models import Client
-from app.models import Medicine
 
 # class HomePageTest(TestCase):
 #     def test_use_home_template(self):
@@ -146,3 +146,168 @@ class MedicinesTest(TestCase):
             },
         )
         self.assertContains(response, "La dosis debe ser un número entero positivo")
+=======
+from app.models import Client, Pet, Breed  # agregue pet para mis test
+
+# cambios para actividad 3 punto 5 de TEST
+
+
+
+class HomePageTest(TestCase):
+    def test_use_home_template(self):
+        response = self.client.get(reverse("home"))
+        self.assertTemplateUsed(response, "home.html")
+
+class ProviderTest(TestCase):
+    def test_can_create_provider(self):
+            response = self.client.post(
+                reverse("providers_form"),
+                data={
+                "name": "Pepe Gonzales",
+                "email": "pepe@hotmail.com",
+                "address": "7 entre 13 y 44",
+            },
+            )
+            provider = Provider.objects.all()
+
+            self.assertEqual(len(provider), 1)
+            self.assertEqual(provider[0].name, "Pepe Gonzales")
+            self.assertEqual(provider[0].email, "pepe@hotmail.com")
+            self.assertEqual(provider[0].address, "7 entre 13 y 44")
+
+            self.assertRedirects(response, reverse("providers_repo"))
+
+    def test_validation_errors_create_provider(self):
+        response = self.client.post(
+            reverse("providers_form"),
+            data={},
+        )
+        self.assertContains(response, "Por favor ingrese un nombre")
+        self.assertContains(response, "Por favor ingrese un email") 
+        self.assertContains(response, "Por favor ingrese una direccion")
+   
+
+# Test de Veterinario
+class VetsTest(TestCase):
+    def test_can_create_vet(self):
+            response = self.client.post(
+                reverse("vets_form"),
+                data={
+                    "name": "Joaquin Munos",
+                    "phone": "22165438",
+                    "address": "20 y 60",
+                    "email": "joaquin10@hotmail.com",
+                    "especialidad": "general",
+                },
+            )
+            vets = Vet.objects.all()
+            self.assertEqual(len(vets), 1)
+
+            self.assertEqual(vets[0].name, "Joaquin Munos")
+            self.assertEqual(vets[0].phone, "22165438")
+            self.assertEqual(vets[0].address, "20 y 60")
+            self.assertEqual(vets[0].email, "joaquin10@hotmail.com")
+            self.assertEqual(vets[0].speciality, "general")
+
+            self.assertRedirects(response, reverse("vets_repo"))
+
+    def test_validation_invalid_especialidad(self):
+            response = self.client.post(
+                reverse("vets_form"),
+                data={
+                    "name": "Joaquin Munos",
+                    "phone": "22165438",
+                    "address": "20 y 60",
+                    "email": "joaquin10@hotmail.com",
+                    "especialidad": "",
+                },
+            )
+
+            self.assertContains(response, "Por favor seleccione una especialidad")
+
+class ProductsTest(TestCase):
+    def test_can_create_product(self):
+        response = self.client.post(
+            reverse("products_form"),
+            data={
+                "name": "NombreProducto",
+                "type": "TipoProducto",
+                "price": 8,
+            },
+        )
+        products = Product.objects.all()
+        self.assertEqual(len(products), 1)
+
+        self.assertEqual(products[0].name, "NombreProducto")
+        self.assertEqual(products[0].type, "TipoProducto")
+        self.assertEqual(products[0].price, 8)
+
+        self.assertRedirects(response, reverse("products_repo"))
+
+    def test_create_product_negative_product(self):
+        response = self.client.post(
+            reverse("products_form"),
+            data={
+                "name": "NombreProducto",
+                "type": "TipoProducto",
+                "price": -8,
+            },
+        )
+        self.assertContains(response, "Por favor ingrese un precio")
+        
+    def test_create_product_no_product(self):
+        response = self.client.post(
+            reverse("products_form"),
+            data={
+                "name": "NombreProducto",
+                "type": "TipoProducto",
+                "price": 0,
+            },
+        )
+        self.assertContains(response, "Por favor ingrese un precio")
+
+
+
+# agrego test intregacion punto 5 actividad 3
+
+
+class PetIntegrationTest(TestCase):
+    def setUp(self):
+        # Crea un cliente para ser el dueño de la mascota
+        self.client_obj = Client.objects.create(
+            name="Test Client", phone="221555232", email="test@test.com", address="13 y 44")
+
+        # Crea un cliente para enviar solicitudes HTTP
+        self.http_client = Client()
+
+    def test_create_pet(self):
+        # # Define la URL y los datos que se enviarán en la solicitud
+        # # Reemplaza 'create_pet' con la URL de tu vista
+        # url = reverse('pets_form')
+        # data = {
+        #     'name': 'Test Pet',
+        #     'breed': Breed.DOG,
+        #     'birthday': '2022-01-01',
+        #     'owner': self.client_obj.id
+        # }
+
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": "Fido",
+                "breed": Breed.DOG,
+                "birthday": "2022-01-01",
+                'owner': self.client_obj.id
+            },
+        )
+
+        # # Envía una solicitud POST a la vista
+        # response = self.http_client.post(url, data)
+
+        # Comprueba que la respuesta tenga un código de estado 200
+        # self.assertEqual(response.status_code, 200)
+
+        # Comprueba que la mascota se haya creado en la base de datos
+        # pet = Pet.objects.filter(name='Test Pet')
+        # self.assertTrue(pet.exists())
+        # self.assertEqual(pet.first().breed, Breed.DOG)

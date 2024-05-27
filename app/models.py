@@ -27,20 +27,18 @@ def validate_provider(data):
 
     name = data.get("name", "")
     email = data.get("email", "")
-    phone = data.get("phone", "")
+    address = data.get("address", "")
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
-
-    if phone == "":
-        errors["phone"] = "Por favor ingrese un teléfono"
-    elif not phone.isdigit():
-        errors["phone"] = "Por favor ingrese un teléfono"
 
     if email == "":
         errors["email"] = "Por favor ingrese un email"
     elif email.count("@") == 0:
         errors["email"] = "Por favor ingrese un email válido"
+
+    if address == "":
+        errors["address"] = "Por favor ingrese una direccion"
 
     return errors
 
@@ -112,10 +110,23 @@ def validate_pet(data):
 # creo modelo del pet
 #########################################################################
 
+# para actividad 3 test, hago el punto 5, agrego opciones al atributo breed
+
+
+class Breed(models.TextChoices):
+    DOG = 'Dog'
+    CAT = 'Cat'
+    BIRD = 'Bird'
+
 
 class Pet(models.Model):
+
     name = models.CharField(max_length=100)
-    breed = models.CharField(max_length=100)  # raza
+    breed = models.CharField(
+        max_length=100,
+        choices=Breed.choices,
+        default=Breed.DOG,
+    )
     birthday = models.DateField()
     owner = models.ForeignKey(Client, on_delete=models.CASCADE)
 
@@ -231,27 +242,35 @@ def update_pet(self, pet_data):
 class Provider(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
+    address = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
     @classmethod
     def save_provider(cls, provider_data):
-        errors = validate_provider(provider_data)
 
+        errors = validate_provider(provider_data)
         if len(errors.keys()) > 0:
             return False, errors
 
         Provider.objects.create(
             name=provider_data.get("name"),
             email=provider_data.get("email"),
+            address=provider_data.get("address"),
         )
 
         return True, None
 
     def update_provider(self, provider_data):
+
+        errors = validate_provider(provider_data)
+        if len(errors.keys()) > 0:
+            return False, errors
+        
         self.name = provider_data.get("name", "") or self.name
         self.email = provider_data.get("email", "") or self.email
+        self.address = provider_data.get("address", "") or self.address
 
         self.save()
 
@@ -281,7 +300,7 @@ def validate_product(data):
         errors["price"] = "Por favor ingrese un precio"
     elif isfloat(price) == False:
         errors["price"] = "Por favor ingrese un precio"
-    elif float(price) < 0:
+    elif float(price) <= 0:
         errors["price"] = "Por favor ingrese un precio"
 
     return errors
@@ -324,14 +343,19 @@ class Product(models.Model):
 
         return True, None
 
+# class Speciality(models.TextChoices):
+#     GENERAL = 'General', 'General'
+#     SURGEON = 'Surgeon', 'Surgeon'
+#     DENTIST = 'Dentist', 'Dentist'
+#     CARDIOLOGIST = 'Cardiologist', 'Cardiologist'
+
 def validate_vet(data):
     errors = {}
 
     name = data.get("name", "")
     phone = data.get("phone", "")
     email = data.get("email", "")
-    opening_time = data.get("opening_time", "")
-    closing_time = data.get("closing_time", "")
+    speciality = data.get("especialidad", "")
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
@@ -346,6 +370,11 @@ def validate_vet(data):
     elif "@" not in email:  # Agreo una verificacion para saber si hay al menos un "@" en el email
         errors["email"] = "Por favor ingrese un email válido"
 
+    if speciality == "":
+        errors["especialidad"] = "Por favor seleccione una especialidad"
+    # elif speciality not in [choice[0] for choice in Speciality.choices]:
+    #     errors["speciality"] = "Especialidad no válida"
+
     return errors
 
 
@@ -354,6 +383,7 @@ class Vet(models.Model):
     phone = models.CharField(max_length=15)
     email = models.EmailField()
     address = models.CharField(max_length=100, blank=True)
+    speciality = models.CharField(max_length=15)
 
     def __str__(self):
         return self.name
@@ -370,6 +400,7 @@ class Vet(models.Model):
             phone=vet_data.get("phone"),
             email=vet_data.get("email"),
             address=vet_data.get("address"),
+            speciality=vet_data.get("especialidad"),
 
         )
 
@@ -385,7 +416,8 @@ class Vet(models.Model):
         self.email = vet_data.get("email", "") or self.email
         self.phone = vet_data.get("phone", "") or self.phone
         self.address = vet_data.get("address", "") or self.address
-
+        self.speciality = vet_data.get("especialidad", "") or self.speciality
+        
         self.save()
 
         return True, None

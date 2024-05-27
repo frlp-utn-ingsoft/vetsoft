@@ -1,6 +1,22 @@
+from .models import Pet, Client, Breed
 from django.test import TestCase
-# from app.models import Client
-from app.models import Medicine
+from app.models import Client, Product, Provider, Vet, Medicine
+
+class ProviderModelTest(TestCase):
+    def test_can_create_and_get_provider(self):
+        Provider.save_provider(
+            {
+                "name": "Pepe Gonzales",
+                "email": "pepe@hotmail.com",
+                "address": "7 entre 13 y 44",
+            }
+        )
+        provider = Provider.objects.all()
+        
+        self.assertEqual(len(provider), 1)
+        self.assertEqual(provider[0].name, "Pepe Gonzales")
+        self.assertEqual(provider[0].email, "pepe@hotmail.com")
+        self.assertEqual(provider[0].address, "7 entre 13 y 44")
 
 
 # class ClientModelTest(TestCase):
@@ -112,4 +128,118 @@ class MedicineModelTest(TestCase):
         )
         medicinas = Medicine.objects.all()
         self.assertEqual(len(medicinas), 0)
-    
+
+        
+#Test de veterinario
+class VetModelTest(TestCase):
+    def test_can_create_and_get_vet(self):
+        Vet.save_vet(
+            {
+                "name": "Tomas Sbert",
+                "phone": "2314557290",
+                "address": "La Plata 43",
+                "email": "tomasbret_dx@hotmail.com",
+                "especialidad": "general",
+            }
+        )
+
+        vets = Vet.objects.all()
+
+        self.assertEqual(len(vets), 1)
+
+        self.assertEqual(vets[0].name, "Tomas Sbert")
+        self.assertEqual(vets[0].phone, "2314557290")
+        self.assertEqual(vets[0].address, "La Plata 43")
+        self.assertEqual(vets[0].email, "tomasbret_dx@hotmail.com")
+        self.assertEqual(vets[0].speciality, "general")
+
+    def test_can_delete_vet(self):
+        vet = Vet.objects.create(
+            name="Tomas Sbert",
+            phone="2314557290",
+            address="La Plata 43",
+            email="tomasbret_dx@hotmail.com",
+            speciality="general"
+        )
+
+        # Eliminar el veterinario
+        vet.delete()
+
+        # Verificar que el veterinario haya sido eliminado
+        vets = Vet.objects.all()
+        self.assertEqual(len(vets), 0)
+
+        
+class ProductModelTest(TestCase):
+    def test_can_create_and_get_product(self):
+        Product.save_product(
+            {
+                "name": "NombreProducto",
+                "type": "TipoProducto",
+                "price": 8,
+            }
+        )
+
+        products = Product.objects.all()
+        self.assertEqual(len(products), 1)
+
+        self.assertEqual(products[0].name, "NombreProducto")
+        self.assertEqual(products[0].type, "TipoProducto")
+        self.assertEqual(products[0].price, 8)
+
+    def test_create_product_with_negative_product(self):
+        Product.save_product(
+            {
+                "name": "NombreProducto",
+                "type": "TipoProducto",
+                "price": -8,
+            }
+        )
+
+        products = Product.objects.all()
+        self.assertEqual(len(products), 0)
+
+
+    def test_create_product_with_no_product(self):
+        Product.save_product(
+            {
+                "name": "NombreProducto",
+                "type": "TipoProducto",
+                "price": 0,
+            }
+        )
+        
+        products = Product.objects.all()
+        self.assertEqual(len(products), 0)
+
+
+# Agrego test unitarios para punto 5 actividad 3
+# cambios por nueva rama  feature-agregaropcionesrazamascota
+class PetModelTest(TestCase):
+    def setUp(self):
+        # Crea un cliente para ser el dueño de la mascota
+        self.client = Client.objects.create(
+            name="Test Client", phone="221555232", email="test@test.com", address="13 y 44")
+
+    def test_create_pet(self):
+        # Crea una nueva mascota
+        pet = Pet.objects.create(
+            name="Test Pet", breed=Breed.DOG, birthday="2022-01-01", owner=self.client)
+
+        # Verifica que la mascota se haya guardado en la base de datos
+        self.assertEqual(Pet.objects.count(), 1)
+        self.assertEqual(Pet.objects.first(), pet)
+
+    def test_breed_choices(self):
+        # Crea mascotas con cada opción de raza
+        pet_dog = Pet.objects.create(
+            name="Dog Pet", breed=Breed.DOG, birthday="2022-01-01", owner=self.client)
+        pet_cat = Pet.objects.create(
+            name="Cat Pet", breed=Breed.CAT, birthday="2022-01-01", owner=self.client)
+        pet_bird = Pet.objects.create(
+            name="Bird Pet", breed=Breed.BIRD, birthday="2022-01-01", owner=self.client)
+
+        # Verifica que las mascotas se hayan guardado con las razas correctas
+        self.assertEqual(pet_dog.breed, Breed.DOG)
+        self.assertEqual(pet_cat.breed, Breed.CAT)
+        self.assertEqual(pet_bird.breed, Breed.BIRD)
