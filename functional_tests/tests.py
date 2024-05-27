@@ -5,12 +5,8 @@ from playwright.sync_api import sync_playwright, expect, Browser
 
 from django.urls import reverse
 
-<<<<<<< HEAD
-from app.models import Client, Pet
-=======
 from app.models import Client, Product, Pet, Med
 from datetime import date
->>>>>>> main
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 playwright = sync_playwright().start()
@@ -248,11 +244,6 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
             "href", reverse("clients_edit", kwargs={"id": client.id})
         )
 
-<<<<<<< HEAD
-
-
-class petCreateEditTestCase(PlaywrightTestCase):
-=======
 class MedicineRepoTestCase(PlaywrightTestCase):
     def test_should_show_message_if_table_is_empty(self):
         self.page.goto(f"{self.live_server_url}{reverse('meds_repo')}")
@@ -419,53 +410,11 @@ class PetCreateEditTestCase(PlaywrightTestCase):
         self.page.goto(f"{self.live_server_url}{reverse('clients_repo')}")
         expect(self.page.get_by_text("No existen clientes")).to_be_visible()
 
->>>>>>> main
     def test_should_be_able_to_create_a_new_pet(self):
         self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
 
         expect(self.page.get_by_role("form")).to_be_visible()
 
-<<<<<<< HEAD
-        self.page.get_by_label("Nombre").fill("Paco")
-        self.page.get_by_label("Raza").fill("Salchicha")
-        self.page.get_by_label("Nacimiento").fill("2008-05-10")
-
-
-        self.page.get_by_role("button", name="Guardar").click()
-
-        expect(self.page.get_by_text("Paco")).to_be_visible()
-        expect(self.page.get_by_text("Salchicha")).to_be_visible()
-        expect(self.page.get_by_text("May 10, 2008")).to_be_visible()
-
-    def test_edit_form_should_be_able_to_throw_an_error_if(self):
-        pet = Pet.objects.create(
-            name="Paco",
-            breed="Salchicha",
-            birthday="2008-05-10"
-        )
-
-        self.page.goto(f"{self.live_server_url}{reverse('pets_repo')}")
-        expect(self.page.get_by_text("Paco")).to_be_visible()
-        expect(self.page.get_by_text("Salchicha")).to_be_visible()
-        expect(self.page.get_by_text("May 10, 2008")).to_be_visible()
-
-
-        self.page.get_by_role("link", name="Editar").click()
-        expect(self.page.get_by_label("Nombre")).to_have_value("Paco")
-        expect(self.page.get_by_label("Raza")).to_have_value("Salchicha")
-        self.page.screenshot(path="before_change.png")
-        expect(self.page.get_by_label("Nacimiento")).to_have_value("")
-
-
-
-
-        self.page.evaluate("document.querySelector('input[name=birthday]').value = '2028-05-10'")
-        self.page.get_by_role("button", name="Guardar").click()
-        expect(self.page.get_by_label("Nombre")).to_have_value("Paco")
-        expect(self.page.get_by_label("Raza")).to_have_value("Salchicha")
-        expect(self.page.get_by_label("Nacimiento")).to_have_value("2028-05-10")
-        expect(self.page.get_by_text("La fecha de nacimiento no puede ser posterior al día actual."))
-=======
         self.page.get_by_label("Nombre").fill("Benita")
         self.page.get_by_label("Raza").select_option("Perro")
         self.page.get_by_label("Nacimiento").fill("2021-01-01")
@@ -524,4 +473,31 @@ class PetCreateEditTestCase(PlaywrightTestCase):
 
         edit_action = self.page.get_by_role("link", name="Editar")
         expect(edit_action).to_have_attribute("href", reverse("pets_edit", kwargs={"id": pet.id}))
->>>>>>> main
+
+    def test_edit_form_should_be_able_to_throw_an_error_if(self):
+        pet = Pet.objects.create(
+            name="Paco",
+            breed="Perro",
+            birthday="2008-05-10"
+        )
+
+        self.page.goto(f"{self.live_server_url}{reverse('pets_repo')}")
+        expect(self.page.get_by_text("Paco")).to_be_visible()
+        expect(self.page.get_by_text("Perro")).to_be_visible()
+        expect(self.page.get_by_text("May 10, 2008")).to_be_visible()
+
+        self.page.get_by_role("link", name="Editar").click()
+        self.page.screenshot(path="after_editar_click.png")
+        expect(self.page.get_by_label("Nombre")).to_have_value("Paco")
+        breed_select = self.page.get_by_label("Raza")
+        expect(breed_select).to_have_value("Perro")
+        expect(self.page.get_by_label("Nacimiento")).to_have_value("")
+
+        self.page.evaluate("document.querySelector('input[name=birthday]').value = '2028-05-10'")
+        self.page.get_by_role("button", name="Guardar").click()
+        self.page.screenshot(path="after_guardar_click.png")
+        expect(self.page.get_by_label("Nombre")).to_have_value("Paco")
+        breed_select = self.page.get_by_label("Raza")
+        expect(breed_select).to_have_value("Perro")
+        expect(self.page.get_by_label("Nacimiento")).to_have_value("2028-05-10")
+        expect(self.page.get_by_text("La fecha de nacimiento no puede ser posterior al día actual."))
