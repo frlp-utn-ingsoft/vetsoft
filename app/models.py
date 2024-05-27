@@ -43,6 +43,7 @@ def validate_product(data):
     name = data.get("name", "")
     type = data.get("type", "")
     price = data.get("price", "")
+    stock = data.get("stock", "")
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
@@ -53,6 +54,8 @@ def validate_product(data):
     if price == "":
         errors["price"] = "Por favor ingrese un precio"
 
+    if stock == "":
+        errors["stock"] = "Por favor ingrese un stock"
     return errors
 
 def validate_veterinary(data):
@@ -74,6 +77,8 @@ def validate_veterinary(data):
         errors["email"] = "Por favor ingrese un email valido"
 
     return errors
+
+
 def validate_med(data):
     errors = {}
 
@@ -89,6 +94,14 @@ def validate_med(data):
 
     if dose == "":
         errors["dose"] = "Por favor ingrese una dosis"
+
+    else:
+        try:
+            dose = float(dose)
+            if dose < 1.0 or dose > 10.0:
+                errors["dose"] = "La dosis debe estar entre 1 y 10"
+        except ValueError:
+            errors["dose"] = "La dosis debe ser un número decimal"
 
     return errors
 
@@ -130,7 +143,8 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=50)
     price = models.FloatField()
-
+    stock = models.IntegerField(default=0)
+    
     def __str__(self):
         return self.name
 
@@ -145,13 +159,23 @@ class Product(models.Model):
             name=product_data.get("name"),
             type=product_data.get("type"),
             price=product_data.get("price"),
+            stock=product_data.get("stock"),
         )
 
         return True, None    
+    
     def update_product(self, product_data):
         self.name = product_data.get("name", "") or self.name
         self.type = product_data.get("type", "") or self.type
         self.price = product_data.get("price", "") or self.price
+        self.stock = product_data.get("stock", "") or self.stock
+        
+        try:
+            if (int(self.stock) < 0):
+                raise ValueError("El stock no puede ser negativo.")
+        except ValueError as e:
+            print(f"El stock no puede ser negativo: {e}")
+            self.stock = Product.objects.get(pk=self.pk).stock
 
         self.save()
 
@@ -241,8 +265,16 @@ def validate_pet(data):
     return errors
 
 class Pet(models.Model):
+    class Breed(models.TextChoices):
+        Perro = "Perro"
+        Gato = "Gato"
+        Conejo = "Conejo"
+        Pájaro = "Pájaro"
+        Pez = "Pez"
+        Otro = "Otro"
+    
     name = models.CharField(max_length=100)
-    breed = models.CharField(max_length=15)
+    breed = models.CharField(choices=Breed.choices, max_length=50)
     birthday = models.DateField()
 
     def __str__(self):
@@ -293,8 +325,20 @@ class Med(models.Model):
         return True, None
 
     def update_med(self, med_data):
-        self.name = med_data.get("name","") or self.name
-        self.desc = med_data.get("desc","") or self.desc
-        self.dose = med_data.get("dose","") or self.dose
+        errors = validate_med(med_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+        
+        errors = validate_med(med_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+        else:
+            self.name = med_data.get("name", "") or self.name
+            self.desc = med_data.get("desc", "") or self.desc
+            self.dose = med_data.get("dose", "") or self.dose
 
         self.save()
+        return True, None
+
