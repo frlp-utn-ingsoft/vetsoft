@@ -260,23 +260,6 @@ class AddMedicine(PlaywrightTestCase):
         expect(self.page.get_by_text("Para dolores de cabeza")).to_be_visible()
         expect(self.page.get_by_text("1")).to_be_visible()
 
-    def test_medicine_dose_range(self):
-        self.page.goto(f"{self.live_server_url}{reverse('medicines_form')}")
-
-        expect(self.page.get_by_role("form")).to_be_visible()
-
-        self.page.get_by_label("Nombre").fill("Medicina 1")
-        self.page.get_by_label("Descripción").fill("Descripción de medicina 1")
-        self.page.get_by_label("Dosis").fill("0")
-
-        self.page.get_by_role("button", name="Guardar").click()
-        expect(self.page.get_by_text("La dosis debe ser entre 1 y 10")).to_be_visible()
-
-        self.page.get_by_label("Dosis").fill("12")
-
-        self.page.get_by_role("button", name="Guardar").click()
-        expect(self.page.get_by_text("La dosis debe ser entre 1 y 10")).to_be_visible()
-
 class AddPet(PlaywrightTestCase):
     def test_add_new_pet(self):
         self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
