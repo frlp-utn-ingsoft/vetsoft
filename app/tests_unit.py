@@ -61,7 +61,7 @@ class ClientModelTest(TestCase):
 
 
 # Agrego test unitarios para punto 5 actividad 3
-
+# cambios por nueva rama  feature-agregaropcionesrazamascota
 class PetModelTest(TestCase):
     def setUp(self):
         # Crea un cliente para ser el dueño de la mascota
