@@ -1,6 +1,5 @@
 from django.db import models
 
-
 def validate_client(data):
     errors = {}
 
@@ -77,6 +76,8 @@ def validate_veterinary(data):
         errors["email"] = "Por favor ingrese un email valido"
 
     return errors
+
+
 def validate_med(data):
     errors = {}
 
@@ -92,6 +93,14 @@ def validate_med(data):
 
     if dose == "":
         errors["dose"] = "Por favor ingrese una dosis"
+
+    else:
+        try:
+            dose = float(dose)
+            if dose < 1.0 or dose > 10.0:
+                errors["dose"] = "La dosis debe estar entre 1 y 10"
+        except ValueError:
+            errors["dose"] = "La dosis debe ser un número decimal"
 
     return errors
 
@@ -312,8 +321,20 @@ class Med(models.Model):
         return True, None
 
     def update_med(self, med_data):
-        self.name = med_data.get("name","") or self.name
-        self.desc = med_data.get("desc","") or self.desc
-        self.dose = med_data.get("dose","") or self.dose
+        errors = validate_med(med_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+        
+        errors = validate_med(med_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+        else:
+            self.name = med_data.get("name", "") or self.name
+            self.desc = med_data.get("desc", "") or self.desc
+            self.dose = med_data.get("dose", "") or self.dose
 
         self.save()
+        return True, None
+

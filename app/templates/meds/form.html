@@ -1,4 +1,5 @@
-{% extends 'base.html' %} {% block main %}
+{% extends 'base.html' %} 
+{% block main %}
 <div class="container">
     <div class="row">
         <div class="col-lg-6 offset-lg-3">
@@ -8,65 +9,38 @@
 
     <div class="row">
         <div class="col-lg-6 offset-lg-3">
-            <form
-                class="vstack gap-3 {% if errors %}was-validated{% endif %}"
-                aria-label="Formulario de creacion de un medicamento"
-                method="POST"
-                action="{% url 'meds_form' %}"
-                novalidate
-            >
+            <form class="vstack gap-3" aria-label="Formulario de creacion de un medicamento" method="POST" action="{% url 'meds_form' %}" novalidate>
                 {% csrf_token %}
-
                 <input type="hidden" value="{{ med.id }}" name="id" />
 
                 <div>
                     <label for="name" class="form-label">Nombre</label>
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value="{{med.name}}"
-                        class="form-control"
-                        required
-                    />
-
+                    <input type="text" id="name" name="name" value="{{ med.name }}" class="form-control {% if errors.name %}is-invalid{% endif %}" required />
                     {% if errors.name %}
-                    <div class="invalid-feedback">{{ errors.name }}</div>
+                        <div class="invalid-feedback">{{ errors.name }}</div>
                     {% endif %}
                 </div>
+
                 <div>
                     <label for="desc" class="form-label">Descripcion</label>
-                    <input
-                        type="text"
-                        id="desc"
-                        name="desc"
-                        class="form-control"
-                        value="{{med.desc}}"
-                        required
-                    />
-
+                    <input type="text" id="desc" name="desc" value="{{ med.desc }}" class="form-control {% if errors.desc %}is-invalid{% endif %}" required />
                     {% if errors.desc %}
-                    <div class="invalid-feedback">{{ errors.desc}}</div>
+                        <div class="invalid-feedback">{{ errors.desc }}</div>
                     {% endif %}
                 </div>
+
                 <div>
                     <label for="dose" class="form-label">Dosis</label>
-                    <input
-                        type="number"
-                        id="dose"
-                        name="dose"
-                        class="form-control"
-                        value="{{ med.dose }}"
-                        required
-                    />
-
+                    <input type="number" id="dose" name="dose" value="{{ med.dose }}" class="form-control {% if errors.dose %}is-invalid{% endif %}" required />
                     {% if errors.dose %}
-                    <div class="invalid-feedback">{{ errors.dose }}</div>
+                        <div class="invalid-feedback">{{ errors.dose }}</div>
                     {% endif %}
                 </div>
+
                 <button class="btn btn-primary">Guardar</button>
             </form>
         </div>
     </div>
 </div>
 {% endblock %}
+
