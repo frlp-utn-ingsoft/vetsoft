@@ -340,3 +340,4 @@ class AddMedicine(PlaywrightTestCase):
 
         self.page.get_by_role("button", name="Guardar").click()
         expect(self.page.get_by_text("La dosis debe ser entre 1 y 10")).to_be_visible()
+
