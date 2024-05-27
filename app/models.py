@@ -1,5 +1,6 @@
 
 from django.db import models
+from datetime import date, datetime
 
 ############################################## CLIENT ##############################################
 class Client(models.Model):
@@ -314,14 +315,22 @@ class Pet(models.Model):
         birthday = data.get("birthday", "")
         weight = data.get("weight", "")
 
+        # Validar que la fecha de nacimiento sea menor a la fecha actual
+        if birthday == "":
+                errors["birthday"] = "Por favor ingrese una fecha"
+        else:
+            try:
+                birthday_date = datetime.strptime(birthday, "%Y-%m-%d").date()
+                if birthday_date >= date.today():
+                    errors['birthday'] = 'La fecha de nacimiento debe ser anterior a la fecha actual.'
+            except ValueError:
+             errors['birthday'] = 'La fecha de nacimiento no es válida.'
+
         if name == "":
             errors["name"] = "Por favor ingrese un nombre"
 
         if breed == "":
             errors["breed"] = "Por favor ingrese una raza"
-
-        if birthday == "":
-            errors["birthday"] = "Por favor ingrese una fecha"
 
         if weight == "":
             errors["weight"] = "Por favor ingrese un peso"
