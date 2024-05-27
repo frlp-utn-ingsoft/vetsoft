@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.shortcuts import reverse
-from app.models import Client, Product, Pet, Med
+from app.models import Client, Product, Pet, Med, Provider
 from datetime import date, timedelta
 
 
@@ -94,6 +94,87 @@ class ClientsTest(TestCase):
         self.assertEqual(editedClient.phone, client.phone)
         self.assertEqual(editedClient.address, client.address)
         self.assertEqual(editedClient.email, client.email)
+
+class ProvidersTest(TestCase):
+    def test_can_create_client(self):
+        response = self.client.post(
+            reverse("providers_form"),
+            data={
+                "name": "Farmacity S.A",
+                "email": "moltito@hotmail.com",
+                "address": "Rio negro 2265",
+            },
+        )
+        providers = Provider.objects.all()
+        self.assertEqual(len(providers), 1)
+
+        self.assertEqual(providers[0].name, "Farmacity S.A")
+        self.assertEqual(providers[0].email, "moltito@hotmail.com")
+        self.assertEqual(providers[0].address, "Rio negro 2265")
+
+
+        self.assertRedirects(response, reverse("providers_repo"))
+    def test_validation_invalid_email(self):
+        response = self.client.post(
+            reverse("providers_form"),
+            data={
+                "name": "Farmacity S.A",
+                "email": "facultad121030",
+                "address": "Rio negro 2265",
+            },
+        )
+
+        self.assertContains(response, "Por favor ingrese un email valido")        
+    def test_validation_errors_create_provider(self):
+        response = self.client.post(
+            reverse("providers_form"),
+            data={},
+        )
+
+        self.assertContains(response, "Por favor ingrese un nombre")
+        self.assertContains(response, "Por favor ingrese un email")
+        self.assertContains(response, "Por favor ingrese una direccion")
+    def test_edit_user_with_valid_data(self):
+        provider = Provider.objects.create(
+            name="Farmacity S.A",
+            email="moltito@hotmail.com",
+            address="Rio negro 2265",
+      )
+
+        response = self.client.post(
+            reverse("providers_form"),
+            data={
+                "id": provider.id,
+                "name": "SuperFarm",
+                "email": "moltito@hotmail.com",
+                "address": "Rio negro 2265"
+            },
+        )
+
+        # redirect after post
+        self.assertEqual(response.status_code, 302)
+
+        editedProvider = Provider.objects.get(pk=provider.id)
+        self.assertEqual(editedProvider.name, "SuperFarm")
+        self.assertEqual(editedProvider.email, provider.email)
+        self.assertEqual(editedProvider.address, provider.address)
+
+    def test_repo_use_repo_template(self):
+        response = self.client.get(reverse("providers_repo"))
+        self.assertTemplateUsed(response, "providers/repository.html")
+
+    def test_repo_display_all_providers(self):
+        response = self.client.get(reverse("providers_repo"))
+        self.assertTemplateUsed(response, "providers/repository.html")
+
+    def test_form_use_form_template(self):
+        response = self.client.get(reverse("providers_form"))
+        self.assertTemplateUsed(response, "providers/form.html")
+        
+
+    
+
+    
 
 
 class MedicinesTest(TestCase):

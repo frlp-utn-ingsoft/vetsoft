@@ -5,7 +5,7 @@ from playwright.sync_api import sync_playwright, expect, Browser
 
 from django.urls import reverse
 
-from app.models import Client, Product, Pet, Med
+from app.models import Client, Product, Pet, Med, Provider
 from datetime import date
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
@@ -242,7 +242,7 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         edit_action = self.page.get_by_role("link", name="Editar")
         expect(edit_action).to_have_attribute(
             "href", reverse("clients_edit", kwargs={"id": client.id})
-        )
+        )    
 
 class MedicineRepoTestCase(PlaywrightTestCase):
     def test_should_show_message_if_table_is_empty(self):
@@ -473,3 +473,72 @@ class PetCreateEditTestCase(PlaywrightTestCase):
 
         edit_action = self.page.get_by_role("link", name="Editar")
         expect(edit_action).to_have_attribute("href", reverse("pets_edit", kwargs={"id": pet.id}))
+
+class ProviderCreateEditTestCase(PlaywrightTestCase):
+    def test_should_be_able_to_create_a_new_provider(self):
+        self.page.goto(f"{self.live_server_url}{reverse('providers_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Farmacity S.A")
+        self.page.get_by_label("Email").fill("moltito@hotmail.com")
+        self.page.get_by_label("Direccion").fill("Rio negro 2265")
+        
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Farmacity S.A")).to_be_visible()
+        expect(self.page.get_by_text("moltito@hotmail.com")).to_be_visible()
+        expect(self.page.get_by_text("Rio negro 2265")).to_be_visible()
+        
+
+    def test_should_view_errors_if_form_is_invalid(self):
+        self.page.goto(f"{self.live_server_url}{reverse('providers_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un email")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una direccion")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Farmacity S.A")
+        self.page.get_by_label("Email").fill("moltito@hotmail.com")
+        self.page.get_by_label("Direccion").fill("Rio negro 2265")
+        
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un email")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una direccion")).not_to_be_visible()
+
+    def test_should_be_able_to_edit_a_client(self):
+        provider = Provider.objects.create(
+            name="Farmacity S.A",
+            email="moltito@hotmail.com",
+            address="Rio negro 2265",
+        )
+
+        path = reverse("providers_edit", kwargs={"id": provider.id})
+        self.page.goto(f"{self.live_server_url}{path}")
+
+        self.page.get_by_label("Nombre").fill("Tonci S.A")
+        self.page.get_by_label("Email").fill("gepe@hotmail.com")
+        self.page.get_by_label("Direccion").fill("Diagonal 80 750")
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Farmacity S.A")).not_to_be_visible()
+        expect(self.page.get_by_text("moltito@hotmail.com")).not_to_be_visible()
+        expect(self.page.get_by_text("Rio negro 2265")).not_to_be_visible()
+        
+        expect(self.page.get_by_text("Tonci S.A")).to_be_visible()
+        expect(self.page.get_by_text("gepe@hotmail.com")).to_be_visible()
+        expect(self.page.get_by_text("Diagonal 80 750")).to_be_visible()
+
+        edit_action = self.page.get_by_role("link", name="Editar")
+        expect(edit_action).to_have_attribute(
+            "href", reverse("providers_edit", kwargs={"id": provider.id})
+        )
+    
