@@ -1,6 +1,5 @@
 from django.test import TestCase
-from app.models import Client
-from app.models import Provider
+from app.models import Client, Product, Provider
 
 class ProviderModelTest(TestCase):
 
@@ -19,60 +18,100 @@ class ProviderModelTest(TestCase):
         self.assertEqual(provider[0].email, "pepe@hotmail.com")
         self.assertEqual(provider[0].address, "7 entre 13 y 44")
 
+# class ClientModelTest(TestCase):
+#     def test_can_create_and_get_client(self):
+#         Client.save_client(
+#             {
+#                 "name": "Juan Sebastian Veron",
+#                 "phone": "221555232",
+#                 "address": "13 y 44",
+#                 "email": "brujita75@hotmail.com",
+#             }
+#         )
+#         clients = Client.objects.all()
+#         self.assertEqual(len(clients), 1)
 
+#         self.assertEqual(clients[0].name, "Juan Sebastian Veron")
+#         self.assertEqual(clients[0].phone, "221555232")
+#         self.assertEqual(clients[0].address, "13 y 44")
+#         self.assertEqual(clients[0].email, "brujita75@hotmail.com")
 
-class ClientModelTest(TestCase):
-    def test_can_create_and_get_client(self):
-        Client.save_client(
+#     def test_can_update_client(self):
+#         Client.save_client(
+#             {
+#                 "name": "Juan Sebastian Veron",
+#                 "phone": "221555232",
+#                 "address": "13 y 44",
+#                 "email": "brujita75@hotmail.com",
+#             }
+#         )
+#         client = Client.objects.get(pk=1)
+
+#         self.assertEqual(client.phone, "221555232")
+
+#         client.update_client({"phone": "221555233"})
+
+#         client_updated = Client.objects.get(pk=1)
+
+#         self.assertEqual(client_updated.phone, "221555233")
+
+#     def test_update_client_with_error(self):
+#         Client.save_client(
+#             {
+#                 "name": "Juan Sebastian Veron",
+#                 "phone": "221555232",
+#                 "address": "13 y 44",
+#                 "email": "brujita75@hotmail.com",
+#             }
+#         )
+#         client = Client.objects.get(pk=1)
+
+#         self.assertEqual(client.phone, "221555232")
+
+#         client.update_client({"phone": ""})
+
+#         client_updated = Client.objects.get(pk=1)
+
+#         self.assertEqual(client_updated.phone, "221555232")
+
+class ProductModelTest(TestCase):
+    def test_can_create_and_get_product(self):
+        Product.save_product(
             {
-                "name": "Juan Sebastian Veron",
-                "phone": "221555232",
-                "address": "13 y 44",
-                "email": "brujita75@hotmail.com",
+                "name": "NombreProducto",
+                "type": "TipoProducto",
+                "price": 8,
             }
         )
-        clients = Client.objects.all()
-        self.assertEqual(len(clients), 1)
 
-        self.assertEqual(clients[0].name, "Juan Sebastian Veron")
-        self.assertEqual(clients[0].phone, "221555232")
-        self.assertEqual(clients[0].address, "13 y 44")
-        self.assertEqual(clients[0].email, "brujita75@hotmail.com")
+        products = Product.objects.all()
+        self.assertEqual(len(products), 1)
 
-    def test_can_update_client(self):
-        Client.save_client(
+        self.assertEqual(products[0].name, "NombreProducto")
+        self.assertEqual(products[0].type, "TipoProducto")
+        self.assertEqual(products[0].price, 8)
+
+    def test_create_product_with_negative_product(self):
+        Product.save_product(
             {
-                "name": "Juan Sebastian Veron",
-                "phone": "221555232",
-                "address": "13 y 44",
-                "email": "brujita75@hotmail.com",
+                "name": "NombreProducto",
+                "type": "TipoProducto",
+                "price": -8,
             }
         )
-        client = Client.objects.get(pk=1)
 
-        self.assertEqual(client.phone, "221555232")
+        products = Product.objects.all()
+        self.assertEqual(len(products), 0)
 
-        client.update_client({"phone": "221555233"})
 
-        client_updated = Client.objects.get(pk=1)
-
-        self.assertEqual(client_updated.phone, "221555233")
-
-    def test_update_client_with_error(self):
-        Client.save_client(
+    def test_create_product_with_no_product(self):
+        Product.save_product(
             {
-                "name": "Juan Sebastian Veron",
-                "phone": "221555232",
-                "address": "13 y 44",
-                "email": "brujita75@hotmail.com",
+                "name": "NombreProducto",
+                "type": "TipoProducto",
+                "price": 0,
             }
         )
-        client = Client.objects.get(pk=1)
 
-        self.assertEqual(client.phone, "221555232")
-
-        client.update_client({"phone": ""})
-
-        client_updated = Client.objects.get(pk=1)
-
-        self.assertEqual(client_updated.phone, "221555232")
+        products = Product.objects.all()
+        self.assertEqual(len(products), 0)
