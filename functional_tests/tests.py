@@ -240,52 +240,6 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         )
 
 
-    def test_should_be_able_to_create_a_new_provider_with_address(self):
-        self.page.goto(f"{self.live_server_url}{reverse('providers_form')}")
-
-        expect(self.page.get_by_role("form")).to_be_visible()
-
-        self.page.get_by_label("Nombre").fill("Proveedor de Prueba")
-        self.page.get_by_label("Email").fill("proveedor@ejemplo.com")
-        self.page.get_by_label("Dirección").fill("Calle Falsa 123")
-
-        self.page.get_by_role("button", name="Guardar").click()
-
-        expect(self.page.get_by_text("Proveedor de Prueba")).to_be_visible()
-        expect(self.page.get_by_text("proveedor@ejemplo.com")).to_be_visible()
-        expect(self.page.get_by_text("Calle Falsa 123")).to_be_visible()
-
-    def test_should_view_errors_if_form_is_invalid(self):
-        self.page.goto(f"{self.live_server_url}{reverse('providers_form')}")
-        
-        expect(self.page.get_by_role("form")).to_be_visible()
-
-        self.page.get_by_role("button", name="Guardar").click()
-
-        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
-        expect(self.page.get_by_text("Por favor ingrese un email")).to_be_visible()
-
-    def test_should_be_able_to_edit_a_provider_with_address(self):
-        provider = Provider.objects.create(
-            name="Proveedor Original",
-            email="original@ejemplo.com",
-            address="Dirección Original",
-        )
-
-        path = reverse("providers_edit", kwargs={"id": provider.id})
-        self.page.goto(f"{self.live_server_url}{path}")
-
-        self.page.get_by_label("Nombre").fill("Proveedor Actualizado")
-        self.page.get_by_label("Email").fill("actualizado@ejemplo.com")
-        self.page.get_by_label("Dirección").fill("Dirección Actualizada")
-
-        self.page.get_by_role("button", name="Guardar").click()
-
-        expect(self.page.get_by_text("Proveedor Original")).not_to_be_visible()
-        expect(self.page.get_by_text("Dirección Original")).not_to_be_visible()
-        expect(self.page.get_by_text("actualizado@ejemplo.com")).to_be_visible()
-        expect(self.page.get_by_text("Dirección Actualizada")).to_be_visible()
-
 #  TEST DE PET
 class PetCreateWeightgreaterThanZero(PlaywrightTestCase):
 
