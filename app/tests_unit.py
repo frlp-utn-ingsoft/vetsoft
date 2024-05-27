@@ -1,6 +1,6 @@
 from .models import Pet, Client, Breed
 from django.test import TestCase
-from app.models import Client, Product, Provider, Vet
+from app.models import Client, Product, Provider, Vet, Medicine
 
 class ProviderModelTest(TestCase):
     def test_can_create_and_get_provider(self):
@@ -17,6 +17,7 @@ class ProviderModelTest(TestCase):
         self.assertEqual(provider[0].name, "Pepe Gonzales")
         self.assertEqual(provider[0].email, "pepe@hotmail.com")
         self.assertEqual(provider[0].address, "7 entre 13 y 44")
+
 
 # class ClientModelTest(TestCase):
 #     def test_can_create_and_get_client(self):
@@ -74,6 +75,61 @@ class ProviderModelTest(TestCase):
 
 #         self.assertEqual(client_updated.phone, "221555232")
 
+
+
+class MedicineModelTest(TestCase):
+    def test_can_create_and_get_medicine(self):
+        success, errors = Medicine.save_medicine(
+            {
+                "name": "Amoxicilina",
+                "description": "Antibiotico de amplio espectro",
+                "dose": "6",
+            }
+        )
+        self.assertTrue(success)
+        self.assertIsNone(errors)
+        
+        medicines = Medicine.objects.all()
+        self.assertEqual(len(medicines), 1)
+
+        self.assertEqual(medicines[0].name, "Amoxicilina")
+        self.assertEqual(medicines[0].description, "Antibiotico de amplio espectro")
+        self.assertEqual(medicines[0].dose, 6)
+
+    def test_update_medicine_with_invalid_dose_zero(self):
+        Medicine.save_medicine(
+            {
+                "name": "Amoxicilina",
+                "description": "Antibiotico de amplio espectro",
+                "dose":"0",
+            }
+        )
+        medicinas = Medicine.objects.all()
+        self.assertEqual(len(medicinas), 0)
+
+    def test_update_medicine_with_invalide_dose(self):
+        Medicine.save_medicine(
+            {
+                "name": "Amoxicilina",
+                "description": "Antibiotico de amplio espectro",
+                "dose":"11",
+            }
+        )
+        medicinas=Medicine.objects.all()
+        self.assertEqual(len(medicinas),0)
+
+    def test_update_medicine_with_invalid_dose_negative(self):
+        Medicine.save_medicine(
+            {
+                "name": "Amoxicilina",
+                "description": "Antibiotico de amplio espectro",
+                "dose":"-5",
+            }
+        )
+        medicinas = Medicine.objects.all()
+        self.assertEqual(len(medicinas), 0)
+
+        
 #Test de veterinario
 class VetModelTest(TestCase):
     def test_can_create_and_get_vet(self):

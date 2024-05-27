@@ -6,6 +6,7 @@ from playwright.sync_api import sync_playwright, expect, Browser
 from django.urls import reverse
 
 from app.models import Client
+from app.models import Medicine
 from app.models import Vet
 from app.models import Provider
 
@@ -332,7 +333,7 @@ class VetsRepoTestCase(PlaywrightTestCase):
             email="emily@example.com",
             speciality="dentista"
         )
-
+        
         self.page.goto(f"{self.live_server_url}{reverse('vets_repo')}")
 
         expect(self.page.get_by_text("No existen veterinarios")).not_to_be_visible()
@@ -357,10 +358,89 @@ class VetsRepoTestCase(PlaywrightTestCase):
         self.page.get_by_label("Teléfono").fill("23145553")
         self.page.get_by_label("Email").fill("eduardola@gmail.com")
         self.page.get_by_label("Especialidad").fill("")
-
+        
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese un teléfono")).not_to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese un email")).not_to_be_visible()
         expect(self.page.get_by_text("Por favor seleccione una especialidad")).to_be_visible()
+
+
+class MedicineCreateTestCase(PlaywrightTestCase):
+    def test_should_be_able_to_create_a_new_medicine(self):
+        self.page.goto(f"{self.live_server_url}{reverse('medicines_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Amoxicilina")
+        self.page.get_by_label("Descripción").fill("Antibiotico de amplio espectro")
+        self.page.get_by_label("Dosis").fill("6")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Amoxicilina")).to_be_visible()
+        expect(self.page.get_by_text("Antibiotico de amplio espectro")).to_be_visible()
+        expect(self.page.get_by_text("6")).to_be_visible()
+
+    def test_should_view_errors_if_dose_is_zero(self):
+        self.page.goto(f"{self.live_server_url}{reverse('medicines_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una descripción")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una dosis")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Amoxicilina")
+        self.page.get_by_label("Descripción").fill("Antibiotico de amplio espectro")
+        self.page.get_by_label("Dosis").fill("0")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una descripción")).not_to_be_visible()
+        expect(self.page.get_by_text("La dosis debe estar entre 1 a 10")).to_be_visible()
+    
+    def test_should_view_errors_if_dose_is_out_of_range(self):
+        self.page.goto(f"{self.live_server_url}{reverse('medicines_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una descripción")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una dosis")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Amoxicilina")
+        self.page.get_by_label("Descripción").fill("Antibiotico de amplio espectro")
+        self.page.get_by_label("Dosis").fill("11")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una descripción")).not_to_be_visible()
+        expect(self.page.get_by_text("La dosis debe estar entre 1 a 10")).to_be_visible()
+
+    def test_should_view_errors_if_dose_is_negative(self):
+        self.page.goto(f"{self.live_server_url}{reverse('medicines_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una descripción")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una dosis")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Amoxicilina")
+        self.page.get_by_label("Descripción").fill("Antibiotico de amplio espectro")
+        self.page.get_by_label("Dosis").fill("-5")
+
+        expect(self.page.get_by_text("Por favor ingrese una descripción")).not_to_be_visible()
+        expect(self.page.get_by_text("La dosis debe ser un número entero")).to_be_visible()
+
+

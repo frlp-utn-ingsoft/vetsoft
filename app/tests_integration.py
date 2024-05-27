@@ -1,62 +1,7 @@
 from django.test import TestCase
-from app.models import Client, Product, Provider, Vet
+from app.models import Client, Product, Provider, Vet, Medicine
 from django.test import Client  # esto lo agrego para mi test
 from django.shortcuts import reverse
-from app.models import Client, Pet, Breed  # agregue pet para mis test
-
-# cambios para actividad 3 punto 5 de TEST
-
-
-
-class HomePageTest(TestCase):
-    def test_use_home_template(self):
-        response = self.client.get(reverse("home"))
-        self.assertTemplateUsed(response, "home.html")
-
-class ProviderTest(TestCase):
-    def test_can_create_provider(self):
-            response = self.client.post(
-                reverse("providers_form"),
-                data={
-                "name": "Pepe Gonzales",
-                "email": "pepe@hotmail.com",
-                "address": "7 entre 13 y 44",
-            },
-            )
-            provider = Provider.objects.all()
-
-            self.assertEqual(len(provider), 1)
-            self.assertEqual(provider[0].name, "Pepe Gonzales")
-            self.assertEqual(provider[0].email, "pepe@hotmail.com")
-            self.assertEqual(provider[0].address, "7 entre 13 y 44")
-
-            self.assertRedirects(response, reverse("providers_repo"))
-
-    def test_validation_errors_create_provider(self):
-        response = self.client.post(
-            reverse("providers_form"),
-            data={},
-        )
-        self.assertContains(response, "Por favor ingrese un nombre")
-        self.assertContains(response, "Por favor ingrese un email") 
-        self.assertContains(response, "Por favor ingrese una direccion")
-   
-
-#class ClientsTest(TestCase):
-#    def test_repo_use_repo_template(self):
-#        response = self.client.get(reverse("clients_repo"))
-#        self.assertTemplateUsed(response, "clients/repository.html")
-
-#    def test_repo_display_all_clients(self):
-#        response = self.client.get(reverse("clients_repo"))
-#        self.assertTemplateUsed(response, "clients/repository.html")
-
-#    def test_form_use_form_template(self):
-#        response = self.client.get(reverse("clients_form"))
-#        self.assertTemplateUsed(response, "clients/form.html")
-
-#    def test_can_create_client(self):
-
 
 # class HomePageTest(TestCase):
 #     def test_use_home_template(self):
@@ -148,6 +93,99 @@ class ProviderTest(TestCase):
 #         self.assertEqual(editedClient.phone, client.phone)
 #         self.assertEqual(editedClient.address, client.address)
 #         self.assertEqual(editedClient.email, client.email)
+
+
+class MedicinesTest(TestCase):
+    def test_can_create_medicine(self):
+        response = self.client.post(
+            reverse("medicines_form"),
+            data={
+                "name": "Amoxicilina",
+                "description": "Antibiotico de amplio espectro",
+                "dose": "6",
+            },
+        )
+        medicines = Medicine.objects.all()
+        self.assertEqual(len(medicines), 1)
+
+        self.assertEqual(medicines[0].name, "Amoxicilina")
+        self.assertEqual(medicines[0].description, "Antibiotico de amplio espectro")
+        self.assertEqual(medicines[0].dose, 6)
+
+        self.assertRedirects(response, reverse("medicines_repo"))
+
+    def test_update_medicine_with_invalid_dose_zero(self):
+        response = self.client.post(
+            reverse("medicines_form"),
+            data={
+                "name": "Amoxicilina",
+                "description": "Antibiotico de amplio espectro",
+                "dose": "0",
+            },
+        )
+        self.assertContains(response, "La dosis debe estar entre 1 a 10")
+
+    def test_update_medicine_with_invalide_dose(self):
+        response = self.client.post(
+            reverse("medicines_form"),
+            data={
+                "name": "Amoxicilina",
+                "description": "Antibiotico de amplio espectro",
+                "dose": "11",
+            },
+        )
+        self.assertContains(response, "La dosis debe estar entre 1 a 10")
+
+    def test_update_medicine_with_invalid_dose_negative(self):
+        response = self.client.post(
+            reverse("medicines_form"),
+            data={
+                "name": "Amoxicilina",
+                "description": "Antibiotico de amplio espectro",
+                "dose": "-5",
+            },
+        )
+        self.assertContains(response, "La dosis debe ser un número entero positivo")
+=======
+from app.models import Client, Pet, Breed  # agregue pet para mis test
+
+# cambios para actividad 3 punto 5 de TEST
+
+
+
+class HomePageTest(TestCase):
+    def test_use_home_template(self):
+        response = self.client.get(reverse("home"))
+        self.assertTemplateUsed(response, "home.html")
+
+class ProviderTest(TestCase):
+    def test_can_create_provider(self):
+            response = self.client.post(
+                reverse("providers_form"),
+                data={
+                "name": "Pepe Gonzales",
+                "email": "pepe@hotmail.com",
+                "address": "7 entre 13 y 44",
+            },
+            )
+            provider = Provider.objects.all()
+
+            self.assertEqual(len(provider), 1)
+            self.assertEqual(provider[0].name, "Pepe Gonzales")
+            self.assertEqual(provider[0].email, "pepe@hotmail.com")
+            self.assertEqual(provider[0].address, "7 entre 13 y 44")
+
+            self.assertRedirects(response, reverse("providers_repo"))
+
+    def test_validation_errors_create_provider(self):
+        response = self.client.post(
+            reverse("providers_form"),
+            data={},
+        )
+        self.assertContains(response, "Por favor ingrese un nombre")
+        self.assertContains(response, "Por favor ingrese un email") 
+        self.assertContains(response, "Por favor ingrese una direccion")
+   
 
 # Test de Veterinario
 class VetsTest(TestCase):
@@ -273,4 +311,3 @@ class PetIntegrationTest(TestCase):
         # pet = Pet.objects.filter(name='Test Pet')
         # self.assertTrue(pet.exists())
         # self.assertEqual(pet.first().breed, Breed.DOG)
-
