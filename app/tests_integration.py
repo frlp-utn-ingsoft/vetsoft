@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.shortcuts import reverse
-from app.models import Client, Product, Provider
+from app.models import Client, Product, Provider, Vet
 
 
 class HomePageTest(TestCase):
@@ -9,7 +9,6 @@ class HomePageTest(TestCase):
         self.assertTemplateUsed(response, "home.html")
 
 class ProviderTest(TestCase):
-
     def test_can_create_provider(self):
             response = self.client.post(
                 reverse("providers_form"),
@@ -144,6 +143,44 @@ class ProviderTest(TestCase):
 #         self.assertEqual(editedClient.phone, client.phone)
 #         self.assertEqual(editedClient.address, client.address)
 #         self.assertEqual(editedClient.email, client.email)
+
+# Test de Veterinario
+class VetsTest(TestCase):
+    def test_can_create_vet(self):
+            response = self.client.post(
+                reverse("vets_form"),
+                data={
+                    "name": "Joaquin Munos",
+                    "phone": "22165438",
+                    "address": "20 y 60",
+                    "email": "joaquin10@hotmail.com",
+                    "especialidad": "general",
+                },
+            )
+            vets = Vet.objects.all()
+            self.assertEqual(len(vets), 1)
+
+            self.assertEqual(vets[0].name, "Joaquin Munos")
+            self.assertEqual(vets[0].phone, "22165438")
+            self.assertEqual(vets[0].address, "20 y 60")
+            self.assertEqual(vets[0].email, "joaquin10@hotmail.com")
+            self.assertEqual(vets[0].speciality, "general")
+
+            self.assertRedirects(response, reverse("vets_repo"))
+
+    def test_validation_invalid_especialidad(self):
+            response = self.client.post(
+                reverse("vets_form"),
+                data={
+                    "name": "Joaquin Munos",
+                    "phone": "22165438",
+                    "address": "20 y 60",
+                    "email": "joaquin10@hotmail.com",
+                    "especialidad": "",
+                },
+            )
+
+            self.assertContains(response, "Por favor seleccione una especialidad")
 
 class ProductsTest(TestCase):
     def test_can_create_product(self):

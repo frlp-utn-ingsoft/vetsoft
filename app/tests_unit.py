@@ -1,8 +1,7 @@
 from django.test import TestCase
-from app.models import Client, Product, Provider
+from app.models import Client, Product, Provider, Vet
 
 class ProviderModelTest(TestCase):
-
     def test_can_create_and_get_provider(self):
         Provider.save_provider(
             {
@@ -74,6 +73,46 @@ class ProviderModelTest(TestCase):
 
 #         self.assertEqual(client_updated.phone, "221555232")
 
+#Test de veterinario
+class VetModelTest(TestCase):
+    def test_can_create_and_get_vet(self):
+        Vet.save_vet(
+            {
+                "name": "Tomas Sbert",
+                "phone": "2314557290",
+                "address": "La Plata 43",
+                "email": "tomasbret_dx@hotmail.com",
+                "especialidad": "general",
+            }
+        )
+
+        vets = Vet.objects.all()
+
+        self.assertEqual(len(vets), 1)
+
+        self.assertEqual(vets[0].name, "Tomas Sbert")
+        self.assertEqual(vets[0].phone, "2314557290")
+        self.assertEqual(vets[0].address, "La Plata 43")
+        self.assertEqual(vets[0].email, "tomasbret_dx@hotmail.com")
+        self.assertEqual(vets[0].speciality, "general")
+
+    def test_can_delete_vet(self):
+        vet = Vet.objects.create(
+            name="Tomas Sbert",
+            phone="2314557290",
+            address="La Plata 43",
+            email="tomasbret_dx@hotmail.com",
+            speciality="general"
+        )
+
+        # Eliminar el veterinario
+        vet.delete()
+
+        # Verificar que el veterinario haya sido eliminado
+        vets = Vet.objects.all()
+        self.assertEqual(len(vets), 0)
+
+        
 class ProductModelTest(TestCase):
     def test_can_create_and_get_product(self):
         Product.save_product(
