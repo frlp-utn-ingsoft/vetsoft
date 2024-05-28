@@ -1,7 +1,7 @@
 name: cd
 
 on:
-    push:
+    release:
         branch: [main]
 
 jobs:
