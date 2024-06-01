@@ -36,21 +36,6 @@
                     {% endif %}
                 </div>
                 <div>
-                    <label for="phone" class="form-label">Teléfono</label>
-                    <input type="text"
-                        id="phone"
-                        name="phone"
-                        class="form-control"
-                        value="{{client.phone}}"
-                        required/>
-
-                    {% if errors.phone %}
-                        <div class="invalid-feedback">
-                            {{ errors.phone }}
-                        </div>
-                    {% endif %}
-                </div>
-                <div>
                     <label for="email" class="form-label">Email</label>
                     <input type="email"
                         id="email"
