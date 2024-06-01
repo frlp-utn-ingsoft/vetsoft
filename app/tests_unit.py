@@ -108,7 +108,7 @@ class MedicineModelTest(TestCase):
         self.assertEqual(len(medicinas), 0)
 
     def test_update_medicine_with_invalide_dose(self):
-        Medicine.save_medicine(
+        response = Medicine.save_medicine(
             {
                 "name": "Amoxicilina",
                 "description": "Antibiotico de amplio espectro",
@@ -117,9 +117,11 @@ class MedicineModelTest(TestCase):
         )
         medicinas=Medicine.objects.all()
         self.assertEqual(len(medicinas),0)
+        self.assertEqual(response[1]['dose'],'La dosis debe estar entre 1 a 10')
+
 
     def test_update_medicine_with_invalid_dose_negative(self):
-        Medicine.save_medicine(
+        response = Medicine.save_medicine(
             {
                 "name": "Amoxicilina",
                 "description": "Antibiotico de amplio espectro",
@@ -128,6 +130,7 @@ class MedicineModelTest(TestCase):
         )
         medicinas = Medicine.objects.all()
         self.assertEqual(len(medicinas), 0)
+        self.assertEqual(response[1]['dose'],'La dosis debe ser un número entero positivo')
 
         
 #Test de veterinario
