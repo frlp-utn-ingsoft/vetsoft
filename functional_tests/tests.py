@@ -295,7 +295,7 @@ class ProductCreateTestCase(PlaywrightTestCase):
 
         expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese un tipo del producto")).not_to_be_visible()
-        expect(self.page.get_by_text("Por favor ingrese un precio")).to_be_visible()
+        expect(self.page.get_by_text("El precio debe ser mayor a cero")).to_be_visible()
 
     def test_should_not_be_able_to_create_a_no_product(self):
         self.page.goto(f"{self.live_server_url}{reverse('products_form')}")
@@ -312,7 +312,7 @@ class ProductCreateTestCase(PlaywrightTestCase):
         
         expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese un tipo del producto")).not_to_be_visible()
-        expect(self.page.get_by_text("Por favor ingrese un precio")).to_be_visible()
+        expect(self.page.get_by_text("El precio debe ser mayor a cero")).to_be_visible()
 
 
 #Test de Vet

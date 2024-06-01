@@ -253,7 +253,7 @@ class ProductsTest(TestCase):
                 "price": -8,
             },
         )
-        self.assertContains(response, "Por favor ingrese un precio")
+        self.assertContains(response, "El precio debe ser mayor a cero")
         
     def test_create_product_no_product(self):
         response = self.client.post(
@@ -264,7 +264,7 @@ class ProductsTest(TestCase):
                 "price": 0,
             },
         )
-        self.assertContains(response, "Por favor ingrese un precio")
+        self.assertContains(response, "El precio debe ser mayor a cero")
 
 
 
