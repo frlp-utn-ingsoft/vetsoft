@@ -188,7 +188,7 @@ class ProductModelTest(TestCase):
         self.assertEqual(products[0].price, 8)
 
     def test_create_product_with_negative_product(self):
-        Product.save_product(
+        response = Product.save_product(
             {
                 "name": "NombreProducto",
                 "type": "TipoProducto",
@@ -198,10 +198,11 @@ class ProductModelTest(TestCase):
 
         products = Product.objects.all()
         self.assertEqual(len(products), 0)
+        self.assertEqual(response[1]["price"], "El precio debe ser mayor a cero")
 
 
     def test_create_product_with_no_product(self):
-        Product.save_product(
+        response = Product.save_product(
             {
                 "name": "NombreProducto",
                 "type": "TipoProducto",
@@ -211,6 +212,7 @@ class ProductModelTest(TestCase):
         
         products = Product.objects.all()
         self.assertEqual(len(products), 0)
+        self.assertEqual(response[1]["price"], "El precio debe ser mayor a cero")
 
 
 # Agrego test unitarios para punto 5 actividad 3
