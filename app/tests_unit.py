@@ -3,7 +3,7 @@ from django.test import TestCase
 from app.models import Client, Product, Provider, Vet, Medicine
 
 class ProviderModelTest(TestCase):
-    def test_can_create_and_get_provider(self):
+    def test_update_provider_address_with_error(self):
         Provider.save_provider(
             {
                 "name": "Pepe Gonzales",
@@ -11,12 +11,18 @@ class ProviderModelTest(TestCase):
                 "address": "7 entre 13 y 44",
             }
         )
-        provider = Provider.objects.all()
+        provider = Provider.objects.get(pk=1)
         
-        self.assertEqual(len(provider), 1)
-        self.assertEqual(provider[0].name, "Pepe Gonzales")
-        self.assertEqual(provider[0].email, "pepe@hotmail.com")
-        self.assertEqual(provider[0].address, "7 entre 13 y 44")
+        self.assertEqual(provider.address, "7 entre 13 y 44")
+        
+        # Intentar actualizar la dirección con un valor inválido (cadena vacía)
+        success, errors = provider.update_provider({"address": ""})
+
+        # Verificar que la actualización no fue exitosa
+        self.assertFalse(success) 
+
+        # Verificar que se generaron errores 
+        self.assertIsNotNone(errors)  
 
 
 # class ClientModelTest(TestCase):
