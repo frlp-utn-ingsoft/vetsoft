@@ -1,10 +1,9 @@
 from datetime import date
+
+from django.shortcuts import get_object_or_404, redirect, render, reverse
 from pyexpat.errors import messages
-from django.shortcuts import render, redirect, reverse, get_object_or_404
-from .models import Client, Product, Provider, Specialty
-from .models import Pet
-from .models import Medicine
-from .models import Vet
+
+from .models import Client, Medicine, Pet, Product, Provider, Specialty, Vet
 
 
 def home(request):
