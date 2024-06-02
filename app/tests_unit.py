@@ -1,6 +1,6 @@
-from .models import Pet, Client, Breed
+from .models import Pet, Client
 from django.test import TestCase
-from app.models import Client, Product, Provider, Vet, Medicine
+from app.models import Client, Product, Provider, Vet, Medicine, Breed
 
 class ProviderModelTest(TestCase):
     def test_can_create_and_get_provider(self):
@@ -229,7 +229,7 @@ class PetModelTest(TestCase):
     def test_create_pet(self):
         # Crea una nueva mascota
         pet = Pet.objects.create(
-            name="Test Pet", breed=Breed.DOG, birthday="2022-01-01", owner=self.client)
+            name="Test Pet", breed=Breed.DOG, birthday="2022-01-01")
 
         # Verifica que la mascota se haya guardado en la base de datos
         self.assertEqual(Pet.objects.count(), 1)
@@ -238,11 +238,11 @@ class PetModelTest(TestCase):
     def test_breed_choices(self):
         # Crea mascotas con cada opción de raza
         pet_dog = Pet.objects.create(
-            name="Dog Pet", breed=Breed.DOG, birthday="2022-01-01", owner=self.client)
+            name="Dog Pet", breed=Breed.DOG, birthday="2022-01-01")
         pet_cat = Pet.objects.create(
-            name="Cat Pet", breed=Breed.CAT, birthday="2022-01-01", owner=self.client)
+            name="Cat Pet", breed=Breed.CAT, birthday="2022-01-01")
         pet_bird = Pet.objects.create(
-            name="Bird Pet", breed=Breed.BIRD, birthday="2022-01-01", owner=self.client)
+            name="Bird Pet", breed=Breed.BIRD, birthday="2022-01-01")
 
         # Verifica que las mascotas se hayan guardado con las razas correctas
         self.assertEqual(pet_dog.breed, Breed.DOG)

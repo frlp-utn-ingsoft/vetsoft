@@ -1,20 +1,18 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
-from .models import Client, Pet, Breed
+from .models import Client, Pet
 from django.http import HttpResponseBadRequest
 from datetime import datetime
 from .models import Client, Product
 from .models import Vet
 from .models import Provider
-from .models import Medicine  # Importa el modelo de Medicine
+from .models import Medicine
 from .models import Pet
+from .models import Breed
 
 
 def home(request):
     return render(request, "home.html")
 
-########################### SEPARADOR ###################################
-# views de clientes
-#########################################################################
 
 
 def clients_repository(request):
@@ -56,10 +54,6 @@ def clients_delete(request):
 
     return redirect(reverse("clients_repo"))
 
-########################### SEPARADOR ###################################
-# creo las vistas para la lista de mascotas
-#########################################################################
-
 
 def pets_repository(request):
     pets = Pet.objects.all()
@@ -84,38 +78,32 @@ def pets_repository(request):
 #         return render(request, 'pets/form.html', {'clients': clients})
 
 def pets_form(request, id=None):
+    breed = Breed.choices
+    if request.method == "POST":
+        pet_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
 
-    breeds = Breed.choices
-
-    if id:
-        pet = get_object_or_404(Pet, id=id)
-    else:
-        pet = None
-
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        breed = request.POST.get('breed')
-        birthday = request.POST.get('birthday')
-        owner_id = request.POST.get('owner')
-        owner = Client.objects.get(id=owner_id)
-
-        pet_data = {
-            'name': name,
-            'breed': breed,
-            'birthday': birthday,
-            'owner': owner,
-        }
-
-        if pet:
-            pet.update_pet(pet_data)
+        if pet_id == "":
+            saved, errors = Pet.save_pet(request.POST)
         else:
-            Pet.save_pet(pet_data, owner)
+            pet = get_object_or_404(Pet, pk=pet_id)
+            pet.update_pet(request.POST)
 
-        # Asume que tienes una vista llamada 'pets_list'
-        return redirect('pets_repo')
-    else:
-        clients = Client.objects.all()
-        return render(request, 'pets/form.html', {'clients': clients, 'pet': pet, "breeds": breeds})
+        if saved:
+            return redirect(reverse("pets_repo"))
+
+        return render(
+            request, "pets/form.html", {"errors": errors,
+                                           "pet": request.POST,
+                                           "breeds": breed}
+        )
+
+    pet = None
+    if id is not None:
+        pet = get_object_or_404(Pet, pk=id)
+
+    return render(request, "pets/form.html", {"pet": pet, "breeds": breed})
 
 
 def pets_delete(request):
