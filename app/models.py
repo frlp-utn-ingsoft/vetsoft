@@ -83,10 +83,12 @@ class Client(models.Model):
 
         return True, None
 
-########################### SEPARADOR ###################################
-# agrego validacion de datos de mascota
-#########################################################################
 
+
+class Breed(models.TextChoices):
+    DOG = "Dog",
+    CAT = "Cat",
+    BIRD = "Bird"
 
 def validate_pet(data):
     errors = {}
@@ -99,24 +101,12 @@ def validate_pet(data):
         errors["name"] = "Por favor ingrese un nombre de la mascota"
 
     if breed == "":
-        errors["phone"] = "Por favor ingrese la raza de la mascota"
+        errors["breed"] = "Por favor ingrese la raza de la mascota"
 
     if birthday == "":
         errors["birthday"] = "Por favor ingrese la fecha de nacimiento de la mascota"
 
     return errors
-
-########################### SEPARADOR ###################################
-# creo modelo del pet
-#########################################################################
-
-# para actividad 3 test, hago el punto 5, agrego opciones al atributo breed
-
-
-class Breed(models.TextChoices):
-    DOG = 'Dog'
-    CAT = 'Cat'
-    BIRD = 'Bird'
 
 
 class Pet(models.Model):
@@ -128,13 +118,12 @@ class Pet(models.Model):
         default=Breed.DOG,
     )
     birthday = models.DateField()
-    owner = models.ForeignKey(Client, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
     @classmethod
-    def save_pet(cls, pet_data, owner):
+    def save_pet(cls, pet_data):
         errors = validate_pet(pet_data)
 
         if len(errors.keys()) > 0:
@@ -143,100 +132,22 @@ class Pet(models.Model):
         Pet.objects.create(
             name=pet_data.get("name"),
             breed=pet_data.get("breed"),
-            birthday=pet_data.get("birthday"),
-            owner=owner,
+            birthday=pet_data.get("birthday")
 
         )
-
         return True, None
 
-    # def update_pet(self, pet_data):
-    #     self.name = pet_data.get("name", "") or self.name
-    #     self.breed = pet_data.get("breed", "") or self.breed
-    #     self.birthday = pet_data.get("birthday", "") or self.birthday
-    #     self.owner = pet_data.get("owner", "") or self.owner
-
-    #     self.save()
-
-
-def update_pet(self, pet_data):
-    self.name = pet_data.get("name", None) or self.name
-    self.breed = pet_data.get("breed", None) or self.breed
-    self.birthday = pet_data.get("birthday", None) or self.birthday
-    self.owner = pet_data.get("owner", None) or self.owner
-
-    self.save()
-
-########################### SEPARADOR ###################################
-# agrego validacion de datos de mascota
-#########################################################################
-
-
-def validate_pet(data):
-    errors = {}
-
-    name = data.get("name", "")
-    breed = data.get("breed", "")
-    birthday = data.get("birthday", "")
-
-    if name == "":
-        errors["name"] = "Por favor ingrese un nombre de la mascota"
-
-    if breed == "":
-        errors["phone"] = "Por favor ingrese la raza de la mascota"
-
-    if birthday == "":
-        errors["birthday"] = "Por favor ingrese la fecha de nacimiento de la mascota"
-
-    return errors
-
-########################### SEPARADOR ###################################
-# creo modelo del pet
-#########################################################################
-
-
-class Pet(models.Model):
-    name = models.CharField(max_length=100)
-    breed = models.CharField(max_length=100)  # raza
-    birthday = models.DateField()
-    owner = models.ForeignKey(Client, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
-
-    @classmethod
-    def save_pet(cls, pet_data, owner):
+    def update_pet(self, pet_data):
         errors = validate_pet(pet_data)
 
         if len(errors.keys()) > 0:
             return False, errors
 
-        Pet.objects.create(
-            name=pet_data.get("name"),
-            breed=pet_data.get("breed"),
-            birthday=pet_data.get("birthday"),
-            owner=owner,
+        self.name = pet_data.get("name", None) or self.name
+        self.breed = pet_data.get("breed", None) or self.breed
+        self.birthday = pet_data.get("birthday", None) or self.birthday
 
-        )
-
-        return True, None
-
-    # def update_pet(self, pet_data):
-    #     self.name = pet_data.get("name", "") or self.name
-    #     self.breed = pet_data.get("breed", "") or self.breed
-    #     self.birthday = pet_data.get("birthday", "") or self.birthday
-    #     self.owner = pet_data.get("owner", "") or self.owner
-
-    #     self.save()
-
-
-def update_pet(self, pet_data):
-    self.name = pet_data.get("name", None) or self.name
-    self.breed = pet_data.get("breed", None) or self.breed
-    self.birthday = pet_data.get("birthday", None) or self.birthday
-    self.owner = pet_data.get("owner", None) or self.owner
-
-    self.save()
+        self.save()
 
 
 class Provider(models.Model):
