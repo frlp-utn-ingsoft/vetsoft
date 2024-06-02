@@ -1,6 +1,6 @@
 from django.db import models
 from enum import Enum
-from django.shortcuts import get_object_or_404
+
 
 class Specialty(Enum):
     GENERAL = "General"
