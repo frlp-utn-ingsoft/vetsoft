@@ -601,7 +601,7 @@ class MedicineRepoTestCase(PlaywrightTestCase):
         expect(edit_form.get_by_role("button", name="Eliminar")).to_be_visible()
 
     def test_should_can_be_able_to_delete_a_medicine(self):
-        medicine = Medicine.objects.create(
+        Medicine.objects.create(
             name="ibuprofeno",
             description="analgesico",
             dose=4,
