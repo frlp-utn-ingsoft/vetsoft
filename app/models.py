@@ -38,7 +38,7 @@ def validate_provider(data):
         errors["email"] = "Por favor ingrese un email válido"
 
     if address == "":
-        errors["address"] = "Por favor ingrese una direccion"
+        errors["address"] = "Por favor ingrese una dirección"
 
     return errors
 

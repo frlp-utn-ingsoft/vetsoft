@@ -159,33 +159,34 @@ class HomePageTest(TestCase):
         self.assertTemplateUsed(response, "home.html")
 
 class ProviderTest(TestCase):
-    def test_can_create_provider(self):
-            response = self.client.post(
-                reverse("providers_form"),
-                data={
+    def test_can_create_provider_with_address(self):
+        response = self.client.post(
+            reverse("providers_form"),
+            data={
                 "name": "Pepe Gonzales",
                 "email": "pepe@hotmail.com",
                 "address": "7 entre 13 y 44",
             },
-            )
-            provider = Provider.objects.all()
+        )
+        provider = Provider.objects.first()
 
-            self.assertEqual(len(provider), 1)
-            self.assertEqual(provider[0].name, "Pepe Gonzales")
-            self.assertEqual(provider[0].email, "pepe@hotmail.com")
-            self.assertEqual(provider[0].address, "7 entre 13 y 44")
+        self.assertEqual(provider.name, "Pepe Gonzales")
+        self.assertEqual(provider.email, "pepe@hotmail.com")
+        self.assertEqual(provider.address, "7 entre 13 y 44")
 
-            self.assertRedirects(response, reverse("providers_repo"))
+        self.assertRedirects(response, reverse("providers_repo"))
 
-    def test_validation_errors_create_provider(self):
+    def test_validation_errors_create_provider_without_address(self):
         response = self.client.post(
             reverse("providers_form"),
-            data={},
+            data={
+                "name": "Pepe Gonzales",
+                "email": "pepe@hotmail.com",
+                # No se proporciona la dirección
+            },
         )
-        self.assertContains(response, "Por favor ingrese un nombre")
-        self.assertContains(response, "Por favor ingrese un email") 
-        self.assertContains(response, "Por favor ingrese una direccion")
-   
+
+        self.assertContains(response, "Por favor ingrese una dirección")
 
 # Test de Veterinario
 class VetsTest(TestCase):

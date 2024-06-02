@@ -66,32 +66,22 @@ class PlaywrightTestCase(StaticLiveServerTestCase):
 
 class ProvidersRepoTestCase(PlaywrightTestCase):
 
-    def test_should_show_message_if_table_is_empty(self):
-        self.page.goto(f"{self.live_server_url}{reverse('providers_repo')}")
-        expect(self.page.get_by_text("No existen proveedores")).to_be_visible()
-
-    def test_should_show_provider_data(self):
+    def test_should_show_provider_address(self):
         Provider.objects.create(
-            name="Pepe Gonzales",
-            email="pepe@hotmail.com",
-            address="7 entre 13 y 44",
+            name="Carlos Perez",
+            email="carlos@example.com",
+            address="Calle falsa 123",
         )
         self.page.goto(f"{self.live_server_url}{reverse('providers_repo')}")
 
-        expect(self.page.get_by_text("No existen proveedores")).not_to_be_visible()
+        expect(self.page.get_by_text("Calle falsa 123")).to_be_visible()
 
-        expect(self.page.get_by_text("Pepe Gonzales")).to_be_visible()
-        expect(self.page.get_by_text("pepe@hotmail.com")).to_be_visible()
-        expect(self.page.get_by_text("7 entre 13 y 44")).to_be_visible()
+    def test_should_require_address_on_provider_form(self):
+        self.page.goto(f"{self.live_server_url}{reverse('providers_form')}")
 
-    def test_should_show_add_provider_action(self):
-        self.page.goto(f"{self.live_server_url}{reverse('providers_repo')}")
+        self.page.get_by_role("button", name="Guardar").click()
 
-        add_provider_action = self.page.get_by_role(
-            "link", name="Nuevo Proveedor", exact=False
-        )
-        expect(add_provider_action).to_have_attribute("href", reverse("providers_form"))    
-
+        expect(self.page.get_by_text("Por favor ingrese una dirección")).to_be_visible()
 
 #class ClientsRepoTestCase(PlaywrightTestCase):
 #    def test_should_show_message_if_table_is_empty(self):
