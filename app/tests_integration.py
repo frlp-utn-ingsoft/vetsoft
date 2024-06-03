@@ -1,6 +1,7 @@
-from django.test import TestCase
-from app.models import Client, Product, Provider, Vet, Medicine
 from django.shortcuts import reverse
+from django.test import TestCase
+
+from app.models import Client, Medicine, Product, Provider, Vet
 
 # class HomePageTest(TestCase):
 #     def test_use_home_template(self):
