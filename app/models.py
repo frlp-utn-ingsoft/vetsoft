@@ -44,6 +44,7 @@ def validate_provider(data):
 
 
 class Client(models.Model):
+    """Representa un cliente de la veterinaria"""
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
     email = models.EmailField()
@@ -86,6 +87,7 @@ class Client(models.Model):
 
 
 class Breed(models.TextChoices):
+    """Define las opciones de razas para las mascotas"""
     DOG = "Dog",
     CAT = "Cat",
     BIRD = "Bird"
@@ -110,7 +112,7 @@ def validate_pet(data):
 
 
 class Pet(models.Model):
-
+    """Representa una mascota en la veterinaria"""
     name = models.CharField(max_length=100)
     breed = models.CharField(
         max_length=100,
@@ -151,6 +153,7 @@ class Pet(models.Model):
 
 
 class Provider(models.Model):
+    """Representa un proveedor de productos para la veterinaria"""
     name = models.CharField(max_length=100)
     email = models.EmailField()
     address = models.CharField(max_length=100)
@@ -218,6 +221,7 @@ def validate_product(data):
 
 
 class Product(models.Model):
+    """Representa un producto en la veterinaria"""
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
     price = models.FloatField()
@@ -290,6 +294,7 @@ def validate_vet(data):
 
 
 class Vet(models.Model):
+    """Representa un veterinario en la veterinaria"""
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
     email = models.EmailField()
@@ -367,6 +372,7 @@ def validate_medicine(data):
 
 
 class Medicine(models.Model):
+    """Representa una medicina en la veterinaria"""
     name = models.CharField(max_length=100)
     description = models.TextField()
     dose = models.IntegerField()
