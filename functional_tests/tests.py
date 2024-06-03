@@ -5,8 +5,6 @@ from playwright.sync_api import sync_playwright, expect, Browser
 
 from django.urls import reverse
 
-from app.models import Client
-from app.models import Medicine
 from app.models import Vet
 from app.models import Provider
 

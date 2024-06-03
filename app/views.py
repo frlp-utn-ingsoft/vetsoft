@@ -1,12 +1,9 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from .models import Client, Pet
-from django.http import HttpResponseBadRequest
-from datetime import datetime
-from .models import Client, Product
+from .models import Product
 from .models import Vet
 from .models import Provider
 from .models import Medicine
-from .models import Pet
 from .models import Breed
 
 
