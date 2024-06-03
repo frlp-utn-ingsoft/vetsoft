@@ -13,7 +13,10 @@ def validate_client(data):
 
     if phone == "":
         errors["phone"] = "Por favor ingrese un teléfono"
-
+    elif not phone.isdigit():
+        errors["phone"] = "Por favor ingrese un teléfono valido"
+    elif int(phone)<=0:
+        errors["phone"] = "El número debe ser positivo"
     if email == "":
         errors["email"] = "Por favor ingrese un email"
     elif email.count("@") == 0:
@@ -45,7 +48,7 @@ def validate_provider(data):
 
 class Client(models.Model):
     name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=15)
+    phone = models.IntegerField()
     email = models.EmailField()
     address = models.CharField(max_length=100, blank=True)
 
