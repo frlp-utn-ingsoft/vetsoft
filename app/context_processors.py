@@ -20,6 +20,7 @@ links = [
 
 
 def navbar(request):
+    """Genera los enlaces de navegación y agrega la clase "active" al enlace correspondiente basado en la ruta actual"""
     def add_active(link):
         copy = link.copy()
 
