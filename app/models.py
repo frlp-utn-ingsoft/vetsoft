@@ -209,7 +209,7 @@ def validate_product(data):
 
     if price == "":
         errors["price"] = "Por favor ingrese un precio"
-    elif isfloat(price) == False:
+    elif not isfloat(price):
         errors["price"] = "Por favor ingrese un precio"
     elif float(price) <= 0:
         errors["price"] = "El precio debe ser mayor a cero"
