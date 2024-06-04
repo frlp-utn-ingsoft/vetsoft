@@ -32,6 +32,17 @@ def validate_client(data):
     return errors
 
 class Client(models.Model):
+    """Esta clase representa un cliente de la veterinaria
+    Contiene los siguientes atributos:
+    - name: nombre del cliente
+    - phone: teléfono del cliente
+    - email: email del cliente
+    - address: dirección del cliente
+    Contiene los siguientes métodos:
+    - __str__: retorna el nombre del cliente
+    - save_client: guarda un cliente en la base de datos
+    - update_client: actualiza los datos de un cliente en la base de datos
+    """
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
     email = models.EmailField()
@@ -92,6 +103,16 @@ def validate_medicine(data):
     return errors
 
 class Medicine(models.Model):
+    """ Esta clase representa un medicamento de la veterinaria
+    Contiene los siguientes atributos:
+    - name: nombre del medicamento
+    - description: descripción del medicamento
+    - dose: dosis del medicamento
+    Contiene los siguientes métodos:
+    - __str__: retorna el nombre del medicamento
+    - save_medicine: guarda un medicamento en la base de datos
+    - update_medicine: actualiza los datos de un medicamento en la base de datos
+    """
     name = models.CharField(max_length=30)
     description = models.CharField(max_length=50)
     dose = models.IntegerField()
@@ -161,6 +182,20 @@ def validate_pet(data):
     return errors
        
 class Pet(models.Model):
+    """ Esta clase representa una mascota de la veterinaria
+    Contiene los siguientes atributos:
+    - name: nombre de la mascota
+    - breed: raza de la mascota
+    - birthday: fecha de nacimiento de la mascota
+    - weight: peso de la mascota
+    - client: dueño de la mascota
+    - medicines: medicamentos que toma la mascota
+    - vets: veterinarios que atienden a la mascota
+    Contiene los siguientes métodos:
+    - __str__: retorna el nombre de la mascota
+    - save_pet: guarda una mascota en la base de datos
+    - update_pet: actualiza los datos de una mascota en la base de datos
+    """
     name = models.CharField(max_length=100)
     breed = models.CharField(max_length=50)
     birthday = models.DateField()
@@ -223,6 +258,17 @@ def validate_product(data):
     return errors
 
 class Product(models.Model):
+    """ Esta clase representa un producto de la veterinaria
+    Contiene los siguientes atributos:
+    - name: nombre del producto
+    - type: tipo del producto
+    - price: precio del producto
+    - provider: proveedor del producto
+    Contiene los siguientes métodos:
+    - __str__: retorna el nombre del producto
+    - save_product: guarda un producto en la base de datos
+    - update_product: actualiza los datos de un producto en la base de datos
+    """
     name = models.CharField(max_length=50)
     type = models.CharField(max_length=50)
     price = models.FloatField()
@@ -278,6 +324,16 @@ def validate_provider(data):
 
 
 class Provider(models.Model):
+    """ Esta clase representa un proveedor de la veterinaria
+    Contiene los siguientes atributos:
+    - name: nombre del proveedor
+    - email: email del proveedor
+    - address: dirección del proveedor
+    Contiene los siguientes métodos:
+    - __str__: retorna el nombre del proveedor
+    - save_provider: guarda un proveedor en la base de datos
+    - update_provider: actualiza los datos de un proveedor en la base de datos
+    """
     name = models.CharField(max_length=100)
     email = models.EmailField(max_length=254)
     address = models.CharField(max_length=100)
@@ -338,6 +394,16 @@ def validate_vet(data):
     return errors
 
 class Vet(models.Model):
+    """ Esta clase representa un veterinario de la veterinaria
+    Contiene los siguientes atributos:
+    - name: nombre del veterinario
+    - email: email del veterinario
+    - phone: teléfono del veterinario
+    Contiene los siguientes métodos:
+    - __str__: retorna el nombre del veterinario
+    - save_vet: guarda un veterinario en la base de datos
+    - update_vet: actualiza los datos de un veterinario en la base de datos
+    """
     name = models.CharField(max_length=100)
     email = models.EmailField(max_length=254)
     phone = models.IntegerField()
