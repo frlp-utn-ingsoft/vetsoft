@@ -15,6 +15,7 @@ def validate_client(data):
     phone = data.get("phone", "")
     email = data.get("email", "")
     pattern_phone = r'^\+?[\d\s\-\(\)]+$'
+    pattern_email = r'^[a-zA-Z0-9_.+-]+@vetsoft.com$'
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
@@ -27,7 +28,10 @@ def validate_client(data):
     if email == "":
         errors["email"] = "Por favor ingrese un email"
     elif email.count("@") == 0:
-        errors["email"] = "Por favor ingrese un email valido"
+        errors["email"] = "Por favor ingrese un email válido"
+    elif not re.match(pattern_email, email):
+        errors["email"] =("El email debe terminar con @vetsoft.com")
+    
 
     return errors
 
