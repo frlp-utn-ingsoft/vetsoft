@@ -24,11 +24,10 @@ Aplicación web para veterinarias utilizada en la cursada 2024 de Ingeniería y 
 
 ## Integrantes:
 
-
+* Milagros Soberon
+* Nuria Robledo  
 * Leo Sebastián Gonzáles Tello
 * Juan Ignacio Frangolini  
-* Nuria Robledo  
-* Milagros Soberon
 
 ## Levantar Docker:
 
