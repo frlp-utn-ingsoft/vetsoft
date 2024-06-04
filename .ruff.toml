@@ -26,7 +26,9 @@ exclude = [
     "node_modules",
     "site-packages",
     "venv",
-    "migrations"
+    "migrations",
+    "app/tests_*.py",
+    "functional_tests"
 ]
 
 # Same as Black.
