@@ -252,16 +252,16 @@ class VetModelTest(TestCase):
         Vet.save_vet(
             {
                 "name": "Juan Sebastian Veron",
-                "phone": "221555232",
-                "email": "brujita75@hotmail.com",
+                "phone": "54221555232",
+                "email": "brujita75@vetsoft.com",
             }
         )
         vets = Vet.objects.all()
         self.assertEqual(len(vets), 1)
 
         self.assertEqual(vets[0].name, "Juan Sebastian Veron")
-        self.assertEqual(vets[0].phone, 221555232)
-        self.assertEqual(vets[0].email, "brujita75@hotmail.com")
+        self.assertEqual(vets[0].phone, 54221555232)
+        self.assertEqual(vets[0].email, "brujita75@vetsoft.com")
 
     def test_can_update_vet(self):
         Vet.save_vet(
@@ -269,7 +269,7 @@ class VetModelTest(TestCase):
                 "name": "Juan Sebastian Veron",
                 "phone": "54221555232",
                 "address": "13 y 44",
-                "email": "brujita75@hotmail.com",
+                "email": "brujita75@vetsoft.com",
             }
         )
         vet = Vet.objects.get(pk=1)
@@ -288,7 +288,7 @@ class VetModelTest(TestCase):
                 "name": "Juan Sebastian Veron",
                 "phone": "54221555232",
                 "address": "13 y 44",
-                "email": "brujita75@hotmail.com",
+                "email": "brujita75@vetsoft.com",
             }
         )
         vet = Vet.objects.get(pk=1)
@@ -306,7 +306,7 @@ class VetModelTest(TestCase):
             "name": "Juan Sebastian Veron",
             "phone": "Hola, no soy un teléfono válido",
             "address": "13 y 44",
-            "email": "brujita75@hotmail.com",
+            "email": "brujita75@vetsoft.com",
         }
         
         with self.assertRaises(ValidationError):
