@@ -1,26 +1,26 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from .models import Client, Pet
-from django.http import HttpResponseBadRequest
-from datetime import datetime
-from .models import Client, Product
+from .models import Product
 from .models import Vet
 from .models import Provider
 from .models import Medicine
-from .models import Pet
 from .models import Breed
 
 
 def home(request):
+    """Renderiza la página de inicio."""
     return render(request, "home.html")
 
 
 
 def clients_repository(request):
+    """Renderiza la página con la lista de clientes."""
     clients = Client.objects.all()
     return render(request, "clients/repository.html", {"clients": clients})
 
 
 def clients_form(request, id=None):
+    """Renderiza y maneja el formulario para crear o editar clientes."""
     if request.method == "POST":
         client_id = request.POST.get("id", "")
         errors = {}
@@ -48,6 +48,7 @@ def clients_form(request, id=None):
 
 
 def clients_delete(request):
+    """Elimina un cliente y redirige al repositorio de clientes."""
     client_id = request.POST.get("client_id")
     client = get_object_or_404(Client, pk=int(client_id))
     client.delete()
@@ -56,6 +57,7 @@ def clients_delete(request):
 
 
 def pets_repository(request):
+    """Renderiza la página con la lista de mascotas."""
     pets = Pet.objects.all()
     return render(request, "pets/repository.html", {"pets": pets})
 
@@ -78,6 +80,7 @@ def pets_repository(request):
 #         return render(request, 'pets/form.html', {'clients': clients})
 
 def pets_form(request, id=None):
+    """Renderiza y maneja el formulario para crear o editar mascotas."""
     breed = Breed.choices
     if request.method == "POST":
         pet_id = request.POST.get("id", "")
@@ -107,6 +110,7 @@ def pets_form(request, id=None):
 
 
 def pets_delete(request):
+    """Elimina una mascota y redirige al repositorio de mascotas."""
     pet_id = request.POST.get("pet_id")
     pet = get_object_or_404(Pet, pk=int(pet_id))
     pet.delete()
@@ -116,6 +120,7 @@ def pets_delete(request):
 
 # Vista para mostrar todos los medicamentos en el repositorio
 def medicines_repository(request):
+    """Renderiza la página con la lista de medicamentos."""
     medicines = Medicine.objects.all()
     return render(request, "medicines/repository.html", {"medicines": medicines})
 
@@ -123,6 +128,7 @@ def medicines_repository(request):
 
 
 def medicines_form(request, id=None):
+    """Renderiza y maneja el formulario para crear o editar medicamentos."""
     if request.method == "POST":
         medicine_id = request.POST.get("id", "")
         errors = {}
@@ -158,6 +164,7 @@ def medicines_form(request, id=None):
 
 
 def medicines_delete(request):
+    """Elimina un medicamento y redirige al repositorio de medicamentos."""
     medicine_id = request.POST.get("medicine_id")
     medicine = get_object_or_404(Medicine, pk=int(medicine_id))
     medicine.delete()
@@ -167,11 +174,13 @@ def medicines_delete(request):
 
 
 def providers_repository(request):
+    """Renderiza la página con la lista de proveedores."""
     providers = Provider.objects.all()
     return render(request, "providers/repository.html", {"providers": providers})
 
 
 def providers_form(request, id=None):
+    """Renderiza y maneja el formulario para crear o editar proveedores."""
     if request.method == "POST":
         provider_id = request.POST.get("id", "")
         errors = {}
@@ -199,46 +208,7 @@ def providers_form(request, id=None):
 
 
 def providers_delete(request):
-    provider_id = request.POST.get("provider_id")
-    provider = get_object_or_404(Provider, pk=int(provider_id))
-    provider.delete()
-
-    return redirect(reverse("providers_repo"))
-
-
-def providers_repository(request):
-    providers = Provider.objects.all()
-    return render(request, "providers/repository.html", {"providers": providers})
-
-
-def providers_form(request, id=None):
-    if request.method == "POST":
-        provider_id = request.POST.get("id", "")
-        errors = {}
-        saved = True
-
-        if provider_id == "":
-            saved, errors = Provider.save_provider(request.POST)
-        else:
-            provider = get_object_or_404(Provider, pk=provider_id)
-            provider.update_provider(request.POST)
-
-        if saved:
-            return redirect(reverse("providers_repo"))
-
-        return render(
-            request, "providers/form.html", {"errors": errors,
-                                             "provider": request.POST}
-        )
-
-    provider = None
-    if id is not None:
-        provider = get_object_or_404(Provider, pk=id)
-
-    return render(request, "providers/form.html", {"provider": provider})
-
-
-def providers_delete(request):
+    """Elimina un proveedor y redirige al repositorio de proveedores."""
     provider_id = request.POST.get("provider_id")
     provider = get_object_or_404(Provider, pk=int(provider_id))
     provider.delete()
@@ -247,11 +217,13 @@ def providers_delete(request):
 
 
 def products_repository(request):
+    """Renderiza la página con la lista de productos."""
     products = Product.objects.all()
     return render(request, "products/repository.html", {"products": products})
 
 
 def products_form(request, id=None):
+    """Renderiza y maneja el formulario para crear o editar productos."""
     if request.method == "POST":
         product_id = request.POST.get("id", "")
         errors = {}
@@ -279,6 +251,7 @@ def products_form(request, id=None):
 
 
 def products_delete(request):
+    """Elimina un producto y redirige al repositorio de productos."""
     product_id = request.POST.get("product_id")
     product = get_object_or_404(Product, pk=int(product_id))
     product.delete()
@@ -288,11 +261,13 @@ def products_delete(request):
 
 # Funciones de Vet
 def vets_repository(request):
+    """Renderiza la página con la lista de veterinarios."""
     vets = Vet.objects.all()
     return render(request, "vets/repository.html", {"vets": vets})
 
 
 def vets_form(request, id=None):
+    """Renderiza y maneja el formulario para crear o editar veterinarios."""
     if request.method == "POST":
         vet_id = request.POST.get("id", "")
         errors = {}
@@ -320,6 +295,7 @@ def vets_form(request, id=None):
 
 
 def vets_delete(request):
+    """Elimina un veterinario y redirige al repositorio de veterinarios."""
     vet_id = request.POST.get("vet_id")
     vet = get_object_or_404(Vet, pk=int(vet_id))
     vet.delete()
