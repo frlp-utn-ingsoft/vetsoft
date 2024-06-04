@@ -267,3 +267,36 @@ class PetModelTest(TestCase):
         self.assertEqual(pet_dog.breed, Breed.DOG)
         self.assertEqual(pet_cat.breed, Breed.CAT)
         self.assertEqual(pet_bird.breed, Breed.BIRD)
+
+
+class ClientModelTest(TestCase):
+    def test_can_create_client_phone_54(self):
+        Client.save_client(
+            {
+                "name": "Nombre",
+                "phone": "541555232",
+                "address": "direccion",
+                "email": "hola@vetsoft.com",
+            }
+        )
+        clients = Client.objects.all()
+        self.assertEqual(len(clients), 1)
+
+        self.assertEqual(clients[0].name, "Nombre")
+        self.assertEqual(clients[0].phone, "541555232")
+        self.assertEqual(clients[0].address, "direccion")
+        self.assertEqual(clients[0].email, "hola@vetsoft.com")
+
+    def test_cannot_create_a_client_phone(self):
+        response = Client.save_client(
+            {
+                "name": "Nombre",
+                "phone": "861555232",
+                "address": "direccion",
+                "email": "hola@vetsoft.com",
+            }
+        )
+
+        clients = Client.objects.all()
+        self.assertEqual(len(clients), 0)
+        self.assertEqual(response[1]["phone"], "El teléfono debe comenzar con 54")
