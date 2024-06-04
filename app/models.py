@@ -3,7 +3,6 @@ import re
 from datetime import date
 
 #Importaciones de Django
-from django.core.exceptions import ValidationError
 from django.db import models
 
 
