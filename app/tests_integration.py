@@ -1,12 +1,12 @@
-from django.test import TestCase
-from app.models import Client, Product, Provider, Vet, Medicine
-from django.test import Client  # esto lo agrego para mi test
 from django.shortcuts import reverse
+from django.test import TestCase
 
-# class HomePageTest(TestCase):
-#     def test_use_home_template(self):
-#         response = self.client.get(reverse("home"))
-#         self.assertTemplateUsed(response, "home.html")
+from app.models import Medicine, Product, Provider, Vet
+
+class HomePageTest(TestCase):
+    def test_use_home_template(self):
+        response = self.client.get(reverse("home"))
+        self.assertTemplateUsed(response, "home.html")
 
 
 # class ClientsTest(TestCase):
@@ -69,30 +69,30 @@ from django.shortcuts import reverse
 
 #         self.assertContains(response, "Por favor ingrese un email valido")
 
-#     def test_edit_user_with_valid_data(self):
-#         client = Client.objects.create(
-#             name="Juan Sebastián Veron",
-#             address="13 y 44",
-#             phone="221555232",
-#             email="brujita75@hotmail.com",
-#         )
+    # def test_edit_user_with_valid_data(self):
+    #     client = Client.objects.create(
+    #         name="Juan Sebastián Veron",
+    #         address="13 y 44",
+    #         phone="221555232",
+    #         email="brujita75@hotmail.com",
+    #     )
 
-#         response = self.client.post(
-#             reverse("clients_form"),
-#             data={
-#                 "id": client.id,
-#                 "name": "Guido Carrillo",
-#             },
-#         )
+    #     response = self.client.post(
+    #         reverse("clients_form"),
+    #         data={
+    #             "id": client.id,
+    #             "name": "Guido Carrillo",
+    #         },
+    #     )
 
-#         # redirect after post
-#         self.assertEqual(response.status_code, 302)
+    #     # redirect after post
+    #     self.assertEqual(response.status_code, 302)
 
-#         editedClient = Client.objects.get(pk=client.id)
-#         self.assertEqual(editedClient.name, "Guido Carrillo")
-#         self.assertEqual(editedClient.phone, client.phone)
-#         self.assertEqual(editedClient.address, client.address)
-#         self.assertEqual(editedClient.email, client.email)
+    #     editedClient = Client.objects.get(pk=client.id)
+    #     self.assertEqual(editedClient.name, "Guido Carrillo")
+    #     self.assertEqual(editedClient.phone, client.phone)
+    #     self.assertEqual(editedClient.address, client.address)
+    #     self.assertEqual(editedClient.email, client.email)
 
 
 class MedicinesTest(TestCase):
@@ -147,7 +147,6 @@ class MedicinesTest(TestCase):
         )
         self.assertContains(response, "La dosis debe ser un número entero positivo")
 
-from app.models import Client, Pet, Breed  # agregue pet para mis test
 
 # cambios para actividad 3 punto 5 de TEST
 
@@ -272,43 +271,43 @@ class ProductsTest(TestCase):
 # agrego test intregacion punto 5 actividad 3
 
 
-class PetIntegrationTest(TestCase):
-    def setUp(self):
-        # Crea un cliente para ser el dueño de la mascota
-        self.client_obj = Client.objects.create(
-            name="Test Client", phone="221555232", email="test@test.com", address="13 y 44")
+# class PetIntegrationTest(TestCase):
+#     def setUp(self):
+#         # Crea un cliente para ser el dueño de la mascota
+#         self.client_obj = Client.objects.create(
+#             name="Test Client", phone="221555232", email="test@test.com", address="13 y 44")
 
-        # Crea un cliente para enviar solicitudes HTTP
-        self.http_client = Client()
+#         # Crea un cliente para enviar solicitudes HTTP
+#         self.http_client = Client()
 
-    def test_create_pet(self):
-        # # Define la URL y los datos que se enviarán en la solicitud
-        # # Reemplaza 'create_pet' con la URL de tu vista
-        # url = reverse('pets_form')
-        # data = {
-        #     'name': 'Test Pet',
-        #     'breed': Breed.DOG,
-        #     'birthday': '2022-01-01',
-        #     'owner': self.client_obj.id
-        # }
+#     def test_create_pet(self):
+#         # # Define la URL y los datos que se enviarán en la solicitud
+#         # # Reemplaza 'create_pet' con la URL de tu vista
+#         # url = reverse('pets_form')
+#         # data = {
+#         #     'name': 'Test Pet',
+#         #     'breed': Breed.DOG,
+#         #     'birthday': '2022-01-01',
+#         #     'owner': self.client_obj.id
+#         # }
 
-        response = self.client.post(
-            reverse("pets_form"),
-            data={
-                "name": "Fido",
-                "breed": Breed.DOG,
-                "birthday": "2022-01-01",
-                'owner': self.client_obj.id
-            },
-        )
+#         response = self.client.post(
+#             reverse("pets_form"),
+#             data={
+#                 "name": "Fido",
+#                 "breed": Breed.DOG,
+#                 "birthday": "2022-01-01",
+#                 'owner': self.client_obj.id
+#             },
+#         )
 
-        # # Envía una solicitud POST a la vista
-        # response = self.http_client.post(url, data)
+#         # # Envía una solicitud POST a la vista
+#         # response = self.http_client.post(url, data)
 
-        # Comprueba que la respuesta tenga un código de estado 200
-        # self.assertEqual(response.status_code, 200)
+#         # Comprueba que la respuesta tenga un código de estado 200
+#         # self.assertEqual(response.status_code, 200)
 
-        # Comprueba que la mascota se haya creado en la base de datos
-        # pet = Pet.objects.filter(name='Test Pet')
-        # self.assertTrue(pet.exists())
-        # self.assertEqual(pet.first().breed, Breed.DOG)
+#         # Comprueba que la mascota se haya creado en la base de datos
+#         # pet = Pet.objects.filter(name='Test Pet')
+#         # self.assertTrue(pet.exists())
+#         # self.assertEqual(pet.first().breed, Breed.DOG)

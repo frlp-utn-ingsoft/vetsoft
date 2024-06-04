@@ -2,6 +2,7 @@ from django.db import models
 
 
 def validate_client(data):
+    """ Valida los datos del cliente """
     errors = {}
 
     name = data.get("name", "")
@@ -23,6 +24,7 @@ def validate_client(data):
 
 
 def validate_provider(data):
+    """ Valida los datos del proveedor """
     errors = {}
 
     name = data.get("name", "")
@@ -51,10 +53,12 @@ class Client(models.Model):
     address = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
+        """Retorna la representación en cadena del cliente"""
         return self.name
 
     @classmethod
     def save_client(cls, client_data):
+        """Guarda un nuevo cliente"""
         errors = validate_client(client_data)
 
         if len(errors.keys()) > 0:
@@ -70,6 +74,7 @@ class Client(models.Model):
         return True, None
 
     def update_client(self, client_data):
+        """Actualiza un cliente existente"""
         errors = validate_client(client_data)
 
         if len(errors.keys()) > 0:
@@ -93,6 +98,7 @@ class Breed(models.TextChoices):
     BIRD = "Bird"
 
 def validate_pet(data):
+    """Valida los datos de la mascosta"""
     errors = {}
 
     name = data.get("name", "")
@@ -122,10 +128,12 @@ class Pet(models.Model):
     birthday = models.DateField()
 
     def __str__(self):
+        """Retorna la representación en cadena de la mascota"""
         return self.name
 
     @classmethod
     def save_pet(cls, pet_data):
+        """Guarda una nueva mascota"""
         errors = validate_pet(pet_data)
 
         if len(errors.keys()) > 0:
@@ -140,6 +148,7 @@ class Pet(models.Model):
         return True, None
 
     def update_pet(self, pet_data):
+        """Actualiza una mascota existente"""
         errors = validate_pet(pet_data)
 
         if len(errors.keys()) > 0:
@@ -159,10 +168,12 @@ class Provider(models.Model):
     address = models.CharField(max_length=100)
 
     def __str__(self):
+        """Retorna la representación en cadena del proveedor"""
         return self.name
 
     @classmethod
     def save_provider(cls, provider_data):
+        """Guarda un nuevo proveedor"""
 
         errors = validate_provider(provider_data)
         if len(errors.keys()) > 0:
@@ -177,6 +188,7 @@ class Provider(models.Model):
         return True, None
 
     def update_provider(self, provider_data):
+        """Actualiza un proveedor existente"""
 
         errors = validate_provider(provider_data)
         if len(errors.keys()) > 0:
@@ -190,6 +202,7 @@ class Provider(models.Model):
 
 
 def isfloat(num):
+    """Verifica si el valor dado es un número flotante"""
     try:
         float(num)
         return True
@@ -198,6 +211,7 @@ def isfloat(num):
 
 
 def validate_product(data):
+    """Valida los datos del producto"""
     errors = {}
 
     name = data.get("name", "")
@@ -212,7 +226,7 @@ def validate_product(data):
 
     if price == "":
         errors["price"] = "Por favor ingrese un precio"
-    elif isfloat(price) == False:
+    elif not isfloat(price):
         errors["price"] = "Por favor ingrese un precio"
     elif float(price) <= 0:
         errors["price"] = "El precio debe ser mayor a cero"
@@ -227,10 +241,12 @@ class Product(models.Model):
     price = models.FloatField()
 
     def __str__(self):
+        """Retorna la representación en cadena del producto"""
         return self.name
 
     @classmethod
     def save_product(cls, product_data):
+        """Guarda un nuevo producto"""
         errors = validate_product(product_data)
 
         if len(errors.keys()) > 0:
@@ -245,6 +261,7 @@ class Product(models.Model):
         return True, None
 
     def update_product(self, product_data):
+        """Acutaliza un producto existente"""
         errors = validate_product(product_data)
 
         if len(errors.keys()) > 0:
@@ -265,6 +282,7 @@ class Product(models.Model):
 #     CARDIOLOGIST = 'Cardiologist', 'Cardiologist'
 
 def validate_vet(data):
+    """Valida los datos del veterinario"""
     errors = {}
 
     name = data.get("name", "")
@@ -302,10 +320,12 @@ class Vet(models.Model):
     speciality = models.CharField(max_length=15)
 
     def __str__(self):
+        """Retorna la representación en cadena del veterinario"""
         return self.name
 
     @classmethod
     def save_vet(cls, vet_data):
+        """Guarda un nuevo veterinario"""
         errors = validate_vet(vet_data)
 
         if len(errors.keys()) > 0:
@@ -323,6 +343,7 @@ class Vet(models.Model):
         return True, None
 
     def update_vet(self, vet_data):
+        """Actualiza los datos de un veterinario existente"""
         errors = validate_vet(vet_data)
 
         if len(errors.keys()) > 0:
@@ -342,6 +363,7 @@ class Vet(models.Model):
 
 
 def validate_medicine(data):
+    """Valida los datos del medicamento"""
     errors = {}
 
     name = data.get("name", "")
@@ -378,11 +400,13 @@ class Medicine(models.Model):
     dose = models.IntegerField()
 
     def __str__(self):
+        """Retorna la representación en cadena del medicamento"""
         return self.name
 
 # Método de clase para guardar un nuevo medicamento
     @classmethod
     def save_medicine(cls, medicine_data):
+        """Guarda un nuevo medicamento"""
         errors = validate_medicine(medicine_data)
 
         if len(errors.keys()) > 0:
@@ -398,6 +422,7 @@ class Medicine(models.Model):
 
     # Método para actualizar un medicamento existente
     def update_medicine(self, medicine_data):
+        """Actualiza un medicamento existente"""
         errors = validate_medicine(medicine_data)
         if len(errors.keys()) > 0:
             return False, errors
