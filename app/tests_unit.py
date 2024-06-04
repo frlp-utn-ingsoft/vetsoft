@@ -60,7 +60,7 @@ class ClientModelTest(TestCase):
         client_updated = Client.objects.get(pk=1)
 
         self.assertEqual(client_updated.phone, "221555232")
-
+    
     def test_validate_phone_number_in_phone_field(self):
         client_data = {
             "name": "Juan Sebastian Veron",
@@ -72,6 +72,7 @@ class ClientModelTest(TestCase):
         with self.assertRaises(ValidationError):
             validate_client(client_data)
         
+
 class ProviderModelTest(TestCase):
     
     def test_create_provider_with_address(self):
