@@ -95,7 +95,17 @@ class ClientsTest(TestCase):
         self.assertEqual(editedClient.address, client.address)
         self.assertEqual(editedClient.email, client.email)
 
-
+    def test_validation_valid_phone(self):
+        response = self.client.post(
+            reverse("clients_form"),
+            data={
+                "name": "Juan Perez",
+                "phone": "",  # teléfono inválido
+                "email": "hola@vetsoft.com",
+                "address": "Calle 123",
+            },
+        )
+        self.assertContains(response, "Por favor ingrese un teléfono")
 
 class ProvidersTest(TestCase):
 
@@ -267,3 +277,16 @@ class MedicinesTest(TestCase):
 
         self.assertContains(response, "La dosis debe estar en un rango de 1 a 10")
 
+class VetsTest(TestCase):
+    def test_validation_invalid_phone(self):
+        response = self.client.post(
+            reverse("vets_form"),
+            data={
+                "name": "Juan Perez",
+                "phone": "",  # teléfono inválido
+                "email": "hola@vetsoft.com",
+                "address": "Calle 123",
+            },
+        )
+
+        self.assertContains(response, "Por favor ingrese un teléfono")
