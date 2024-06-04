@@ -1,8 +1,9 @@
 from datetime import date
 
+from django.forms import ValidationError
 from django.test import TestCase
 
-from app.models import Client, Provider, validate_medicine, validate_pet, validate_product
+from app.models import Client, Provider, validate_medicine, validate_pet, validate_product, validate_client
 
 class ClientModelTest(TestCase):
     def test_can_create_and_get_client(self):
@@ -60,6 +61,17 @@ class ClientModelTest(TestCase):
 
         self.assertEqual(client_updated.phone, "221555232")
 
+    def test_validate_phone_number_in_phone_field(self):
+        client_data = {
+            "name": "Juan Sebastian Veron",
+            "phone": "Hola, no soy un teléfono válido",
+            "address": "13 y 44",
+            "email": "brujita75@hotmail.com",
+        }
+        
+        with self.assertRaises(ValidationError):
+            validate_client(client_data)
+        
 class ProviderModelTest(TestCase):
     
     def test_create_provider_with_address(self):
