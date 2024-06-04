@@ -79,6 +79,18 @@ class ProvidersRepoTestCase(PlaywrightTestCase):
 
         expect(self.page.get_by_text("Por favor ingrese una dirección")).to_be_visible()
 
+    def test_should_show_error_for_invalid_email_domain(self):
+        self.page.goto(f"{self.live_server_url}{reverse('clients_form')}")
+
+        self.page.get_by_label("Nombre").fill("Juan Pérez")
+        self.page.get_by_label("Teléfono").fill("123456789")
+        self.page.get_by_label("Email").fill("juan@example")
+        self.page.get_by_label("Dirección").fill("Calle Falsa 123")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor el email debe ser de dominio '@vetsoft.com'")).to_be_visible()        
+
 #class ClientsRepoTestCase(PlaywrightTestCase):
 #    def test_should_show_message_if_table_is_empty(self):
 #        self.page.goto(f"{self.live_server_url}{reverse('clients_repo')}")
