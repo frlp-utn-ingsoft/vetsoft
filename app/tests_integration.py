@@ -70,7 +70,19 @@ class ClientsTest(TestCase):
 
         self.assertContains(response, "Por favor ingrese un email válido")
 
-   
+    def test_validate_email_ends_with_vetsoft_com(self):
+        response = self.client.post(
+            reverse("clients_form"),
+            data={
+                "name": "Rosario Central",
+                "phone": "4444444",
+                "address": "13 y 44",
+                "email": "rositac@gmail.com",
+            },
+        )
+
+        self.assertContains(response, "El email debe terminar con @vetsoft.com")    
+
     def test_edit_user_with_valid_data(self):
         client = Client.objects.create(
             name="Juan Sebastián Veron",
