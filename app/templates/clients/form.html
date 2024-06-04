@@ -56,7 +56,8 @@
                         type="email"
                         id="email"
                         name="email"
-                        class="form-control"
+                        class="form-control {% if errors.email %}is-invalid{% endif %}"
+                        pattern="[a-z0-9._%+\-]+@vetsoft.com"
                         value="{{ client.email }}"
                         required
                     />
