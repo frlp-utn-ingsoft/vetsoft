@@ -189,7 +189,7 @@ class PetsTest(TestCase):
                     "name": "Roma",
                     "breed": "Labrador",
                     "birthday": "2021-10-10",
-                    "weight": 10
+                    "weight": 10,
                 },
             )
             pets = Pet.objects.all()
@@ -216,7 +216,7 @@ class PetsTest(TestCase):
                     "name": "Roma",
                     "breed": "Labrador",
                     "birthday": "2021-10-10",
-                    "weight": -10
+                    "weight": -10,
                 },
             )
         # Verifico si el peso es negativo y muestra un mensaje de error
@@ -230,8 +230,8 @@ class PetsTest(TestCase):
             "name": "Pepe",
             "breed": "Labrador",
             "birthday": "2026-01-01",
-            "weight": 10
-        }
+            "weight": 10,
+        },
         )
 
         self.assertContains(response, "La fecha de nacimiento no puede ser mayor o igual a la fecha actual")

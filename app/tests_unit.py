@@ -10,7 +10,7 @@ class ClientModelTest(TestCase):
                 "phone": "221555232",
                 "address": "13 y 44",
                 "email": "brujita75@hotmail.com",
-            }
+            },
         )
         clients = Client.objects.all()
         self.assertEqual(len(clients), 1)
@@ -27,7 +27,7 @@ class ClientModelTest(TestCase):
                 "phone": "221555232",
                 "address": "13 y 44",
                 "email": "brujita75@hotmail.com",
-            }
+            },
         )
         client = Client.objects.get(pk=1)
 
@@ -46,7 +46,7 @@ class ClientModelTest(TestCase):
                 "phone": "221555232",
                 "address": "13 y 44",
                 "email": "brujita75@hotmail.com",
-            }
+            },
         )
         client = Client.objects.get(pk=1)
 
@@ -66,7 +66,7 @@ class ProviderModelTest(TestCase):
         provider_data = {
             "name": "Pedro Perez",
             "email": "PedroP012@hotmail.com",
-            "address": "Calle 142 723"
+            "address": "Calle 142 723",
         }
 
         # Crear proveedor
@@ -89,14 +89,14 @@ class ProviderModelTest(TestCase):
         provider = Provider.objects.create(
             name="Proveedor Original",
             email="original@ejemplo.com",
-            address="Dirección Original"
+            address="Dirección Original",
         )
 
         # Datos de prueba para actualización
         update_data = {
             "name": "Proveedor Actualizado",
             "email": "actualizado@ejemplo.com",
-            "address": "Dirección Actualizada"
+            "address": "Dirección Actualizada",
         }
 
         # Actualizar proveedor
@@ -115,7 +115,7 @@ class PetModelTest(TestCase):
             "name": "Fido",
             "breed": 2,
             "birthday": "2020-01-01",
-            "weight": 10
+            "weight": 10,
         }
         errors = validate_pet(mascota_data)
         # verifica que no hay error en el peso
@@ -129,7 +129,7 @@ class PetModelTest(TestCase):
             "name": "Roma",
             "breed": 1,
             "birthday": "2021-01-01",
-            "weight": -2
+            "weight": -2,
         }
        
         errors= validate_pet(mascota_data)
@@ -177,7 +177,7 @@ class MedicineModelTest(TestCase):
         medicine_data = {
             "name": "Test Medicine",
             "description": "Test Description",
-            "dose": -10 
+            "dose": -10, 
         }
 
         # Llamar a la función de validación del medicamento
@@ -215,7 +215,7 @@ class ProductModelTest(TestCase):
         product_data = {
             "name": "Test Product",
             "type": "Test Type",
-            "price": -10 
+            "price": -10, 
         }
 
         # Llamar a la función de validación del producto
