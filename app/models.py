@@ -1,3 +1,5 @@
+import re
+
 from django.db import models
 
 
@@ -14,6 +16,8 @@ def validate_client(data):
 
     if phone == "":
         errors["phone"] = "Por favor ingrese un teléfono"
+    elif len(re.findall("^54", phone)) == 0:
+        errors["phone"] = "El teléfono debe comenzar con 54"
 
     if email == "":
         errors["email"] = "Por favor ingrese un email"
