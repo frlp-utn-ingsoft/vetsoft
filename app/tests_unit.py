@@ -82,7 +82,7 @@ class ClientModelTest(TestCase):
         }
         errors = validate_client(client_data)
         self.assertIn("phone", errors)
-        self.assertEqual(errors["phone"], "El número de teléfono debe comenzar con el prefijo '54' para Argentina.")
+        self.assertEqual(errors["phone"], "El número de teléfono debe comenzar con el prefijo 54 para Argentina.")
 
         
 
@@ -335,7 +335,7 @@ class VetModelTest(TestCase):
         }
         errors = validate_vet(vet_data)
         self.assertIn("phone", errors)
-        self.assertEqual(errors["phone"], "El número de teléfono debe comenzar con el prefijo '54' para Argentina.")
+        self.assertEqual(errors["phone"], "El número de teléfono debe comenzar con el prefijo 54 para Argentina.")
 
         
 
