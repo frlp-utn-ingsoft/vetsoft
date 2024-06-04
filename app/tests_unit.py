@@ -64,13 +64,15 @@ class ClientModelTest(TestCase):
     def test_validate_phone_number_in_phone_field(self):
         client_data = {
             "name": "Juan Sebastian Veron",
-            "phone": "Hola, no soy un teléfono válido",
+            "phone": "",
             "address": "13 y 44",
             "email": "brujita75@vetsoft.com",
         }
         
-        with self.assertRaises(ValidationError):
-            validate_client(client_data)
+        errors = validate_client(client_data)
+        self.assertIn("phone", errors)
+        self.assertEqual(errors["phone"], "Por favor ingrese un teléfono")
+
         
 
 class ProviderModelTest(TestCase):
