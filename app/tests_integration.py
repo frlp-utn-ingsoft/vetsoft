@@ -278,3 +278,15 @@ class MedicinesTest(TestCase):
 
         self.assertContains(response, "La dosis debe estar en un rango de 1 a 10")
 
+class VetsTest(TestCase):
+    def test_validation_invalid_phone(self):
+        response = self.client.post(
+            reverse("vets_form"),
+            data={
+                "name": "Juan Perez",
+                "email": "invalid-phone",  # email inválido
+                "address": "Calle 123",
+            },
+        )
+
+        self.assertContains(response, "Por favor ingrese un teléfono")
