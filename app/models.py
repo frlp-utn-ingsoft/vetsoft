@@ -1,8 +1,12 @@
-from django.db import models
-from django.core.exceptions import ValidationError
+#Importaciones de Python
+import re
 from datetime import date
 
-import re
+#Importaciones de Django
+from django.core.exceptions import ValidationError
+from django.db import models
+
+
 ##---------clients----------   
 def validate_client(data):
     errors = {}

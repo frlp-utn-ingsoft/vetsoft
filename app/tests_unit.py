@@ -1,6 +1,8 @@
-from django.test import TestCase
-from app.models import Client, Provider, validate_pet, validate_product,validate_medicine
 from datetime import date
+
+from django.test import TestCase
+
+from app.models import Client, Provider, validate_medicine, validate_pet, validate_product
 
 class ClientModelTest(TestCase):
     def test_can_create_and_get_client(self):
@@ -57,7 +59,6 @@ class ClientModelTest(TestCase):
         client_updated = Client.objects.get(pk=1)
 
         self.assertEqual(client_updated.phone, "221555232")
-
 
 class ProviderModelTest(TestCase):
     
