@@ -32,6 +32,7 @@ ALLOWED_HOSTS = [
     'vetsoft-app-1-0.onrender.com',  # Agrega tu host de Render aquí
 ]
 
+CSRF_TRUSTED_ORIGINS = ['https://vetsoft-app-1-0.onrender.com']
 
 # Application definition
 

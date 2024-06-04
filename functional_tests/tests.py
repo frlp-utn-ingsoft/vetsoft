@@ -1,14 +1,10 @@
 import os
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from playwright.sync_api import sync_playwright, expect, Browser
-
 from django.urls import reverse
+from playwright.sync_api import Browser, expect, sync_playwright
 
-from app.models import Client
-from app.models import Medicine
-from app.models import Vet
-from app.models import Provider
+from app.models import Provider, Vet
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 playwright = sync_playwright().start()
@@ -82,6 +78,18 @@ class ProvidersRepoTestCase(PlaywrightTestCase):
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("Por favor ingrese una dirección")).to_be_visible()
+
+    def test_should_show_error_for_invalid_email_domain(self):
+        self.page.goto(f"{self.live_server_url}{reverse('clients_form')}")
+
+        self.page.get_by_label("Nombre").fill("Juan Pérez")
+        self.page.get_by_label("Teléfono").fill("123456789")
+        self.page.get_by_label("Email").fill("juan@example")
+        self.page.get_by_label("Dirección").fill("Calle Falsa 123")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor el email debe ser de dominio '@vetsoft.com'")).to_be_visible()        
 
 #class ClientsRepoTestCase(PlaywrightTestCase):
 #    def test_should_show_message_if_table_is_empty(self):
@@ -249,6 +257,22 @@ class ProvidersRepoTestCase(PlaywrightTestCase):
 #             "href", reverse("clients_edit", kwargs={"id": client.id})
 #         )
 
+class ClientsRepoTestCase(PlaywrightTestCase):
+    def test_should_not_be_able_to_create_a_name(self):
+        self.page.goto(f"{self.live_server_url}{reverse('clients_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("1243##$")
+        self.page.get_by_label("Dirección").fill("La Plata")
+        self.page.get_by_label("Teléfono").fill("23145553")
+        self.page.get_by_label("Email").fill("eduardola@gmail.com")
+        
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("El nombre solo puede contener letras y espacios")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un teléfono")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un email")).not_to_be_visible()
 
 class ProductCreateTestCase(PlaywrightTestCase):
     def test_should_be_able_to_create_a_new_product(self):

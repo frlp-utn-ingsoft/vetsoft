@@ -1,7 +1,10 @@
+import re
+
 from django.db import models
 
 
 def validate_client(data):
+    """ Valida los datos del cliente """
     errors = {}
 
     name = data.get("name", "")
@@ -10,19 +13,24 @@ def validate_client(data):
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
+    elif not re.match("^[a-zA-Z ]+$", name):
+        errors["name"] = "El nombre solo puede contener letras y espacios"
 
     if phone == "":
         errors["phone"] = "Por favor ingrese un teléfono"
 
     if email == "":
         errors["email"] = "Por favor ingrese un email"
+    elif "vetsoft.com" not in email:
+        errors["email"] = "Por favor el email debe ser de dominio '@vetsoft.com'"
     elif email.count("@") == 0:
-        errors["email"] = "Por favor ingrese un email valido"
+        errors["email"] = "Por favor ingrese un email válido"
 
     return errors
 
 
 def validate_provider(data):
+    """ Valida los datos del proveedor """
     errors = {}
 
     name = data.get("name", "")
@@ -44,12 +52,14 @@ def validate_provider(data):
 
 
 class Client(models.Model):
+    """Representa un cliente de la veterinaria"""
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
     email = models.EmailField()
     address = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
+        """Retorna la representación en cadena del cliente"""
         return self.name
 
     @classmethod
@@ -88,11 +98,13 @@ class Client(models.Model):
 
 
 class Breed(models.TextChoices):
+    """Define las opciones de razas para las mascotas"""
     DOG = "Dog",
     CAT = "Cat",
     BIRD = "Bird"
 
 def validate_pet(data):
+    """Valida los datos de la mascosta"""
     errors = {}
 
     name = data.get("name", "")
@@ -112,7 +124,7 @@ def validate_pet(data):
 
 
 class Pet(models.Model):
-
+    """Representa una mascota en la veterinaria"""
     name = models.CharField(max_length=100)
     breed = models.CharField(
         max_length=100,
@@ -122,6 +134,7 @@ class Pet(models.Model):
     birthday = models.DateField()
 
     def __str__(self):
+        """Retorna la representación en cadena de la mascota"""
         return self.name
 
     @classmethod
@@ -155,11 +168,13 @@ class Pet(models.Model):
 
 
 class Provider(models.Model):
+    """Representa un proveedor de productos para la veterinaria"""
     name = models.CharField(max_length=100)
     email = models.EmailField()
     address = models.CharField(max_length=100)
 
     def __str__(self):
+        """Retorna la representación en cadena del proveedor"""
         return self.name
 
     @classmethod
@@ -191,6 +206,7 @@ class Provider(models.Model):
 
 
 def isfloat(num):
+    """Verifica si el valor dado es un número flotante"""
     try:
         float(num)
         return True
@@ -199,6 +215,7 @@ def isfloat(num):
 
 
 def validate_product(data):
+    """Valida los datos del producto"""
     errors = {}
 
     name = data.get("name", "")
@@ -213,7 +230,7 @@ def validate_product(data):
 
     if price == "":
         errors["price"] = "Por favor ingrese un precio"
-    elif isfloat(price) == False:
+    elif not isfloat(price):
         errors["price"] = "Por favor ingrese un precio"
     elif float(price) <= 0:
         errors["price"] = "El precio debe ser mayor a cero"
@@ -222,11 +239,13 @@ def validate_product(data):
 
 
 class Product(models.Model):
+    """Representa un producto en la veterinaria"""
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
     price = models.FloatField()
 
     def __str__(self):
+        """Retorna la representación en cadena del producto"""
         return self.name
 
     @classmethod
@@ -267,6 +286,7 @@ class Product(models.Model):
 #     CARDIOLOGIST = 'Cardiologist', 'Cardiologist'
 
 def validate_vet(data):
+    """Valida los datos del veterinario"""
     errors = {}
 
     name = data.get("name", "")
@@ -296,6 +316,7 @@ def validate_vet(data):
 
 
 class Vet(models.Model):
+    """Representa un veterinario en la veterinaria"""
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
     email = models.EmailField()
@@ -303,6 +324,7 @@ class Vet(models.Model):
     speciality = models.CharField(max_length=15)
 
     def __str__(self):
+        """Retorna la representación en cadena del veterinario"""
         return self.name
 
     @classmethod
@@ -345,6 +367,7 @@ class Vet(models.Model):
 
 
 def validate_medicine(data):
+    """Valida los datos del medicamento"""
     errors = {}
 
     name = data.get("name", "")
@@ -375,11 +398,13 @@ def validate_medicine(data):
 
 
 class Medicine(models.Model):
+    """Representa una medicina en la veterinaria"""
     name = models.CharField(max_length=100)
     description = models.TextField()
     dose = models.IntegerField()
 
     def __str__(self):
+        """Retorna la representación en cadena del medicamento"""
         return self.name
 
 # Método de clase para guardar un nuevo medicamento
