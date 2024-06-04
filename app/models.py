@@ -23,6 +23,8 @@ def validate_client(data):
     if phone == "":
         errors["phone"] = "Por favor ingrese un teléfono"
     elif not re.match(pattern_phone, phone):
+        raise ValidationError("El formato del teléfono es inválido.")
+    elif not re.match(pattern_phone, phone):
         errors["phone"] = "El número de teléfono debe comenzar con el prefijo '54' para Argentina."
 
     if email == "":
@@ -405,6 +407,8 @@ def validate_vet(data):
         errors["email"] = "Por favor ingrese un email valido"
     if phone == "":
         errors["phone"] = "Por favor ingrese un teléfono"
+    elif not re.match(pattern_phone, phone):
+        raise ValidationError("El formato del teléfono es inválido.")
     elif not re.match(pattern_phone, phone):
         errors["phone"] = "El número de teléfono debe comenzar con el prefijo '54' para Argentina."
 
