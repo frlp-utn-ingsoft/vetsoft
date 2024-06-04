@@ -1,6 +1,9 @@
-from django.test import TestCase
-from app.models import Pet
 from datetime import datetime, timedelta
+
+from django.test import TestCase
+
+from app.models import Pet
+
 
 class PetModelTest(TestCase):
   

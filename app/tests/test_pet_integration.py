@@ -1,7 +1,8 @@
+from datetime import datetime
+
 from django.test import TestCase
 from django.urls import reverse
-from app.models import Pet
-from datetime import datetime
+
 
 class PetViewsTest(TestCase):
 

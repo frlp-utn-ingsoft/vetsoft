@@ -1,5 +1,7 @@
 from django.test import TestCase
+
 from app.models import Product
+
 
 class ProductStockTest(TestCase):
 

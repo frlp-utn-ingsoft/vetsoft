@@ -1,12 +1,11 @@
 import os
-
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from playwright.sync_api import sync_playwright, expect, Browser
 from datetime import datetime, timedelta
 
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import reverse
+from playwright.sync_api import Browser, expect, sync_playwright
 
-from app.models import Client, Product
+from app.models import Client
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 playwright = sync_playwright().start()
@@ -275,7 +274,7 @@ class AddPet(PlaywrightTestCase):
         expect(self.page.get_by_text("Por favor ingrese la raza")).to_be_visible()
         expect(self.page.get_by_text("Por favor ingrese una fecha")).to_be_visible()
 
-    def test_add_new_empy_pet(self):
+    def test_check_future_date_is_not_valid(self):
         self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
 
         expect(self.page.get_by_role("form")).to_be_visible()

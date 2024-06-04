@@ -1,6 +1,6 @@
-from django.test import TestCase
 from django.shortcuts import reverse
-from app.models import Medicine
+from django.test import TestCase
+
 
 class MedicineTest(TestCase):
     def test_dose_below_one(self):

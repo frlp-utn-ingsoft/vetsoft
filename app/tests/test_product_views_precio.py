@@ -1,6 +1,6 @@
-from django.test import TestCase
 from django.shortcuts import reverse
-from app.models import Product
+from django.test import TestCase
+
 
 class ProductTest(TestCase):
     def test_precio_menor(self):

@@ -1,7 +1,9 @@
+from django.contrib.messages import get_messages
 from django.test import TestCase
 from django.urls import reverse
+
 from app.models import Product
-from django.contrib.messages import get_messages
+
 
 class ProductViewsTest(TestCase):
 

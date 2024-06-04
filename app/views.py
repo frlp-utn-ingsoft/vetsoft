@@ -1,6 +1,8 @@
-from django.shortcuts import render, redirect, reverse, get_object_or_404
-from .models import Client, Medicine, Product, Pet, Vet
 from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect, render, reverse
+
+from .models import Client, Medicine, Pet, Product, Vet
+
 
 def home(request):
     return render(request, "home.html")

@@ -1,5 +1,6 @@
-from django.test import TestCase
 from django.shortcuts import reverse
+from django.test import TestCase
+
 from app.models import Client
 
 
