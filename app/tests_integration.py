@@ -30,7 +30,7 @@ class ClientsTest(TestCase):
                 "name": "Juan Sebastian Veron",
                 "phone": "221555232",
                 "address": "13 y 44",
-                "email": "brujita75@hotmail.com",
+                "email": "brujita75@vetsoft.com",
             },
         )
         clients = Client.objects.all()
@@ -39,7 +39,7 @@ class ClientsTest(TestCase):
         self.assertEqual(clients[0].name, "Juan Sebastian Veron")
         self.assertEqual(clients[0].phone, "221555232")
         self.assertEqual(clients[0].address, "13 y 44")
-        self.assertEqual(clients[0].email, "brujita75@hotmail.com")
+        self.assertEqual(clients[0].email, "brujita75@vetsoft.com")
 
         self.assertRedirects(response, reverse("clients_repo"))
 
@@ -68,14 +68,15 @@ class ClientsTest(TestCase):
             },
         )
 
-        self.assertContains(response, "Por favor ingrese un email valido")
+        self.assertContains(response, "Por favor ingrese un email válido")
 
+   
     def test_edit_user_with_valid_data(self):
         client = Client.objects.create(
             name="Juan Sebastián Veron",
             address="13 y 44",
             phone="221555232",
-            email="brujita75@hotmail.com",
+            email="brujita75@vetsoft.com",
         )
 
         response = self.client.post(
