@@ -26,7 +26,7 @@
                         id="name"
                         name="name"
                         value="{{client.name}}"
-                        class="form-control"
+                        class="form-control {% if errors.name %}is-invalid{% endif %}"
                         required/>
 
                     {% if errors.name %}
@@ -40,7 +40,7 @@
                     <input type="text"
                         id="phone"
                         name="phone"
-                        class="form-control"
+                        class="form-control {% if errors.phone %}is-invalid{% endif %}"
                         value="{{client.phone}}"
                         required/>
 
@@ -55,7 +55,7 @@
                     <input type="email"
                         id="email"
                         name="email"
-                        class="form-control"
+                        class="form-control {% if errors.email %}is-invalid{% endif %}"
                         value="{{ client.email }}"
                         required/>
 
@@ -71,7 +71,7 @@
                         id="address"
                         name="address"
                         value="{{client.address}}"
-                        class="form-control" />
+                        class="form-control {% if errors.address %}is-invalid{% endif %}" />
 
                     <div class="invalid-feedback">
                         La dirrección es opcional
