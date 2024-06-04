@@ -361,7 +361,7 @@ class ProductCreatePriceGreaterThanZeroTestCase(PlaywrightTestCase):
 
         self.page.get_by_label("Nombre").fill("Amoxicilina")
         self.page.get_by_label("Tipo").fill("Antibiotico")
-        self.page.get_by_label("Precio").fill("100");
+        self.page.get_by_label("Precio").fill("100")
 
         self.page.get_by_role("button", name="Guardar").click()
         
@@ -402,7 +402,7 @@ class MedicineCreateDoseRangeOneToTen(PlaywrightTestCase):
 
         self.page.get_by_label("Nombre").fill("Diclofenaco")
         self.page.get_by_label("Descripción").fill("Calma el dolor")
-        self.page.get_by_label("Dosis").fill("3");
+        self.page.get_by_label("Dosis").fill("3")
 
         self.page.get_by_role("button", name="Guardar").click()
 

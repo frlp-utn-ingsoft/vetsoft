@@ -1,5 +1,5 @@
 from django.test import TestCase
-from app.models import Client, Provider, validate_pet, validate_product,validate_medicine, validate_pet
+from app.models import Client, Provider, validate_pet, validate_product,validate_medicine
 from datetime import date
 
 class ClientModelTest(TestCase):
