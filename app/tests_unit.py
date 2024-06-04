@@ -82,6 +82,20 @@ class ProviderModelTest(TestCase):
 
 #         self.assertEqual(client_updated.phone, "221555232")
 
+class ClientModelTest(TestCase):
+    def test_can_create_and_get_client(self):
+        response = Client.save_client(
+            {
+                "name": "234#~$",
+                "phone": "221555232",
+                "address": "13 y 44",
+                "email": "brujita75@hotmail.com",
+            }
+        )
+        clients = Client.objects.all()
+        self.assertEqual(len(clients),0)
+        self.assertEqual(response[1]["name"],"El nombre solo puede contener letras y espacios")
+
 
 
 class MedicineModelTest(TestCase):
