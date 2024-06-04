@@ -444,4 +444,44 @@ class MedicineCreateTestCase(PlaywrightTestCase):
         expect(self.page.get_by_text("Por favor ingrese una descripción")).not_to_be_visible()
         expect(self.page.get_by_text("La dosis debe ser un número entero positivo")).to_be_visible()
 
+class ClientCreateTestCasePhone(PlaywrightTestCase):
+    def test_should_be_able_to_create_a_new_client_phone(self):
+        self.page.goto(f"{self.live_server_url}{reverse('clients_form')}")
 
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("NombrePersona")
+        self.page.get_by_label("Teléfono").fill("54221555232")
+        self.page.get_by_label("Email").fill("email@vetsoft.com")
+        self.page.get_by_label("Dirección").fill("Direccion")
+        
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("NombrePersona")).to_be_visible()
+        expect(self.page.get_by_text("54221555232")).to_be_visible()
+        expect(self.page.get_by_text("email@vetsoft.com")).to_be_visible()
+        expect(self.page.get_by_text("Direccion")).to_be_visible()
+
+    def test_should_not_be_able_to_create_a_client_phone(self):
+        
+        self.page.goto(f"{self.live_server_url}{reverse('clients_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un teléfono")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un email")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Nombre")
+        self.page.get_by_label("Teléfono").fill("221555232")
+        self.page.get_by_label("Email").fill("email@vetsoft.com")
+        self.page.get_by_label("Dirección").fill("Direccion")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un teléfono")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un email")).not_to_be_visible()
+        expect(self.page.get_by_text("El teléfono debe comenzar con 54")).to_be_visible()

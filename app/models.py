@@ -267,7 +267,7 @@ class Product(models.Model):
         return True, None
 
     def update_product(self, product_data):
-        """Acutaliza un producto existente"""
+        """Actualiza un producto existente"""
         errors = validate_product(product_data)
 
         if len(errors.keys()) > 0:
@@ -280,12 +280,6 @@ class Product(models.Model):
         self.save()
 
         return True, None
-
-# class Speciality(models.TextChoices):
-#     GENERAL = 'General', 'General'
-#     SURGEON = 'Surgeon', 'Surgeon'
-#     DENTIST = 'Dentist', 'Dentist'
-#     CARDIOLOGIST = 'Cardiologist', 'Cardiologist'
 
 def validate_vet(data):
     """Valida los datos del veterinario"""
