@@ -119,6 +119,18 @@ class ClientsTest(TestCase):
             },
         )
         self.assertContains(response, "Por favor ingrese un teléfono")
+    
+    def test_validation_invalid_phone_number(self):
+        response = self.client.post(
+            reverse("clients_form"),
+            data={
+                "name": "Juan Sebastian Veron",
+                "phone": "111111111",
+                "email": "brujita75@vetsoft.com",
+                "address": "13 y 44",     
+            },
+        )
+        self.assertContains(response, "El número de teléfono debe comenzar con el prefijo 54 para Argentina.")
 
 class ProvidersTest(TestCase):
 
