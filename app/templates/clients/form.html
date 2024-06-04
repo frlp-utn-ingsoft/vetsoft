@@ -37,7 +37,7 @@
                 </div>
                 <div>
                     <label for="phone" class="form-label">Teléfono</label>
-                    <input type="text"
+                    <input type="number"
                         id="phone"
                         name="phone"
                         class="form-control {% if errors.phone %}is-invalid{% endif %}"
@@ -58,7 +58,6 @@
                         class="form-control {% if errors.email %}is-invalid{% endif %}"
                         value="{{ client.email }}"
                         required/>
-
                     {% if errors.email %}
                         <div class="invalid-feedback">
                             {{ errors.email }}

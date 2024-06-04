@@ -1,26 +1,27 @@
 from datetime import date
 
+from django.forms import ValidationError
 from django.test import TestCase
 
-from app.models import Client, Provider, validate_medicine, validate_pet, validate_product
+from app.models import Client, Provider, Vet, validate_medicine, validate_pet, validate_product, validate_client, validate_vet
 
 class ClientModelTest(TestCase):
     def test_can_create_and_get_client(self):
         Client.save_client(
             {
                 "name": "Juan Sebastian Veron",
-                "phone": "221555232",
+                "phone": "54221555232",
                 "address": "13 y 44",
-                "email": "brujita75@hotmail.com",
+                "email": "brujita75@vetsoft.com",
             },
         )
         clients = Client.objects.all()
         self.assertEqual(len(clients), 1)
 
         self.assertEqual(clients[0].name, "Juan Sebastian Veron")
-        self.assertEqual(clients[0].phone, "221555232")
+        self.assertEqual(clients[0].phone, "54221555232")
         self.assertEqual(clients[0].address, "13 y 44")
-        self.assertEqual(clients[0].email, "brujita75@hotmail.com")
+        self.assertEqual(clients[0].email, "brujita75@vetsoft.com")
 
     def test_can_update_client(self):
         Client.save_client(
@@ -28,7 +29,7 @@ class ClientModelTest(TestCase):
                 "name": "Juan Sebastian Veron",
                 "phone": "221555232",
                 "address": "13 y 44",
-                "email": "brujita75@hotmail.com",
+                "email": "brujita75@vetsoft.com",
             },
         )
         client = Client.objects.get(pk=1)
@@ -47,7 +48,7 @@ class ClientModelTest(TestCase):
                 "name": "Juan Sebastian Veron",
                 "phone": "221555232",
                 "address": "13 y 44",
-                "email": "brujita75@hotmail.com",
+                "email": "brujita75@vetsoft.com",
             },
         )
         client = Client.objects.get(pk=1)
@@ -59,6 +60,18 @@ class ClientModelTest(TestCase):
         client_updated = Client.objects.get(pk=1)
 
         self.assertEqual(client_updated.phone, "221555232")
+    
+    def test_validate_phone_number_in_phone_field(self):
+        client_data = {
+            "name": "Juan Sebastian Veron",
+            "phone": "Hola, no soy un teléfono válido",
+            "address": "13 y 44",
+            "email": "brujita75@hotmail.com",
+        }
+        
+        with self.assertRaises(ValidationError):
+            validate_client(client_data)
+        
 
 class ProviderModelTest(TestCase):
     
@@ -233,4 +246,70 @@ class ProductModelTest(TestCase):
         # Comprobar que hay un error de validación en el campo 'price'
         self.assertIn("price", errors)
         self.assertEqual(errors["price"], "El precio debe ser mayor que cero")
+
+class VetModelTest(TestCase):
+    def test_can_create_and_get_vet(self):
+        Vet.save_vet(
+            {
+                "name": "Juan Sebastian Veron",
+                "phone": "54221555232",
+                "email": "brujita75@vetsoft.com",
+            }
+        )
+        vets = Vet.objects.all()
+        self.assertEqual(len(vets), 1)
+
+        self.assertEqual(vets[0].name, "Juan Sebastian Veron")
+        self.assertEqual(vets[0].phone, 54221555232)
+        self.assertEqual(vets[0].email, "brujita75@vetsoft.com")
+
+    def test_can_update_vet(self):
+        Vet.save_vet(
+            {
+                "name": "Juan Sebastian Veron",
+                "phone": "54221555232",
+                "address": "13 y 44",
+                "email": "brujita75@vetsoft.com",
+            }
+        )
+        vet = Vet.objects.get(pk=1)
+
+        self.assertEqual(vet.phone, 54221555232)
+
+        vet.update_vet({"phone": "54221555233"})
+
+        vet_updated = Vet.objects.get(pk=1)
+
+        self.assertEqual(vet_updated.phone, 54221555233)
+    
+    def test_update_vet_with_error(self):
+        Vet.save_vet(
+            {
+                "name": "Juan Sebastian Veron",
+                "phone": "54221555232",
+                "address": "13 y 44",
+                "email": "brujita75@vetsoft.com",
+            }
+        )
+        vet = Vet.objects.get(pk=1)
+
+        self.assertEqual(vet.phone, 54221555232)
+
+        vet.update_vet({"phone": ""})
+
+        vet_updated = Vet.objects.get(pk=1)
+
+        self.assertEqual(vet_updated.phone, 54221555232)
+    
+    def test_validate_phone_number_in_phone_field(self):
+        vet_data = {
+            "name": "Juan Sebastian Veron",
+            "phone": "Hola, no soy un teléfono válido",
+            "address": "13 y 44",
+            "email": "brujita75@vetsoft.com",
+        }
+        
+        with self.assertRaises(ValidationError):
+            validate_vet(vet_data)
+        
 

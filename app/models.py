@@ -15,6 +15,7 @@ def validate_client(data):
     phone = data.get("phone", "")
     email = data.get("email", "")
     pattern_phone = r'^54[\d\s\-\(\)]+$'
+    pattern_email = r'^[a-zA-Z0-9_.+-]+@vetsoft.com$'
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
@@ -27,7 +28,10 @@ def validate_client(data):
     if email == "":
         errors["email"] = "Por favor ingrese un email"
     elif email.count("@") == 0:
-        errors["email"] = "Por favor ingrese un email valido"
+        errors["email"] = "Por favor ingrese un email válido"
+    elif not re.match(pattern_email, email):
+        errors["email"] =("El email debe terminar con @vetsoft.com")
+    
 
     return errors
 
@@ -53,6 +57,7 @@ class Client(models.Model):
 
     @classmethod
     def save_client(cls, client_data):
+        """"save_client: Método para guardar un cliente en la base de datos"""
         errors = validate_client(client_data)
 
         if len(errors.keys()) > 0:
@@ -68,6 +73,7 @@ class Client(models.Model):
         return True, None
 
     def update_client(self, client_data):
+        """"update_client: Método para actualizar un cliente en la base de datos"""
         self.name = client_data.get("name", "") or self.name
         self.email = client_data.get("email", "") or self.email
         self.phone = client_data.get("phone", "") or self.phone
@@ -122,6 +128,7 @@ class Medicine(models.Model):
 
     @classmethod
     def save_medicine(cls, medicine_data):
+        """def save_medicine: Método para guardar un medicamento en la base de datos"""
         errors = validate_medicine(medicine_data)
 
         if len(errors.keys()) > 0:
@@ -135,6 +142,7 @@ class Medicine(models.Model):
 
         return True, None
     def update_medicine(self, medicine_data):
+        """def update_medicine: Método para actualizar un medicamento en la base de datos"""
         self.name = medicine_data.get("name", "") or self.name
         self.description = medicine_data.get("description", "") or self.description
         self.dose = medicine_data.get("dose", "") or self.dose
@@ -205,10 +213,12 @@ class Pet(models.Model):
     vets = models.ManyToManyField("Vet", blank=True)
 
     def __str__(self):
+        """def __str__: Método para retornar el nombre de la mascota"""
         return self.name
     
     @classmethod
     def save_pet(cls, pet_data):
+        """def save_pet: Método para guardar una mascota en la base de datos"""
         errors = validate_pet(pet_data)
 
         if len(errors.keys()) > 0:
@@ -224,6 +234,7 @@ class Pet(models.Model):
         return True, None
     
     def update_pet(self, pet_data):
+        """def update_pet: Método para actualizar una mascota en la base de datos"""
         self.name = pet_data.get("name", "") or self.name
         self.breed = pet_data.get("breed", 0) or self.breed
         self.birthday = pet_data.get("birthday", "") or self.birthday
@@ -274,12 +285,13 @@ class Product(models.Model):
     price = models.FloatField()
     provider = models.ForeignKey("Provider", on_delete=models.CASCADE, null=True, blank=True)
 
-
     def __str__(self):
+        """def __str__: Método para retornar el nombre del producto"""
         return self.name
     
     @classmethod
     def save_product(cls, product_data):
+        """def save_product: Método para guardar un producto en la base de datos"""
         errors = validate_product(product_data)
 
         if len(errors.keys()) > 0:
@@ -294,6 +306,7 @@ class Product(models.Model):
         return True, None
     
     def update_product(self, product_data):
+        """def update_product: Método para actualizar un producto en la base de datos"""
         self.name = product_data.get("name", "") or self.name
         self.type = product_data.get("type", "") or self.type
         self.price = product_data.get("price", "") or self.price
@@ -303,6 +316,7 @@ class Product(models.Model):
 ##---------providers----------   
 
 def validate_provider(data):
+    """validate_provider: Método para validar los datos de un proveedor"""
     errors = {}
 
     name = data.get("name", "")
@@ -343,6 +357,7 @@ class Provider(models.Model):
 
     @classmethod
     def save_provider(cls, provider_data):
+        """save_provider: Método para guardar un proveedor en la base de datos"""
         errors = validate_provider(provider_data)
 
         if len(errors.keys()) > 0:
@@ -357,6 +372,7 @@ class Provider(models.Model):
         return True, None
 
     def update_provider(self, provider_data):
+        """update_provider: Método para actualizar un proveedor en la base de datos"""
         self.name = provider_data.get("name", "") or self.name
         self.email = provider_data.get("email", "") or self.email
         new_address = provider_data.get("address", "")
@@ -372,6 +388,7 @@ class Provider(models.Model):
 
 ##---------vets----------   
 def validate_vet(data):
+    """validate_vet: Método para validar los datos de un veterinario"""
     errors = {}
 
     name = data.get("name", "")
@@ -413,6 +430,7 @@ class Vet(models.Model):
 
     @classmethod
     def save_vet(cls, vet_data):
+        """def save_vet: Método para guardar un veterinario en la base"""
         errors = validate_vet(vet_data)
 
         if len(errors.keys()) > 0:
@@ -427,6 +445,7 @@ class Vet(models.Model):
         return True, None
 
     def update_vet(self, vet_data):
+        """def update_vet: Método para actualizar un veterinario en la base"""
         self.name = vet_data.get("name", "") or self.name
         self.email = vet_data.get("email", "") or self.email
         self.phone = vet_data.get("phone", "") or self.phone
