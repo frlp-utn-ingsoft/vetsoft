@@ -377,7 +377,7 @@ def validate_vet(data):
     name = data.get("name", "")
     email = data.get("email", "")
     phone = data.get("phone", "")
-    pattern_phone = r'^\+?[\d\s\-\(\)]+$'
+    pattern_phone = r'^54[\d\s\-\(\)]+$'
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
@@ -389,7 +389,7 @@ def validate_vet(data):
     if phone == "":
         errors["phone"] = "Por favor ingrese un teléfono"
     elif not re.match(pattern_phone, phone):
-        raise ValidationError("El formato del teléfono es inválido.")
+        errors["phone"] = "El número de teléfono debe comenzar con el prefijo '54' para Argentina."
 
     return errors
 
