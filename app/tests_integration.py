@@ -310,8 +310,19 @@ class VetsTest(TestCase):
                 "name": "Juan Perez",
                 "phone": "",  # teléfono inválido
                 "email": "hola@vetsoft.com",
-                "address": "Calle 123",
             },
         )
 
         self.assertContains(response, "Por favor ingrese un teléfono")
+
+    def test_validation_invalid_phone_number(self):
+        response = self.client.post(
+            reverse("vets_form"),
+            data={
+                "name": "Juan Sebastian Veron",
+                "phone": "111111111",
+                "email": "brujita75@vetsoft.com",  
+            },
+        )
+        self.assertContains(response, "El número de teléfono debe comenzar con el prefijo 54 para Argentina.")
+
