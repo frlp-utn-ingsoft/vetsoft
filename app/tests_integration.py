@@ -95,6 +95,17 @@ class ClientsTest(TestCase):
         self.assertEqual(editedClient.address, client.address)
         self.assertEqual(editedClient.email, client.email)
 
+    def test_validation_invalid_phone(self):
+        response = self.client.post(
+            reverse("clients_form"),
+            data={
+                "name": "Juan Perez",
+                "email": "invalid-phone",  # email inválido
+                "address": "Calle 123",
+            },
+        )
+
+        self.assertContains(response, "Por favor ingrese un teléfono")
 
 
 class ProvidersTest(TestCase):
