@@ -9,7 +9,8 @@ services:
         - DB_NAME=db.sqlite3
         - DEBUG=true
     environment:
-      - SECRET_KEY=secreto
+      - SECRET_KEY = django-insecure-p)^5i@33!)v)l7*c#q)%j(g5d+**-yo%)6l*vg!gs_w-e=^_ig
+      - ALLOWED_HOSTS=vetsoft-g10.onrender.com
     image: vetsoft-app:1.0
     ports:
       - "8000:8000"
