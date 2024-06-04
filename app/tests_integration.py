@@ -269,8 +269,6 @@ class ProductsTest(TestCase):
 
 
 # agrego test intregacion punto 5 actividad 3
-
-
 # class PetIntegrationTest(TestCase):
 #     def setUp(self):
 #         # Crea un cliente para ser el dueño de la mascota
@@ -311,3 +309,36 @@ class ProductsTest(TestCase):
 #         # pet = Pet.objects.filter(name='Test Pet')
 #         # self.assertTrue(pet.exists())
 #         # self.assertEqual(pet.first().breed, Breed.DOG)
+
+class ClientsTest(TestCase):
+    def test_can_create_client_phone_54(self):
+        response = self.client.post(
+            reverse("clients_form"),
+            data={
+                "name": "Nombre",
+                "phone": "54221555232",
+                "address": "Direccion",
+                "email": "email@vetsoft.com",
+            },
+        )
+        clients = Client.objects.all()
+        self.assertEqual(len(clients), 1)
+
+        self.assertEqual(clients[0].name, "Nombre")
+        self.assertEqual(clients[0].phone, "54221555232")
+        self.assertEqual(clients[0].address, "Direccion")
+        self.assertEqual(clients[0].email, "email@vetsoft.com")
+
+        self.assertRedirects(response, reverse("clients_repo"))
+
+    def test_cannot_create_client_phone(self):
+        response = self.client.post(
+            reverse("clients_form"),
+            data={
+                "name": "Nombre",
+                "phone": "221555232",
+                "address": "Direccion",
+                "email": "email@vetsoft.com",
+            },
+        )
+        self.assertContains(response, "El teléfono debe comenzar con 54")
