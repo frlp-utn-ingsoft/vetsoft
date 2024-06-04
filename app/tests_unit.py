@@ -1,6 +1,7 @@
-from .models import Pet, Client
 from django.test import TestCase
-from app.models import Client, Product, Provider, Vet, Medicine, Breed
+
+from app.models import Breed, Client, Medicine, Pet, Product, Provider, Vet
+
 
 class ProviderModelTest(TestCase):
     def test_update_provider_address_with_error(self):
