@@ -1,7 +1,6 @@
 from django.test import TestCase
 from django.shortcuts import reverse
 from app.models import Client, Provider, Pet
-from django.urls import reverse
 
 class HomePageTest(TestCase):
     def test_use_home_template(self):
