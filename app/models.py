@@ -64,7 +64,7 @@ class Client(models.Model):
 
     @classmethod
     def save_client(cls, client_data):
-        """Guarda un nuevo cliente"""
+        """"Guarda un nuevo cliente en la base de datos"""
         errors = validate_client(client_data)
 
         if len(errors.keys()) > 0:
@@ -80,7 +80,7 @@ class Client(models.Model):
         return True, None
 
     def update_client(self, client_data):
-        """Actualiza un cliente existente"""
+        """"Actualiza los datos de un cliente existente en la base de datos"""        
         errors = validate_client(client_data)
 
         if len(errors.keys()) > 0:
@@ -139,7 +139,7 @@ class Pet(models.Model):
 
     @classmethod
     def save_pet(cls, pet_data):
-        """Guarda una nueva mascota"""
+        """"Guarda una nueva mascota en la base de datos"""
         errors = validate_pet(pet_data)
 
         if len(errors.keys()) > 0:
@@ -154,7 +154,7 @@ class Pet(models.Model):
         return True, None
 
     def update_pet(self, pet_data):
-        """Actualiza una mascota existente"""
+        """"Actualiza los datos de una mascota existente en la base de datos"""
         errors = validate_pet(pet_data)
 
         if len(errors.keys()) > 0:
@@ -179,8 +179,7 @@ class Provider(models.Model):
 
     @classmethod
     def save_provider(cls, provider_data):
-        """Guarda un nuevo proveedor"""
-
+        """"Guarda un nuevo proveedor en la base de datos"""
         errors = validate_provider(provider_data)
         if len(errors.keys()) > 0:
             return False, errors
@@ -194,8 +193,7 @@ class Provider(models.Model):
         return True, None
 
     def update_provider(self, provider_data):
-        """Actualiza un proveedor existente"""
-
+        """"Actualiza los datos de un proveedor existente en la base de datos"""
         errors = validate_provider(provider_data)
         if len(errors.keys()) > 0:
             return False, errors
@@ -252,7 +250,7 @@ class Product(models.Model):
 
     @classmethod
     def save_product(cls, product_data):
-        """Guarda un nuevo producto"""
+        """"Guarda un nuevo producto en la base de datos"""
         errors = validate_product(product_data)
 
         if len(errors.keys()) > 0:
@@ -267,7 +265,7 @@ class Product(models.Model):
         return True, None
 
     def update_product(self, product_data):
-        """Acutaliza un producto existente"""
+        """"Actualiza los datos de un producto existente en la base de datos"""
         errors = validate_product(product_data)
 
         if len(errors.keys()) > 0:
@@ -331,7 +329,7 @@ class Vet(models.Model):
 
     @classmethod
     def save_vet(cls, vet_data):
-        """Guarda un nuevo veterinario"""
+        """"Guarda un nuevo veterinario en la base de datos"""
         errors = validate_vet(vet_data)
 
         if len(errors.keys()) > 0:
@@ -349,7 +347,7 @@ class Vet(models.Model):
         return True, None
 
     def update_vet(self, vet_data):
-        """Actualiza los datos de un veterinario existente"""
+        """"Actualiza los datos de un veterinario existente en la base de datos"""
         errors = validate_vet(vet_data)
 
         if len(errors.keys()) > 0:
@@ -412,7 +410,7 @@ class Medicine(models.Model):
 # Método de clase para guardar un nuevo medicamento
     @classmethod
     def save_medicine(cls, medicine_data):
-        """Guarda un nuevo medicamento"""
+        """"Guarda una nueva medicina en la base de datos"""
         errors = validate_medicine(medicine_data)
 
         if len(errors.keys()) > 0:
@@ -428,7 +426,7 @@ class Medicine(models.Model):
 
     # Método para actualizar un medicamento existente
     def update_medicine(self, medicine_data):
-        """Actualiza un medicamento existente"""
+        """"Actualiza los datos de una medicina existente en la base de datos"""
         errors = validate_medicine(medicine_data)
         if len(errors.keys()) > 0:
             return False, errors
