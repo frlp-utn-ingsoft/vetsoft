@@ -327,3 +327,19 @@ def vet_form(request, id=None):
         vet = get_object_or_404(Vet, pk=id)
 
     return render(request, "vets/form.html", {"vet": vet})
+
+def vet_delete(request):
+    """
+    Elimina un veterinario de la base de datos según el ID proporcionado en la solicitud POST.
+
+    Args:
+        request (HttpRequest): Objeto de solicitud HTTP que contiene el ID del veterinario en los datos POST.
+
+    Returns:
+        HttpResponseRedirect: Redirige a la página del repositorio de veterinarios después de eliminar el veterinario.
+    """
+    
+    vet_id = request.POST.get("vet_id")
+    vet = get_object_or_404(Vet, pk=int(vet_id))
+    vet.delete()
+    return redirect(reverse("vet_repo"))
