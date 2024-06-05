@@ -1,9 +1,11 @@
-
 from django.db import models
 from datetime import date, datetime
 
 ############################################## CLIENT ##############################################
 class Client(models.Model):
+    """
+    Representa a un cliente con sus datos básicos.
+    """
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
     email = models.EmailField()
@@ -27,8 +29,11 @@ class Client(models.Model):
             errors["email"] = "Por favor ingrese un email"
         elif email.count("@") == 0:
             errors["email"] = "Por favor ingrese un email valido"
+        elif not email.endswith("@vetsoft.com"):
+            errors["email"] = 'El email debe finalizar con "@vetsoft.com"'
 
         return errors
+
     @classmethod
     def save_client(cls, client_data):
         errors = cls.validate_client(client_data)
@@ -50,6 +55,16 @@ class Client(models.Model):
         self.email = client_data.get("email", "") or self.email
         self.phone = client_data.get("phone", "") or self.phone
         self.address = client_data.get("address", "") or self.address
+
+        errors = self.validate_client({
+            "name": self.name,
+            "phone": self.phone,
+            "email": self.email,
+            "address": self.address,
+        })
+
+        if len(errors.keys()) > 0:
+            return False, errors
 
         self.save()
         return True, None
