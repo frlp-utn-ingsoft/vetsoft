@@ -26,7 +26,7 @@
                         id="name"
                         name="name"
                         value="{{pet.name}}"
-                        class="form-control"
+                        class="form-control {% if errors.name %}is-invalid{% endif %}"
                         required
                     />
 
@@ -56,7 +56,7 @@
                         type="date"
                         id="birthday"
                         name="birthday"
-                        class="form-control"
+                        class="form-control {% if errors.birthday %}is-invalid{% endif %}"
                         value="{{ pet.birthday }}"
                         required
                     />
@@ -73,8 +73,7 @@
                         name="weight"
                         value="{{pet.weight}}"
                         class="form-control"
-                        required
-                        min="0" 
+                        required 
                         min="0.001" 
                     />
 
