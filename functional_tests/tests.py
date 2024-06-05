@@ -1,6 +1,4 @@
 import os
-from datetime import datetime, timedelta
-import time
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import reverse
