@@ -3,6 +3,10 @@ from django.db import models
 
 ############################################## CLIENT ##############################################
 class Client(models.Model):
+    """
+    Representa a un cliente con sus datos básicos.
+    """
+
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
     email = models.EmailField()
@@ -59,6 +63,9 @@ class Client(models.Model):
 
 ############################################# PRODUCT ##############################################
 class Product(models.Model):
+    """
+    Representa a un producto con sus datos básicos.
+    """
     name = models.CharField(max_length=75)
     type = models.CharField(max_length=25)
     price = models.FloatField()
@@ -114,6 +121,10 @@ class Product(models.Model):
 
 ############################################# MEDICINE #############################################
 class Medicine(models.Model):
+    """
+    Representa a una medicina con sus datos básicos.
+    """
+
     name = models.CharField(max_length=75)
     description = models.CharField(max_length=255)
     dose = models.FloatField()
@@ -167,6 +178,10 @@ class Medicine(models.Model):
 
 ############################################### VET ################################################
 class Vet(models.Model):
+    """
+    Representa a una veterinaria con sus datos básicos.
+    """
+
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
     email = models.EmailField()
@@ -222,6 +237,10 @@ class Vet(models.Model):
 
 ############################################# PROVIDER #############################################
 class Provider(models.Model):
+    """
+    Representa a un proveedor con sus datos básicos.
+    """
+
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
     email = models.EmailField()
@@ -292,6 +311,10 @@ class Provider(models.Model):
 ############################################### PET ################################################
 
 class Pet(models.Model):
+    """
+    Representa a una mascota con sus datos básicos.
+    """
+
     name = models.CharField(max_length=100)
     breed = models.CharField(max_length=50, blank=True)
     weight = models.FloatField(default=0.0)

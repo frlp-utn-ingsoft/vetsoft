@@ -17,6 +17,11 @@ def home(request):
 
 ############################################# CLIENTS ##############################################
 class ClientRepositoryView(View):
+    """
+    Vista para manejar el repositorio de clientes.
+    
+    """
+
     template_name = "clients/repository.html"
 
     def get(self, request):
@@ -24,6 +29,11 @@ class ClientRepositoryView(View):
         return render(request, self.template_name, {"clients": clients})
 
 class ClientFormView(View):
+    """
+    Vista para manejar el formulario de clientes.
+    
+    """
+
     template_name = "clients/form.html"
 
     def get(self, request, id=None):
@@ -45,6 +55,11 @@ class ClientFormView(View):
         return render(request, self.template_name, {"errors": errors, "client": request.POST})
 
 class ClientDeleteView(View):
+    """
+    Vista para manejar la eliminacion de clientes.
+    
+    """
+
     def post(self, request):
         client_id = request.POST.get("client_id")
         client = get_object_or_404(Client, pk=int(client_id))
@@ -54,6 +69,10 @@ class ClientDeleteView(View):
 
 ############################################# PRODUCTS #############################################
 class ProductRepositoryView(TemplateView):
+    """
+    Vista para manejar el repositorio del producto.
+    """
+
     template_name = "products/repository.html"
 
     def get_context_data(self, **kwargs):
@@ -62,6 +81,10 @@ class ProductRepositoryView(TemplateView):
         return context
 
 class ProductFormView(View):
+    """
+    Vista para manejar el formulario del producto.
+    """
+
     template_name = "products/form.html"
 
     def get(self, request, id=None):
@@ -83,6 +106,10 @@ class ProductFormView(View):
         return render(request, self.template_name, {"errors": errors, "product": request.POST})
 
 class ProductDeleteView(View):
+    """
+    Vista para manejar la eliminacion del producto.
+    """
+
     def post(self, request):
         product_id = request.POST.get("product_id")
         product = get_object_or_404(Product, pk=int(product_id))
@@ -93,6 +120,10 @@ class ProductDeleteView(View):
 ############################################ MEDICINAS #############################################
 
 class MedicineRepositoryView(TemplateView):
+    """
+    Vista para manejar el repositorio de medicinas.
+    """
+
     template_name = "medicines/repository.html"
 
     def get_context_data(self, **kwargs):
@@ -101,6 +132,10 @@ class MedicineRepositoryView(TemplateView):
         return context
 
 class MedicineFormView(View):
+    """
+    Vista para manejar el formulario de medicinas.
+    """
+
     template_name = "medicines/form.html"
 
     def get(self, request, id=None):
@@ -122,6 +157,10 @@ class MedicineFormView(View):
         return render(request, self.template_name, {"errors": errors, "medicine": request.POST})
 
 class MedicineDeleteView(View):
+    """
+    Vista para manejar la eliminacion de medicinas.
+    """
+
     def post(self, request):
         medicine_id = request.POST.get("medicine_id")
         medicine = get_object_or_404(Medicine, pk=int(medicine_id))
@@ -131,11 +170,19 @@ class MedicineDeleteView(View):
 
 ############################################# VETS #################################################
 class VetRepositoryView(View):
+    """
+    Vista para manejar el repositorio de veterinarias.
+    """
+
     def get(self, request):
         vets = Vet.objects.all()
         return render(request, "vets/repository.html", {"vets": vets})
 
 class VetFormView(View):
+    """
+    Vista para manejar el formulario de veterinarias.
+    """
+
     template_name = "vets/form.html"
 
     def get(self, request, id=None):
@@ -160,6 +207,10 @@ class VetFormView(View):
         return render(request, self.template_name, {"errors": errors, "vet": request.POST})
 
 class VetDeleteView(View):
+    """
+    Vista para manejar la eliminacion de veterinarias.
+    """
+
     def post(self, request):
         vet_id = request.POST.get("vet_id")
         vet = get_object_or_404(Vet, pk=int(vet_id))
@@ -169,11 +220,19 @@ class VetDeleteView(View):
 
 ########################################### PROVEEDORES ############################################
 class ProviderRepositoryView(View):
+    """
+    Vista para manejar el repositorio de proveedores.
+    """
+
     def get(self, request):
         providers = Provider.objects.all()
         return render(request, "providers/repository.html", {"providers": providers})
 
 class ProviderFormView(View):
+    """
+    Vista para manejar el formulario de proveedores.
+    """
+
     template_name = "providers/form.html"
 
     def get(self, request, id=None):
@@ -198,6 +257,10 @@ class ProviderFormView(View):
         return render(request, self.template_name, {"errors": errors, "provider": request.POST})
 
 class ProviderDeleteView(View):
+    """
+    Vista para manejar la eliminacion de proveedores.
+    """
+
     def post(self, request):
         provider_id = request.POST.get("provider_id")
         provider = get_object_or_404(Provider, pk=int(provider_id))
@@ -207,11 +270,19 @@ class ProviderDeleteView(View):
 
 ############################################### PETS ###############################################
 class PetRepositoryView(View):
+    """
+    Vista para manejar el repositorio de mascotas.
+    """
+
     def get(self, request):
         pets = Pet.objects.all()
         return render(request, "pets/repository.html", {"pets": pets})
 
 class PetFormView(View):
+    """
+    Vista para manejar el formulario de mascotas.
+    """
+
     template_name = "pets/form.html"
 
     def get(self, request, id=None):
@@ -236,6 +307,10 @@ class PetFormView(View):
         return render(request, self.template_name, {"errors": errors, "pet": request.POST})
 
 class PetDeleteView(View):
+    """
+    Vista para manejar la eliminacion de mascotas.
+    """
+
     def post(self, request):
         pet_id = request.POST.get("pet_id")
         pet = get_object_or_404(Pet, pk=int(pet_id))
