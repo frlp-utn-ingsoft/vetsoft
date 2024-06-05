@@ -4,6 +4,15 @@ from django.db import models
 
 
 def validate_client(data):
+    """
+    Valida los datos del cliente.
+
+    Args:
+        data: Diccionario con los datos del cliente.
+
+    Returns:
+        dict: Un diccionario con errores de validación si los hay.
+    """
     errors = {}
 
     name = data.get("name", "")
@@ -24,6 +33,15 @@ def validate_client(data):
     return errors
 
 def validate_pet(data):
+    """
+    Valida los datos de la mascota.
+
+    Args:
+        data: Diccionario con los datos de la mascota.
+
+    Returns:
+        dict: Un diccionario con errores de validación si los hay.
+    """
     errors = {}
 
     name = data.get("name", "")
@@ -84,6 +102,15 @@ class Client(models.Model):
         self.save()
 
 def validate_medicines(data):
+        """
+        Valida los datos de la medicina.
+
+        Args:
+            data: Diccionario con los datos de la medicina.
+
+        Returns:
+            dict: Un diccionario con errores de validación si los hay.
+        """
         errors = {}
         name = data.get("name", "")
         description = data.get("description", "")
@@ -150,6 +177,15 @@ class Medicine(models.Model):
         self.save()
     
 def validate_products(data):
+    """
+    Valida los datos del producto.
+
+    Args:
+        data: Diccionario con los datos del producto.
+
+    Returns:
+        dict: Un diccionario con errores de validación si los hay.
+    """
     errors = {}
     name = data.get("name", "")
     type = data.get("type", "")
@@ -264,6 +300,15 @@ class Pet(models.Model):
         self.save()
 
 def validate_vet(data):
+        """
+        Valida los datos del veterinario.
+
+        Args:
+            data: Diccionario con los datos del veterinario.
+
+        Returns:
+            dict: Un diccionario con errores de validación si los hay.
+        """
         errors = {}
         name = data.get("name", "")
         email = data.get("email", "")
