@@ -248,7 +248,7 @@ class Pet(models.Model):
 
         Pet.objects.create(
             name=pet_data.get("name"),
-            breed=pet_data.get("breed", 0),
+            breed=pet_data.get("breed"),
             birthday=pet_data.get("birthday"),
             weight=pet_data.get("weight"),
         )
@@ -258,7 +258,7 @@ class Pet(models.Model):
     def update_pet(self, pet_data):
         """def update_pet: Método para actualizar una mascota en la base de datos"""
         self.name = pet_data.get("name", "") or self.name
-        self.breed = pet_data.get("breed", 0) or self.breed
+        self.breed = pet_data.get("breed", "") or self.breed
         self.birthday = pet_data.get("birthday", "") or self.birthday
         self.weight = pet_data.get("weight", "") or self.weight
         self.save()
