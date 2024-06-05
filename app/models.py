@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from django.db import models
-
+import re
 
 def validate_client(data):
     """
@@ -21,6 +21,8 @@ def validate_client(data):
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
+    elif not re.match("^[a-zA-Z\s]+$", name):
+        errors["name"] = "El nombre solo debe contener letras y espacios"
 
     if phone == "":
         errors["phone"] = "Por favor ingrese un teléfono"
@@ -94,6 +96,11 @@ class Client(models.Model):
         return True, None
 
     def update_client(self, client_data):
+        errors = validate_client(client_data)
+
+        if len(errors.keys()) > 0:
+            return False, errors
+        
         self.name = client_data.get("name", "") or self.name
         self.email = client_data.get("email", "") or self.email
         self.phone = client_data.get("phone", "") or self.phone
