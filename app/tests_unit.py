@@ -26,18 +26,58 @@ class ProviderModelTest(TestCase):
         self.assertIsNotNone(errors)  
 
 
-# class ClientModelTest(TestCase):
-#     def test_can_create_and_get_client(self):
-#         Client.save_client(
-#             {
-#                 "name": "Juan Sebastian Veron",
-#                 "phone": "221555232",
-#                 "address": "13 y 44",
-#                 "email": "brujita75@hotmail.com",
-#             }
-#         )
-#         clients = Client.objects.all()
-#         self.assertEqual(len(clients), 1)
+class ClientModelTest(TestCase):
+    def test_can_create_and_get_client(self):
+        Client.save_client(
+            {
+                "name": "Juan Sebastian Veron",
+                "phone": "221555232",
+                "address": "13 y 44",
+                "email": "brujita75@hotmail.com",
+            }
+        )
+        clients = Client.objects.all()
+        self.assertEqual(len(clients), 1)
+
+    def test_phone_empty(self):
+        response = Client.save_client(
+            {
+                "name": "Juan Sebastian Veron",
+                "phone": "",
+                "address":"13 y 44",
+                "email":"brujita75@hotmail.com",
+            }
+        )
+        clients = Client.objects.all()
+        self.assertEqual(len(clients), 0)
+        self.assertEqual(response[1]['phone'],'Por favor ingrese un teléfono')
+
+    def test_phone_not_numeric(self):
+        response = Client.save_client(
+            {
+                "name": "Juan Sebastian Veron",
+                "phone": "123abc",
+                "address":"13 y 44",
+                "email":"brujita75@hotmail.com",
+            }
+        )
+        clients = Client.objects.all()
+        self.assertEqual(len(clients), 0)
+        self.assertEqual(response[1]['phone'],'Por favor ingrese un teléfono valido')
+
+    def test_phone_zero(self):
+        response = Client.save_client(
+            {
+                "name": "Juan Sebastian Veron",
+                "phone": "0",
+                "address":"13 y 44",
+                "email":"brujita75@hotmail.com",
+            }
+        )
+        clients = Client.objects.all()
+        self.assertEqual(len(clients), 0)
+        self.assertEqual(response[1]['phone'],'El número debe ser positivo')
+
 
 #         self.assertEqual(clients[0].name, "Juan Sebastian Veron")
 #         self.assertEqual(clients[0].phone, "221555232")
