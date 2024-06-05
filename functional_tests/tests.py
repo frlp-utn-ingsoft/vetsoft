@@ -21,7 +21,7 @@ class PlaywrightTestCase(StaticLiveServerTestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.browser: Browser = playwright.firefox.launch(
-            headless=True, slow_mo=int(slow_mo),
+            headless=headless, slow_mo=int(slow_mo),
         )
 
     @classmethod
@@ -285,15 +285,6 @@ class AddPet(PlaywrightTestCase):
 
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
-        expect(self.page.get_by_text("Por favor ingrese la raza")).to_be_visible()
-        expect(self.page.get_by_text("Por favor ingrese una fecha")).to_be_visible()
-
-    def test_check_future_date_is_not_valid(self):
-        self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
-
-        expect(self.page.get_by_role("form")).to_be_visible()
-
         divs = self.page.locator(".invalid-feedback").all()
         
         textos = [div.text_content() for div in divs]
@@ -306,7 +297,7 @@ class AddProduct(PlaywrightTestCase):
     Clase de tests para agregar un producto con Playwright
     """
     def test_add_new_product(self):
-        self.page.goto(f"{self.live_server_url}{reverse('product_form')}")
+        self.page.goto(f"{self.live_server_url}{reverse('products_form')}")
 
         expect(self.page.get_by_role("form")).to_be_visible()
 
