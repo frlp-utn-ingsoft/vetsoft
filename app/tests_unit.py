@@ -83,8 +83,29 @@ class ClientModelTest(TestCase):
         errors = validate_client(client_data)
         self.assertIn("phone", errors)
         self.assertEqual(errors["phone"], "El número de teléfono debe comenzar con el prefijo 54 para Argentina.")
+    
+    def test_validate_name_with_invalid_characters(self):
+        client_data = {
+            "name": "Juan123",
+            "phone": "54221555232",
+            "address": "13 y 44",
+            "email": "brujita75@vetsoft.com",
+        }
+        errors = validate_client(client_data)
+        self.assertIn("name", errors)
+        self.assertEqual(errors["name"], "El nombre solo puede contener letras y espacios")
+    
+    def test_validate_name_with_valid_characters(self):
+        client_data = {
+            "name": "Juan Sebastian Veron",
+            "phone": "54221555232",
+            "address": "13 y 44",
+            "email": "brujita75@vetsoft.com",
+        }
+        errors = validate_client(client_data)
+        self.assertNotIn("name", errors)
 
-        
+    
 
 class ProviderModelTest(TestCase):
     

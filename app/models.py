@@ -15,10 +15,12 @@ def validate_client(data):
     email = data.get("email", "")
     pattern_phone = r'^54[\d\s\-\(\)]+$'
     pattern_email = r'^[a-zA-Z0-9_.+-]+@vetsoft.com$'
+    pattern_name = r'^[a-zA-Z\s]+$' #solo letras y espacios
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
-
+    elif not re.match(pattern_name, name):
+        errors["name"] = "El nombre solo puede contener letras y espacios"
     if phone == "":
         errors["phone"] = "Por favor ingrese un teléfono"
     elif not re.match(pattern_phone, phone):

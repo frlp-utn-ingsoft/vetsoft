@@ -131,6 +131,19 @@ class ClientsTest(TestCase):
             },
         )
         self.assertContains(response, "El número de teléfono debe comenzar con el prefijo 54 para Argentina.")
+    
+    def test_validation_invalid_name(self):
+        response = self.client.post(
+            reverse("clients_form"),
+            data={
+                "name": "Juan123",
+                "phone": "54221555232",
+                "email": "brujita75@vetsoft.com",
+                "address": "13 y 44",
+            },
+        )
+        self.assertContains(response, "El nombre solo puede contener letras y espacios")
+
 
 class ProvidersTest(TestCase):
 
