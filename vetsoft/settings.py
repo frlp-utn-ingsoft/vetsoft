@@ -27,8 +27,12 @@ if DEBUG:
 else:
     SECRET_KEY = os.environ.get('SECRET_KEY')
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    ALLOWED_HOSTS = ",".split(os.environ.get('ALLOWED_HOSTS'))
     ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(",")
+
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+
+CSRF_TRUSTED_ORIGINS = ["https://vetsoft-g10.onrender.com"]
 
 # Application definition
 
@@ -115,8 +119,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
-
-CSRF_TRUSTED_ORIGINS = ["https://vetsoft-g10.onrender.com"]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
