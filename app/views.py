@@ -290,3 +290,40 @@ def vet_repository(request):
     """
     vets = Vet.objects.all()
     return render(request, "vets/repository.html", {"vets": vets})
+
+def vet_form(request, id=None):
+    """
+    Maneja el formulario de creación y actualización de veterinarios.
+
+    Args:
+        request: Objeto de solicitud HTTP.
+        id: ID opcional del veterinario para editar (None para crear un nuevo veterinario).
+
+    Returns:
+        HttpResponse: Redirige al repositorio de veterinarios si se guarda con éxito.
+        Render: Renderiza el formulario con errores si hay problemas o con los datos del veterinario a editar.
+    """
+    
+    if request.method == "POST":
+        vet_id = request.POST.get("id", "")
+        errors = {}
+        saved = True
+
+        if vet_id == "":
+            saved, errors = Vet.save_vet(request.POST)
+        else:
+            vet = get_object_or_404(Vet, pk=vet_id)
+            vet.update_vet(request.POST)
+
+        if saved:
+            return redirect(reverse("vet_repo"))
+
+        return render(
+            request, "vets/form.html", {"errors": errors, "vet": request.POST},
+        )
+
+    vet = None
+    if id is not None:
+        vet = get_object_or_404(Vet, pk=id)
+
+    return render(request, "vets/form.html", {"vet": vet})
