@@ -1,9 +1,8 @@
 from datetime import date
 
-from django.forms import ValidationError
 from django.test import TestCase
 
-from app.models import Breed, Client, Provider, Vet, validate_medicine, validate_pet, validate_product, validate_client, validate_vet
+from app.models import Breed, Client, Pet, Provider, Vet, validate_medicine, validate_pet, validate_product, validate_client, validate_vet
 
 class ClientModelTest(TestCase):
     def test_can_create_and_get_client(self):
