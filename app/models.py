@@ -45,6 +45,12 @@ def validate_pet(data):
 
 
 class Client(models.Model):
+    """
+    Clase de cliente: almacena un valor y permite recuperarlo.
+
+    Atributos:
+        valor: está almacenado en la instancia de la clase.
+    """
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
     email = models.EmailField()
@@ -103,6 +109,12 @@ def validate_medicines(data):
 
 
 class Medicine(models.Model):
+    """
+    Clase de medicina: almacena un valor y permite recuperarlo.
+
+    Atributos:
+        valor: está almacenado en la instancia de la clase.
+    """
     name = models.CharField(max_length=100)
     description = models.TextField()
     dose = models.IntegerField()
@@ -169,6 +181,12 @@ def validate_products(data):
     return errors
 
 class Product(models.Model):
+    """
+    Clase de producto: almacena un valor y permite recuperarlo.
+
+    Atributos:
+        valor: está almacenado en la instancia de la clase.
+    """
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
     price = models.FloatField()
@@ -210,6 +228,12 @@ class Product(models.Model):
         self.save()
 
 class Pet(models.Model):
+    """
+    Clase de mascota: almacena un valor y permite recuperarlo.
+
+    Atributos:
+        valor: está almacenado en la instancia de la clase.
+    """
     name = models.CharField(max_length=100)
     breed = models.CharField(max_length=300)
     birthday = models.DateField()
@@ -259,6 +283,12 @@ def validate_vet(data):
         return errors
 
 class Vet(models.Model):
+    """
+    Clase de veterinarios/as: almacena un valor y permite recuperarlo.
+
+    Atributos:
+        valor: está almacenado en la instancia de la clase.
+    """
     name = models.CharField(max_length=100)
     email = models.EmailField()
     phone = models.CharField(max_length=15)

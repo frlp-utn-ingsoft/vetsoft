@@ -5,6 +5,10 @@ from django.urls import reverse
 
 
 class PetViewsTest(TestCase):
+    """
+    Clase de test de integracion que valida que la fecha de cumpleaños no sea mayor a la fecha actual
+
+    """
 
     def test_pet_form_view(self):
         response = self.client.post(

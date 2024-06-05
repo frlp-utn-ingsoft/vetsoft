@@ -6,6 +6,10 @@ from app.models import Pet
 
 
 class PetModelTest(TestCase):
+    """
+    Clase de test de unidad que valida que la fecha de cumpleaños no sea mayor a la fecha actual.
+    
+    """
   
     def test_create_pet(self):
         pet = Pet.objects.create(name="Test Pet", breed="Test Breed", birthday=datetime.strptime("2024-05-06", "%Y-%m-%d").date())

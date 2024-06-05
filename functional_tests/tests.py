@@ -14,6 +14,10 @@ slow_mo = os.environ.get("SLOW_MO", 500)
 
 
 class PlaywrightTestCase(StaticLiveServerTestCase):
+    """
+    Clase base para tests utilizando Playwright con un servidor estático en vivo.
+
+    """
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -36,6 +40,9 @@ class PlaywrightTestCase(StaticLiveServerTestCase):
 
 
 class HomeTestCase(PlaywrightTestCase):
+    """
+    Clase de tests para el Home con Playwright
+    """
     def test_should_have_navbar_with_links(self):
         self.page.goto(self.live_server_url)
 
@@ -62,6 +69,9 @@ class HomeTestCase(PlaywrightTestCase):
 
 
 class ClientsRepoTestCase(PlaywrightTestCase):
+    """
+    Clase de tests para el modelo de clientes con Playwright
+    """
     def test_should_show_message_if_table_is_empty(self):
         self.page.goto(f"{self.live_server_url}{reverse('clients_repo')}")
 
@@ -166,6 +176,9 @@ class ClientsRepoTestCase(PlaywrightTestCase):
 
 
 class ClientCreateEditTestCase(PlaywrightTestCase):
+    """
+    Clase de tests para la creacion y edicion de los clientes con Playwright
+    """
     def test_should_be_able_to_create_a_new_client(self):
         self.page.goto(f"{self.live_server_url}{reverse('clients_form')}")
 
@@ -244,6 +257,9 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         )
 
 class AddPet(PlaywrightTestCase):
+    """
+    Clase de tests para agregar una mascota con Playwright
+    """
     def test_add_new_pet(self):
         self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
 
@@ -289,6 +305,9 @@ class AddPet(PlaywrightTestCase):
         expect(self.page.get_by_text("La fecha de cumpleaños no puede ser mayor al dia actual")).to_be_visible()
 
 class AddProduct(PlaywrightTestCase):
+    """
+    Clase de tests para agregar un producto con Playwright
+    """
     def test_add_new_product(self):
         self.page.goto(f"{self.live_server_url}{reverse('product_form')}")
 
@@ -308,6 +327,9 @@ class AddProduct(PlaywrightTestCase):
         expect(self.page.get_by_text("15")).to_be_visible()
 
 class AddMedicine(PlaywrightTestCase):
+    """
+    Clase de tests para agregar una medicina con Playwright
+    """
     def test_add_new_medicine(self):
         self.page.goto(f"{self.live_server_url}{reverse('medicines_form')}")
 

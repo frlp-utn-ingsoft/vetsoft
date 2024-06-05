@@ -4,6 +4,9 @@ from app.models import Client
 
 
 class ClientModelTest(TestCase):
+    """
+    Clase de tests de unidad para el modelo de cliente en la creacion y update.
+    """
     def test_can_create_and_get_client(self):
         Client.save_client(
             {

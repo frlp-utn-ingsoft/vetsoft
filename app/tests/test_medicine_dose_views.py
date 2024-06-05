@@ -3,6 +3,11 @@ from django.test import TestCase
 
 
 class MedicineTest(TestCase):
+    """
+    Clase de test de integracion para recibir mediante un post la dosis de medicina para las mascotas.
+
+    """
+
     def test_dose_below_one(self):
             response = self.client.post(
                 reverse("medicines_form"),
