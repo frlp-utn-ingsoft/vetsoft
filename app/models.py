@@ -165,7 +165,7 @@ def validate_pet(data):
         errors["name"] = "Por favor ingrese un nombre"
 
     if breed == "":
-        errors["breed"] = "Por favor ingrese una raza"
+        errors["breed"] = "Por favor seleccione una raza"
 
     if birthday == "":
         errors["birthday"] = "Por favor ingrese una fecha de nacimiento"
@@ -187,8 +187,30 @@ def validate_pet(data):
                     errors["weight"] = "El peso debe ser un número mayor a cero"
         except ValueError:
             errors["weight"] = "El peso debe ser un número válido"
+
     return errors
-       
+
+##---------clase enumerativa de raza----------   
+class Breed(models.TextChoices):
+    """ Esta clase enumarativa representa las razas de perro
+    y gato de una mascota
+    """
+     # raza de perros
+    LABRADOR = 'labrador', 'Labrador'
+    BEAGLE = 'beagle', 'Beagle'
+    BULLDOG = 'bulldog', 'Bulldog'
+    CHIHUAHUA = 'chihuahua', 'Chihuahua'
+    DOGO_ARGENTINO = 'dogo_argentino', 'Dogo Argentino'
+    PUG = 'pug', 'Pug'
+    POODLE = 'poodle', 'Poodle'
+    ROTTWEILER = 'rottweiler', 'Rottweiler'
+    
+    # razas de gatos
+    SIAMESE = 'siamese', 'Siamés'
+    PERSIAN = 'persian', 'Persa'
+    SPHYNX = 'sphynx', 'Sphynx'
+    BENGAL = 'bengal', 'Bengalí'
+
 class Pet(models.Model):
     """ Esta clase representa una mascota de la veterinaria
     Contiene los siguientes atributos:
@@ -205,7 +227,7 @@ class Pet(models.Model):
     - update_pet: actualiza los datos de una mascota en la base de datos
     """
     name = models.CharField(max_length=100)
-    breed = models.CharField(max_length=50)
+    breed = models.CharField(max_length=50, choices=Breed.choices)
     birthday = models.DateField()
     weight = models.DecimalField(max_digits=8, decimal_places=3)  
     client = models.ForeignKey("Client", on_delete=models.CASCADE, null=True, blank=True)
@@ -226,7 +248,7 @@ class Pet(models.Model):
 
         Pet.objects.create(
             name=pet_data.get("name"),
-            breed=pet_data.get("breed", ""),
+            breed=pet_data.get("breed"),
             birthday=pet_data.get("birthday"),
             weight=pet_data.get("weight"),
         )
@@ -236,7 +258,7 @@ class Pet(models.Model):
     def update_pet(self, pet_data):
         """def update_pet: Método para actualizar una mascota en la base de datos"""
         self.name = pet_data.get("name", "") or self.name
-        self.breed = pet_data.get("breed", 0) or self.breed
+        self.breed = pet_data.get("breed", "") or self.breed
         self.birthday = pet_data.get("birthday", "") or self.birthday
         self.weight = pet_data.get("weight", "") or self.weight
         self.save()
@@ -335,7 +357,6 @@ def validate_provider(data):
         errors["address"] = "Por favor ingrese una dirección"
 
     return errors
-
 
 class Provider(models.Model):
     """ Esta clase representa un proveedor de la veterinaria

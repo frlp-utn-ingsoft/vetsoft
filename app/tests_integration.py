@@ -9,7 +9,6 @@ class HomePageTest(TestCase):
         response = self.client.get(reverse("home"))
         self.assertTemplateUsed(response, "home.html")
 
-
 class ClientsTest(TestCase):
     def test_repo_use_repo_template(self):
         response = self.client.get(reverse("clients_repo"))
@@ -107,7 +106,7 @@ class ClientsTest(TestCase):
         self.assertEqual(editedClient.phone, client.phone)
         self.assertEqual(editedClient.address, client.address)
         self.assertEqual(editedClient.email, client.email)
-
+        
     def test_validation_valid_phone(self):
         response = self.client.post(
             reverse("clients_form"),
@@ -230,7 +229,11 @@ class ProvidersTest(TestCase):
 
 # TEST DE PET
 class PetsTest(TestCase):
-    
+    # verifica que se una la template correcta
+    def test_form_use_form_template(self):
+        response = self.client.get(reverse("pets_form"))
+        self.assertTemplateUsed(response, "pets/form.html")
+        
     # creacion de mascota
     def test_can_create_pet(self):
             response = self.client.post(
@@ -285,7 +288,20 @@ class PetsTest(TestCase):
         )
 
         self.assertContains(response, "La fecha de nacimiento no puede ser mayor o igual a la fecha actual")
-
+        
+     # validar de que la raza no puede ser null
+    def test_validation_errors_pet_breedless(self):
+        response = self.client.post(
+                reverse("pets_form"),
+                data={
+                    "name": "Posta",
+                    "breed": "",
+                    "birthday": "2021-10-10",
+                    "weight": 180.05
+                },
+            )
+        # Verifico si no tiene raza y muestra un mensaje de error
+        self.assertContains(response, "Por favor seleccione una raza")
 
 class ProductsTest(TestCase):
     def test_validation_invalid_price(self):

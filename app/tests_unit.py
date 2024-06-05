@@ -1,9 +1,8 @@
 from datetime import date
 
-from django.forms import ValidationError
 from django.test import TestCase
 
-from app.models import Client, Provider, Vet, validate_medicine, validate_pet, validate_product, validate_client, validate_vet
+from app.models import Breed, Client, Pet, Provider, Vet, validate_medicine, validate_pet, validate_product, validate_client, validate_vet
 
 class ClientModelTest(TestCase):
     def test_can_create_and_get_client(self):
@@ -218,6 +217,53 @@ class PetModelTest(TestCase):
 
         #Compruebo que no hay error en el campo de birthday
         self.assertNotIn("birthday", errors, "La fecha ingresada es correcta, no debe haber error")
+
+#test para ver si la clase enumerativa de raza existe
+class TestBreedEnum(TestCase):
+    def test_breed_enum_exists(self):
+        # Verifica que la enumeración Breed existe
+        self.assertTrue(hasattr(Breed, 'BEAGLE'))
+        self.assertTrue(hasattr(Breed, 'LABRADOR'))
+        self.assertTrue(hasattr(Breed, 'PUG'))
+        self.assertTrue(hasattr(Breed, 'BULLDOG'))
+
+        # Verifica los valores de la enumeración
+        self.assertEqual(Breed.BEAGLE, "beagle")
+        self.assertEqual(Breed.LABRADOR, "labrador")
+        self.assertEqual(Breed.PUG, "pug")
+        self.assertEqual(Breed.BULLDOG, "bulldog")
+
+class PetModelTest(TestCase):
+     
+     #test de validacion de creacion de mascota con raza seleccionada
+     def test_validation_create_pet_with_breed(self):
+          # Crear una instancia de Mascota con una raza seleccionada
+        mascota_data = {
+            "name": "Charly",
+            "breed": "Pug",
+            "birthday": "2020-06-18",
+            "weight": 130
+        }
+        errors = validate_pet(mascota_data)
+        # verifica que no hay error en el peso
+        self.assertNotIn("breed", errors, "No debe haber un error de seleccion de raza")
+
+    #test de validacion de creacion de mascota sin raza seleccionada
+     def test_validation_create_pet_breedless(self):
+          # Crear una instancia de Mascota SIN una raza seleccionada
+        mascota_data = {
+            "name": "Charly",
+            "breed": "",
+            "birthday": "2020-06-18",
+            "weight": 130
+        }
+        errors = validate_pet(mascota_data)
+        # verifica que salga el error correspondiente
+        self.assertEqual(errors["breed"], "Por favor seleccione una raza")
+         # Verificar que no se haya creado la mascota en la base de datos
+        self.assertEqual(Pet.objects.count(), 0)
+
+
 
 class MedicineModelTest(TestCase):
     def test_medicine_dose_validation_in_range_1_to_10(self):
