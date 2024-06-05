@@ -5,6 +5,7 @@ from datetime import date
 #Importaciones de Django
 from django.db import models
 
+
 ##---------clients----------   
 def validate_client(data):
     errors = {}
@@ -191,6 +192,9 @@ def validate_pet(data):
 
 ##---------clase enumerativa de raza----------   
 class Breed(models.TextChoices):
+    """ Esta clase enumarativa representa las razas de perro
+    y gato de una mascota
+    """
      # raza de perros
     LABRADOR = 'labrador', 'Labrador'
     BEAGLE = 'beagle', 'Beagle'

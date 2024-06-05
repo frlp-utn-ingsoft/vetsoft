@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, redirect, render, reverse
 
 from app.models import Breed, Client, Medicine, Pet, Product, Provider, Vet
 
+
 def home(request):
     return render(request, "home.html")
 
@@ -138,6 +139,48 @@ def pets_history(request, id):
     return render(request, "pets/form.html", {"pet": pet, "clients": clients})
 
 
+# def pets_form(request, id=None):
+#     clients = Client.objects.all()
+#     if request.method == "POST":
+#         pet_id = request.POST.get("id", "")
+#         errors = {}
+#         saved = True
+
+#         if pet_id == "":
+#             saved, errors = Pet.save_pet(request.POST)
+#             # Si el objeto Pet se ha creado correctamente
+#             if saved:
+#                 # Obtener el ID del cliente seleccionado del formulario
+#                 client_id = request.POST.get("client", "")
+#                 # Asociar el cliente seleccionado con el animal creado
+#                 if client_id:
+#                     pet = Pet.objects.latest('id')  # Obtener el último animal creado
+#                     pet.client_id = client_id
+#                     pet.save()
+#         else:
+#             pet = get_object_or_404(Pet, pk=pet_id)
+#             pet.update_pet(request.POST)
+#             # Obtener el ID del cliente seleccionado del formulario
+#             client_id = request.POST.get("client", "")
+#             # Asociar el cliente seleccionado con el animal actualizado
+#             if client_id:
+#                 pet.client_id = client_id
+#                 pet.save()
+
+#         if saved:
+#             return redirect(reverse("pets_repo"))
+
+#         return render(
+#             request, "pets/form.html", {"errors": errors, "pet": request.POST, "clients": clients},
+#         )
+
+#     pet = None
+#     if id is not None:
+#         pet = get_object_or_404(Pet, pk=id)
+
+#     return render(request, "pets/form.html", {"pet": pet, "clients": clients})
+
+
 def pets_form(request, id=None):
     clients = Client.objects.all()
     if request.method == "POST":
@@ -170,49 +213,7 @@ def pets_form(request, id=None):
             return redirect(reverse("pets_repo"))
 
         return render(
-            request, "pets/form.html", {"errors": errors, "pet": request.POST, "clients": clients},
-        )
-
-    pet = None
-    if id is not None:
-        pet = get_object_or_404(Pet, pk=id)
-
-    return render(request, "pets/form.html", {"pet": pet, "clients": clients})
-
-
-def pets_form(request, id=None):
-    clients = Client.objects.all()
-    if request.method == "POST":
-        pet_id = request.POST.get("id", "")
-        errors = {}
-        saved = True
-
-        if pet_id == "":
-            saved, errors = Pet.save_pet(request.POST)
-            # Si el objeto Pet se ha creado correctamente
-            if saved:
-                # Obtener el ID del cliente seleccionado del formulario
-                client_id = request.POST.get("client", "")
-                # Asociar el cliente seleccionado con el animal creado
-                if client_id:
-                    pet = Pet.objects.latest('id')  # Obtener el último animal creado
-                    pet.client_id = client_id
-                    pet.save()
-        else:
-            pet = get_object_or_404(Pet, pk=pet_id)
-            pet.update_pet(request.POST)
-            # Obtener el ID del cliente seleccionado del formulario
-            client_id = request.POST.get("client", "")
-            # Asociar el cliente seleccionado con el animal actualizado
-            if client_id:
-                pet.client_id = client_id
-                pet.save()
-
-        if saved:
-            return redirect(reverse("pets_repo"))
-
-        return render(
-            request, "pets/form.html", {"errors": errors, "pet": request.POST, "clients": clients, "Breed": Breed}
+            request, "pets/form.html", {"errors": errors, "pet": request.POST, "clients": clients, "Breed": Breed, } ,
         )
 
     pet = None
