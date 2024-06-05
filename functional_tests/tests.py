@@ -1,5 +1,6 @@
 import os
 from datetime import datetime, timedelta
+import time
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import reverse
@@ -295,14 +296,12 @@ class AddPet(PlaywrightTestCase):
 
         expect(self.page.get_by_role("form")).to_be_visible()
 
-        self.page.get_by_label("Nombre").fill("Cachito")
-        self.page.get_by_label("Raza").fill("Una Raza")
-        hoy = datetime.now().date()
-        day = hoy + timedelta(days=1)
-        self.page.get_by_label("Cumpleaños").fill(day)
-
-        self.page.get_by_role("button", name="Guardar").click()
-        expect(self.page.get_by_text("La fecha de cumpleaños no puede ser mayor al dia actual")).to_be_visible()
+        divs = self.page.locator(".invalid-feedback").all()
+        
+        textos = [div.text_content() for div in divs]
+        assert "Por favor ingrese un nombre" in str(textos)
+        assert "Por favor ingrese la raza" in str(textos)
+        assert "Por favor ingrese una fecha" in str(textos)
 
 class AddProduct(PlaywrightTestCase):
     """

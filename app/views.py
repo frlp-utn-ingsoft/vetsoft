@@ -162,6 +162,9 @@ def pets_form(request, id=None):
 
         if saved:
             return redirect(reverse("pets_repo"))
+        
+        if len(errors) > 0:
+            messages.warning(request, f"{errors}")
 
         return render(
             request, "pets/form.html", {"errors": errors, "pet": request.POST}
