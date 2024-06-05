@@ -22,7 +22,7 @@ def validate_client(data):
         errors["phone"] = "El teléfono debe comenzar con 54"
     elif not phone.isdigit():
         errors["phone"] = "Por favor ingrese un teléfono valido"
-    elif int(phone)<=0:
+    elif int(phone) <= 0:
         errors["phone"] = "El número debe ser positivo"
 
     if email == "":
@@ -86,7 +86,7 @@ class Client(models.Model):
         return True, None
 
     def update_client(self, client_data):
-        """"Actualiza los datos de un cliente existente en la base de datos"""        
+        """"Actualiza los datos de un cliente existente en la base de datos"""
         errors = validate_client(client_data)
 
         if len(errors.keys()) > 0:
@@ -101,6 +101,9 @@ class Client(models.Model):
 
         return True, None
 
+########################### SEPARADOR ###################################
+#                           MASCOTA
+#########################################################################
 
 
 class Breed(models.TextChoices):
@@ -108,6 +111,7 @@ class Breed(models.TextChoices):
     DOG = "Dog",
     CAT = "Cat",
     BIRD = "Bird"
+
 
 def validate_pet(data):
     """Valida los datos de la mascosta"""
@@ -172,6 +176,9 @@ class Pet(models.Model):
 
         self.save()
 
+########################### SEPARADOR ###################################
+#########################################################################
+
 
 class Provider(models.Model):
     """Representa un proveedor de productos para la veterinaria"""
@@ -203,7 +210,7 @@ class Provider(models.Model):
         errors = validate_provider(provider_data)
         if len(errors.keys()) > 0:
             return False, errors
-        
+
         self.name = provider_data.get("name", "") or self.name
         self.email = provider_data.get("email", "") or self.email
         self.address = provider_data.get("address", "") or self.address
@@ -285,6 +292,13 @@ class Product(models.Model):
 
         return True, None
 
+# class Speciality(models.TextChoices):
+#     GENERAL = 'General', 'General'
+#     SURGEON = 'Surgeon', 'Surgeon'
+#     DENTIST = 'Dentist', 'Dentist'
+#     CARDIOLOGIST = 'Cardiologist', 'Cardiologist'
+
+
 def validate_vet(data):
     """Valida los datos del veterinario"""
     errors = {}
@@ -358,7 +372,7 @@ class Vet(models.Model):
         self.phone = vet_data.get("phone", "") or self.phone
         self.address = vet_data.get("address", "") or self.address
         self.speciality = vet_data.get("especialidad", "") or self.speciality
-        
+
         self.save()
 
         return True, None
@@ -430,11 +444,12 @@ class Medicine(models.Model):
         errors = validate_medicine(medicine_data)
         if len(errors.keys()) > 0:
             return False, errors
-    
+
         self.name = medicine_data.get("name", "") or self.name
-        self.description = medicine_data.get("description", "") or self.description
+        self.description = medicine_data.get(
+            "description", "") or self.description
         self.dose = medicine_data.get("dose", "") or self.dose
 
         self.save()
-        
+
         return True, None
