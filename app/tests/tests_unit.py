@@ -14,7 +14,7 @@ class ClientModelTest(TestCase):
                 "phone": "221555232",
                 "address": "13 y 44",
                 "email": "brujita75@hotmail.com",
-            }
+            },
         )
         clients = Client.objects.all()
         self.assertEqual(len(clients), 1)
@@ -31,7 +31,7 @@ class ClientModelTest(TestCase):
                 "phone": "221555232",
                 "address": "13 y 44",
                 "email": "brujita75@hotmail.com",
-            }
+            },
         )
         client = Client.objects.get(pk=1)
 
@@ -50,7 +50,7 @@ class ClientModelTest(TestCase):
                 "phone": "221555232",
                 "address": "13 y 44",
                 "email": "brujita75@hotmail.com",
-            }
+            },
         )
         client = Client.objects.get(pk=1)
 

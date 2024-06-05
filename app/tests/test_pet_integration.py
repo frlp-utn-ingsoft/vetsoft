@@ -18,8 +18,8 @@ class PetViewsTest(TestCase):
             {
                 "name": "Test Pet",
                 "breed": "Test Breed",
-                "birthday": today
-            }
+                "birthday": today,
+            },
         )
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 0)
@@ -34,8 +34,8 @@ class PetViewsTest(TestCase):
             {   
                 "name": "Test Pet",
                 "breed": "Test Breed",
-                "birthday": tomorrow
-            }
+                "birthday": tomorrow,
+            },
         )
 
         messages = list(get_messages(response.wsgi_request))
@@ -50,8 +50,8 @@ class PetViewsTest(TestCase):
             {   
                 "name": "",
                 "breed": "",
-                "birthday": ""
-            }
+                "birthday": "",
+            },
         )
 
         messages = list(get_messages(response.wsgi_request))

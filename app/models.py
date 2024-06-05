@@ -206,7 +206,7 @@ class Product(models.Model):
             name=product_data.get("name"),
             type=product_data.get("type"),
             price=product_data.get("price"),
-            stock=product_data.get("stock", 0)
+            stock=product_data.get("stock", 0),
         )
         
         return True, None
