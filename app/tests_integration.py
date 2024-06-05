@@ -1,7 +1,8 @@
 from django.shortcuts import reverse
 from django.test import TestCase
 
-from app.models import Medicine, Product, Provider, Vet
+from app.models import Medicine, Product, Provider, Vet, Pet, Breed
+
 
 class HomePageTest(TestCase):
     def test_use_home_template(self):
@@ -9,166 +10,23 @@ class HomePageTest(TestCase):
         self.assertTemplateUsed(response, "home.html")
 
 
-
-# class ClientsTest(TestCase):
-#     def test_repo_use_repo_template(self):
-#         response = self.client.get(reverse("clients_repo"))
-#         self.assertTemplateUsed(response, "clients/repository.html")
-
-#     def test_repo_display_all_clients(self):
-#         response = self.client.get(reverse("clients_repo"))
-#         self.assertTemplateUsed(response, "clients/repository.html")
-
-#     def test_form_use_form_template(self):
-#         response = self.client.get(reverse("clients_form"))
-#         self.assertTemplateUsed(response, "clients/form.html")
-
-#     def test_can_create_client(self):
-#         response = self.client.post(
-#             reverse("clients_form"),
-#             data={
-#                 "name": "Juan Sebastian Veron",
-#                 "phone": "221555232",
-#                 "address": "13 y 44",
-#                 "email": "brujita75@hotmail.com",
-#             },
-#         )
-#         clients = Client.objects.all()
-#         self.assertEqual(len(clients), 1)
-
-#         self.assertEqual(clients[0].name, "Juan Sebastian Veron")
-#         self.assertEqual(clients[0].phone, "221555232")
-#         self.assertEqual(clients[0].address, "13 y 44")
-#         self.assertEqual(clients[0].email, "brujita75@hotmail.com")
-
-#         self.assertRedirects(response, reverse("clients_repo"))
-
-#     def test_validation_errors_create_client(self):
-#         response = self.client.post(
-#             reverse("clients_form"),
-#             data={},
-#         )
-
-#         self.assertContains(response, "Por favor ingrese un nombre")
-#         self.assertContains(response, "Por favor ingrese un teléfono")
-#         self.assertContains(response, "Por favor ingrese un email")
-
-#     def test_should_response_with_404_status_if_client_doesnt_exists(self):
-#         response = self.client.get(reverse("clients_edit", kwargs={"id": 100}))
-#         self.assertEqual(response.status_code, 404)
-
-#     def test_validation_invalid_email(self):
-#         response = self.client.post(
-#             reverse("clients_form"),
-#             data={
-#                 "name": "Juan Sebastian Veron",
-#                 "phone": "221555232",
-#                 "address": "13 y 44",
-#                 "email": "brujita75",
-#             },
-#         )
-
-#         self.assertContains(response, "Por favor ingrese un email valido")
-    
 class ClientsTest(TestCase):
-    
+
     def test_validation_invalid_name(self):
-            response = self.client.post(
-                reverse("clients_form"),
-                data={
-                    "name": "1234$#%",
-                    "phone": "22165438",
-                    "address": "1 y 62",
-                    "email": "tomasbret@hotmail.com",
-                },
-            )
-            self.assertContains(response, "El nombre solo puede contener letras y espacios")
+        response = self.client.post(
+            reverse("clients_form"),
+            data={
+                "name": "1234$#%",
+                "phone": "22165438",
+                "address": "1 y 62",
+                "email": "tomasbret@hotmail.com",
+            },
+        )
+        self.assertContains(
+            response, "El nombre solo puede contener letras y espacios")
 
-# class ClientsTest(TestCase):
-#     def test_repo_use_repo_template(self):
-#         response = self.client.get(reverse("clients_repo"))
-#         self.assertTemplateUsed(response, "clients/repository.html")
-
-#     def test_repo_display_all_clients(self):
-#         response = self.client.get(reverse("clients_repo"))
-#         self.assertTemplateUsed(response, "clients/repository.html")
-
-#     def test_form_use_form_template(self):
-#         response = self.client.get(reverse("clients_form"))
-#         self.assertTemplateUsed(response, "clients/form.html")
-
-#     def test_can_create_client(self):
-#         response = self.client.post(
-#             reverse("clients_form"),
-#             data={
-#                 "name": "Juan Sebastian Veron",
-#                 "phone": "221555232",
-#                 "address": "13 y 44",
-#                 "email": "brujita75@hotmail.com",
-#             },
-#         )
-#         clients = Client.objects.all()
-#         self.assertEqual(len(clients), 1)
-
-#         self.assertEqual(clients[0].name, "Juan Sebastian Veron")
-#         self.assertEqual(clients[0].phone, "221555232")
-#         self.assertEqual(clients[0].address, "13 y 44")
-#         self.assertEqual(clients[0].email, "brujita75@hotmail.com")
-
-#         self.assertRedirects(response, reverse("clients_repo"))
-
-#     def test_validation_errors_create_client(self):
-#         response = self.client.post(
-#             reverse("clients_form"),
-#             data={},
-#         )
-
-#         self.assertContains(response, "Por favor ingrese un nombre")
-#         self.assertContains(response, "Por favor ingrese un teléfono")
-#         self.assertContains(response, "Por favor ingrese un email")
-
-#     def test_should_response_with_404_status_if_client_doesnt_exists(self):
-#         response = self.client.get(reverse("clients_edit", kwargs={"id": 100}))
-#         self.assertEqual(response.status_code, 404)
-
-#     def test_validation_invalid_email(self):
-#         response = self.client.post(
-#             reverse("clients_form"),
-#             data={
-#                 "name": "Juan Sebastian Veron",
-#                 "phone": "221555232",
-#                 "address": "13 y 44",
-#                 "email": "brujita75",
-#             },
-#         )
-
-#         self.assertContains(response, "Por favor ingrese un email valido")
-
-
-    # def test_edit_user_with_valid_data(self):
-    #     client = Client.objects.create(
-    #         name="Juan Sebastián Veron",
-    #         address="13 y 44",
-    #         phone="221555232",
-    #         email="brujita75@hotmail.com",
-    #     )
-
-    #     response = self.client.post(
-    #         reverse("clients_form"),
-    #         data={
-    #             "id": client.id,
-    #             "name": "Guido Carrillo",
-    #         },
-    #     )
-
-    #     # redirect after post
-    #     self.assertEqual(response.status_code, 302)
-
-    #     editedClient = Client.objects.get(pk=client.id)
-    #     self.assertEqual(editedClient.name, "Guido Carrillo")
-    #     self.assertEqual(editedClient.phone, client.phone)
-    #     self.assertEqual(editedClient.address, client.address)
-    #     self.assertEqual(editedClient.email, client.email)
+########################### SEPARADOR ###################################
+#########################################################################
 
 
 class MedicinesTest(TestCase):
@@ -185,7 +43,8 @@ class MedicinesTest(TestCase):
         self.assertEqual(len(medicines), 1)
 
         self.assertEqual(medicines[0].name, "Amoxicilina")
-        self.assertEqual(medicines[0].description, "Antibiotico de amplio espectro")
+        self.assertEqual(medicines[0].description,
+                         "Antibiotico de amplio espectro")
         self.assertEqual(medicines[0].dose, 6)
 
         self.assertRedirects(response, reverse("medicines_repo"))
@@ -221,17 +80,19 @@ class MedicinesTest(TestCase):
                 "dose": "-5",
             },
         )
-        self.assertContains(response, "La dosis debe ser un número entero positivo")
+        self.assertContains(
+            response, "La dosis debe ser un número entero positivo")
 
 
-# cambios para actividad 3 punto 5 de TEST
-
+########################### SEPARADOR ###################################
+#########################################################################
 
 
 class HomePageTest(TestCase):
     def test_use_home_template(self):
         response = self.client.get(reverse("home"))
         self.assertTemplateUsed(response, "home.html")
+
 
 class ProviderTest(TestCase):
     def test_can_create_provider_with_address(self):
@@ -263,43 +124,49 @@ class ProviderTest(TestCase):
 
         self.assertContains(response, "Por favor ingrese una dirección")
 
+
+########################### SEPARADOR ###################################
+#########################################################################
+
 # Test de Veterinario
+
 class VetsTest(TestCase):
     def test_can_create_vet(self):
-            response = self.client.post(
-                reverse("vets_form"),
-                data={
-                    "name": "Joaquin Munos",
-                    "phone": "22165438",
-                    "address": "20 y 60",
-                    "email": "joaquin10@hotmail.com",
-                    "especialidad": "general",
-                },
-            )
-            vets = Vet.objects.all()
-            self.assertEqual(len(vets), 1)
+        response = self.client.post(
+            reverse("vets_form"),
+            data={
+                "name": "Joaquin Munos",
+                "phone": "22165438",
+                "address": "20 y 60",
+                "email": "joaquin10@hotmail.com",
+                "especialidad": "general",
+            },
+        )
+        vets = Vet.objects.all()
+        self.assertEqual(len(vets), 1)
 
-            self.assertEqual(vets[0].name, "Joaquin Munos")
-            self.assertEqual(vets[0].phone, "22165438")
-            self.assertEqual(vets[0].address, "20 y 60")
-            self.assertEqual(vets[0].email, "joaquin10@hotmail.com")
-            self.assertEqual(vets[0].speciality, "general")
+        self.assertEqual(vets[0].name, "Joaquin Munos")
+        self.assertEqual(vets[0].phone, "22165438")
+        self.assertEqual(vets[0].address, "20 y 60")
+        self.assertEqual(vets[0].email, "joaquin10@hotmail.com")
+        self.assertEqual(vets[0].speciality, "general")
 
-            self.assertRedirects(response, reverse("vets_repo"))
+        self.assertRedirects(response, reverse("vets_repo"))
 
     def test_validation_invalid_especialidad(self):
-            response = self.client.post(
-                reverse("vets_form"),
-                data={
-                    "name": "Joaquin Munos",
-                    "phone": "22165438",
-                    "address": "20 y 60",
-                    "email": "joaquin10@hotmail.com",
-                    "especialidad": "",
-                },
-            )
+        response = self.client.post(
+            reverse("vets_form"),
+            data={
+                "name": "Joaquin Munos",
+                "phone": "22165438",
+                "address": "20 y 60",
+                "email": "joaquin10@hotmail.com",
+                "especialidad": "",
+            },
+        )
 
-            self.assertContains(response, "Por favor seleccione una especialidad")
+        self.assertContains(response, "Por favor seleccione una especialidad")
+
 
 class ProductsTest(TestCase):
     def test_can_create_product(self):
@@ -330,7 +197,7 @@ class ProductsTest(TestCase):
             },
         )
         self.assertContains(response, "El precio debe ser mayor a cero")
-        
+
     def test_create_product_no_product(self):
         response = self.client.post(
             reverse("products_form"),
@@ -343,47 +210,21 @@ class ProductsTest(TestCase):
         self.assertContains(response, "El precio debe ser mayor a cero")
 
 
-
-# agrego test intregacion punto 5 actividad 3
-
-
-# class PetIntegrationTest(TestCase):
-#     def setUp(self):
-#         # Crea un cliente para ser el dueño de la mascota
-#         self.client_obj = Client.objects.create(
-#             name="Test Client", phone="221555232", email="test@test.com", address="13 y 44")
-
-#         # Crea un cliente para enviar solicitudes HTTP
-#         self.http_client = Client()
-
-#     def test_create_pet(self):
-#         # # Define la URL y los datos que se enviarán en la solicitud
-#         # # Reemplaza 'create_pet' con la URL de tu vista
-#         # url = reverse('pets_form')
-#         # data = {
-#         #     'name': 'Test Pet',
-#         #     'breed': Breed.DOG,
-#         #     'birthday': '2022-01-01',
-#         #     'owner': self.client_obj.id
-#         # }
-
-#         response = self.client.post(
-#             reverse("pets_form"),
-#             data={
-#                 "name": "Fido",
-#                 "breed": Breed.DOG,
-#                 "birthday": "2022-01-01",
-#                 'owner': self.client_obj.id
-#             },
-#         )
-
-#         # # Envía una solicitud POST a la vista
-#         # response = self.http_client.post(url, data)
-
-#         # Comprueba que la respuesta tenga un código de estado 200
-#         # self.assertEqual(response.status_code, 200)
-
-#         # Comprueba que la mascota se haya creado en la base de datos
-#         # pet = Pet.objects.filter(name='Test Pet')
-#         # self.assertTrue(pet.exists())
-#         # self.assertEqual(pet.first().breed, Breed.DOG)
+########################### SEPARADOR ###################################
+#########################################################################
+class PetTest(TestCase):
+    def test_can_create_pet(self):
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": "Pepito",
+                "breed": Breed.DOG,
+                "birthday": "2024-01-01",
+            },
+        )
+        pets = Pet.objects.all()
+        self.assertEqual(len(pets), 1)
+        self.assertEqual(pets[0].name, "Pepito")
+        self.assertEqual(pets[0].breed, Breed.DOG)
+        self.assertEqual(pets[0].birthday.strftime("%Y-%m-%d"), "2024-01-01")
+        self.assertRedirects(response, reverse("pets_repo"))
