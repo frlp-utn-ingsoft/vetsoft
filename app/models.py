@@ -3,7 +3,6 @@ import re
 from datetime import date
 
 #Importaciones de Django
-from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -14,7 +13,7 @@ def validate_client(data):
     name = data.get("name", "")
     phone = data.get("phone", "")
     email = data.get("email", "")
-    pattern_phone = r'^\+?[\d\s\-\(\)]+$'
+    pattern_phone = r'^54[\d\s\-\(\)]+$'
     pattern_email = r'^[a-zA-Z0-9_.+-]+@vetsoft.com$'
 
     if name == "":
@@ -23,8 +22,7 @@ def validate_client(data):
     if phone == "":
         errors["phone"] = "Por favor ingrese un teléfono"
     elif not re.match(pattern_phone, phone):
-        raise ValidationError("El formato del teléfono es inválido.")
-
+        errors["phone"] = "El número de teléfono debe comenzar con el prefijo 54 para Argentina."
     if email == "":
         errors["email"] = "Por favor ingrese un email"
     elif email.count("@") == 0:
@@ -394,7 +392,7 @@ def validate_vet(data):
     name = data.get("name", "")
     email = data.get("email", "")
     phone = data.get("phone", "")
-    pattern_phone = r'^\+?[\d\s\-\(\)]+$'
+    pattern_phone = r'^54[\d\s\-\(\)]+$'
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
@@ -404,9 +402,10 @@ def validate_vet(data):
     elif email.count("@") == 0:
         errors["email"] = "Por favor ingrese un email valido"
     if phone == "":
-        errors["phone"] = "Por favor ingrese un teléfono"
+        errors["phone"] = "Por favor ingrese un teléfono"        
     elif not re.match(pattern_phone, phone):
-        raise ValidationError("El formato del teléfono es inválido.")
+        errors["phone"] = "El número de teléfono debe comenzar con el prefijo 54 para Argentina."
+
 
     return errors
 

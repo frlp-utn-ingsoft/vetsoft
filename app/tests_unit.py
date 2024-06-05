@@ -27,50 +27,63 @@ class ClientModelTest(TestCase):
         Client.save_client(
             {
                 "name": "Juan Sebastian Veron",
-                "phone": "221555232",
+                "phone": "54221555232",
                 "address": "13 y 44",
                 "email": "brujita75@vetsoft.com",
             },
         )
         client = Client.objects.get(pk=1)
 
-        self.assertEqual(client.phone, "221555232")
+        self.assertEqual(client.phone, "54221555232")
 
-        client.update_client({"phone": "221555233"})
+        client.update_client({"phone": "54221555233"})
 
         client_updated = Client.objects.get(pk=1)
 
-        self.assertEqual(client_updated.phone, "221555233")
+        self.assertEqual(client_updated.phone, "54221555233")
 
     def test_update_client_with_error(self):
         Client.save_client(
             {
                 "name": "Juan Sebastian Veron",
-                "phone": "221555232",
+                "phone": "54221555232",
                 "address": "13 y 44",
                 "email": "brujita75@vetsoft.com",
             },
         )
         client = Client.objects.get(pk=1)
 
-        self.assertEqual(client.phone, "221555232")
+        self.assertEqual(client.phone, "54221555232")
 
         client.update_client({"phone": ""})
 
         client_updated = Client.objects.get(pk=1)
 
-        self.assertEqual(client_updated.phone, "221555232")
+        self.assertEqual(client_updated.phone, "54221555232")
     
     def test_validate_phone_number_in_phone_field(self):
         client_data = {
             "name": "Juan Sebastian Veron",
-            "phone": "Hola, no soy un teléfono válido",
+            "phone": "",
             "address": "13 y 44",
-            "email": "brujita75@hotmail.com",
+            "email": "brujita75@vetsoft.com",
         }
         
-        with self.assertRaises(ValidationError):
-            validate_client(client_data)
+        errors = validate_client(client_data)
+        self.assertIn("phone", errors)
+        self.assertEqual(errors["phone"], "Por favor ingrese un teléfono")
+    
+    def test_phone_number_without_54(self):
+        client_data = {
+            "name": "Juan Sebastian Veron",
+            "phone": "2245556789",
+            "address": "13 y 44",
+            "email": "brujita75@vetsoft.com",
+        }
+        errors = validate_client(client_data)
+        self.assertIn("phone", errors)
+        self.assertEqual(errors["phone"], "El número de teléfono debe comenzar con el prefijo 54 para Argentina.")
+
         
 
 class ProviderModelTest(TestCase):
@@ -304,12 +317,25 @@ class VetModelTest(TestCase):
     def test_validate_phone_number_in_phone_field(self):
         vet_data = {
             "name": "Juan Sebastian Veron",
-            "phone": "Hola, no soy un teléfono válido",
+            "phone": "",
             "address": "13 y 44",
             "email": "brujita75@vetsoft.com",
         }
         
-        with self.assertRaises(ValidationError):
-            validate_vet(vet_data)
+        errors = validate_client(vet_data)
+        self.assertIn("phone", errors)
+        self.assertEqual(errors["phone"], "Por favor ingrese un teléfono")
+    
+    def test_phone_number_without_54(self):
+        vet_data = {
+            "name": "Juan Sebastian Veron",
+            "phone": "2245556789",
+            "address": "13 y 44",
+            "email": "brujita75@vetsoft.com",
+        }
+        errors = validate_vet(vet_data)
+        self.assertIn("phone", errors)
+        self.assertEqual(errors["phone"], "El número de teléfono debe comenzar con el prefijo 54 para Argentina.")
+
         
 
