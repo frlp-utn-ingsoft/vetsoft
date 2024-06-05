@@ -38,11 +38,12 @@
                 <div>
                     <label for="phone" class="form-label">Teléfono</label>
                     <input
-                        type="number"
+                        type="text"
                         id="phone"
                         name="phone"
                         class="form-control"
                         value="{{client.phone}}"
+                        pattern="[5][4][0-9]"
                         min="1"
                         required
                     />

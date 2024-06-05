@@ -1,7 +1,7 @@
 from django.shortcuts import reverse
 from django.test import TestCase
 
-from app.models import Medicine, Product, Provider, Vet
+from app.models import Client, Medicine, Product, Provider, Vet
 
 class HomePageTest(TestCase):
     def test_use_home_template(self):
@@ -223,16 +223,6 @@ class MedicinesTest(TestCase):
         )
         self.assertContains(response, "La dosis debe ser un número entero positivo")
 
-
-# cambios para actividad 3 punto 5 de TEST
-
-
-
-class HomePageTest(TestCase):
-    def test_use_home_template(self):
-        response = self.client.get(reverse("home"))
-        self.assertTemplateUsed(response, "home.html")
-
 class ProviderTest(TestCase):
     def test_can_create_provider_with_address(self):
         response = self.client.post(
@@ -263,7 +253,7 @@ class ProviderTest(TestCase):
 
         self.assertContains(response, "Por favor ingrese una dirección")
 
-# Test de Veterinario
+
 class VetsTest(TestCase):
     def test_can_create_vet(self):
             response = self.client.post(
@@ -299,7 +289,7 @@ class VetsTest(TestCase):
                 },
             )
 
-            self.assertContains(response, "Por favor seleccione una especialidad")
+            self.assertContains(response, "Por favor seleccione una especialidad") 
 
 class ProductsTest(TestCase):
     def test_can_create_product(self):
@@ -330,7 +320,7 @@ class ProductsTest(TestCase):
             },
         )
         self.assertContains(response, "El precio debe ser mayor a cero")
-        
+
     def test_create_product_no_product(self):
         response = self.client.post(
             reverse("products_form"),
@@ -341,11 +331,6 @@ class ProductsTest(TestCase):
             },
         )
         self.assertContains(response, "El precio debe ser mayor a cero")
-
-
-
-# agrego test intregacion punto 5 actividad 3
-
 
 # class PetIntegrationTest(TestCase):
 #     def setUp(self):
@@ -387,3 +372,36 @@ class ProductsTest(TestCase):
 #         # pet = Pet.objects.filter(name='Test Pet')
 #         # self.assertTrue(pet.exists())
 #         # self.assertEqual(pet.first().breed, Breed.DOG)
+
+class ClientsTestPhone(TestCase):
+    def test_can_create_client_phone_54(self):
+        response = self.client.post(
+            reverse("clients_form"),
+            data={
+                "name": "Nombre",
+                "phone": "54221555232",
+                "address": "Direccion",
+                "email": "email@vetsoft.com",
+            },
+        )
+        clients = Client.objects.all()
+        self.assertEqual(len(clients), 1)
+
+        self.assertEqual(clients[0].name, "Nombre")
+        self.assertEqual(clients[0].phone, "54221555232")
+        self.assertEqual(clients[0].address, "Direccion")
+        self.assertEqual(clients[0].email, "email@vetsoft.com")
+
+        self.assertRedirects(response, reverse("clients_repo"))
+
+    def test_cannot_create_client_phone(self):
+        response = self.client.post(
+            reverse("clients_form"),
+            data={
+                "name": "Nombre",
+                "phone": "221555232",
+                "address": "Direccion",
+                "email": "email@vetsoft.com",
+            },
+        )
+        self.assertContains(response, "El teléfono debe comenzar con 54")

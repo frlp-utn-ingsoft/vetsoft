@@ -18,10 +18,13 @@ def validate_client(data):
 
     if phone == "":
         errors["phone"] = "Por favor ingrese un teléfono"
+    elif len(re.findall("^54", phone)) == 0:
+        errors["phone"] = "El teléfono debe comenzar con 54"
     elif not phone.isdigit():
         errors["phone"] = "Por favor ingrese un teléfono valido"
     elif int(phone)<=0:
         errors["phone"] = "El número debe ser positivo"
+
     if email == "":
         errors["email"] = "Por favor ingrese un email"
     elif "vetsoft.com" not in email:
@@ -281,12 +284,6 @@ class Product(models.Model):
         self.save()
 
         return True, None
-
-# class Speciality(models.TextChoices):
-#     GENERAL = 'General', 'General'
-#     SURGEON = 'Surgeon', 'Surgeon'
-#     DENTIST = 'Dentist', 'Dentist'
-#     CARDIOLOGIST = 'Cardiologist', 'Cardiologist'
 
 def validate_vet(data):
     """Valida los datos del veterinario"""
