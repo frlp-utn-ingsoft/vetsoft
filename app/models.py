@@ -84,7 +84,7 @@ class Product(models.Model):
         errors = {
             "name": "Por favor ingrese un nombre",
             "type": "Por favor ingrese un tipo",
-            "price": "Por favor ingrese un precio"
+            "price": "Por favor ingrese un precio",
         }
         for key in list(errors.keys()):
             # restrict values not null
@@ -349,7 +349,7 @@ class Pet(models.Model):
             name=pet_data.get("name"),
             breed=Breed.objects.get(pk=pet_data.get("breed")),
             birthday=pet_data.get("birthday"),
-            weight=pet_data.get("weight")
+            weight=pet_data.get("weight"),
         )
 
         return True, None
