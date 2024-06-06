@@ -1,6 +1,8 @@
 from django.forms import ValidationError
-from django.test import TestCase
+from django.test import TestCase, Client as DjangoClient
+from django.urls import reverse
 from app.models import Breed, Client, Medicine, Pet, Product, Provider
+from app.views import ClientRepositoryView, ProviderFormView
 
 class ClientModelTest(TestCase):
     def test_can_create_and_get_client(self):
@@ -78,6 +80,15 @@ class ClientModelTest(TestCase):
         self.assertIn("phone", errors)
 
 
+class ClientViewsTest(TestCase):
+    def setUp(self):
+        self.clientView = DjangoClient()
+
+    def test_client_repository_view(self):
+        response = self.clientView.get(reverse('clients_repo'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'clients/repository.html')
+
 ##### PROVEDOR #####
 class ProviderModelTest(TestCase):
     def test_can_create_and_get_provider(self):
@@ -139,6 +150,15 @@ class ProviderModelTest(TestCase):
 
         self.assertEqual(provider_updated.floor_apartament, "Piso 3c")
 
+class ProviderViewsTest(TestCase):
+    def setUp(self):
+        self.client = DjangoClient()
+
+    def test_provider_repository_view(self):
+        response = self.client.get(reverse('providers_repo'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'providers/repository.html')
+
 class ProductModelTest(TestCase):
     def test_invalid_price(self):
         result, errors = Product.save_product({
@@ -177,6 +197,15 @@ class ProductModelTest(TestCase):
         self.assertEqual(result, False)
         self.assertDictEqual(errors, {'price': 'Los precios deben ser mayores que 0'})
 
+class MedicineViewsTest(TestCase):
+    def setUp(self):
+        self.client = DjangoClient()
+
+    def test_medicine_repository_view(self):
+        response = self.client.get(reverse('medicines_repo'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'medicines/repository.html')
+
 class MedicineModelTest(TestCase):
     def test_invalid_dose(self):
         result, errors = Medicine.save_medicine({
@@ -214,6 +243,15 @@ class BreedModelTest(TestCase):
 
         self.assertEqual(breeds[0].name, valid_name_1)
         self.assertEqual(breeds[1].name, valid_name_2)
+
+class PetViewTest(TestCase):
+    def setUp(self):
+        self.client = DjangoClient()
+
+    def test_breed_repository_view(self):
+        response = self.client.get(reverse('pets_repo'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'pets/repository.html')
 
 class PetModelTest(TestCase):
     def test_invalid_weight(self):
