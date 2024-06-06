@@ -43,7 +43,7 @@ class ClientsTest(TestCase):
                 "name": "Juan Sebastian Veron",
                 "phone": "54221555232",
                 "address": "13 y 44",
-                "email": "brujita75@hotmail.com",
+                "email": "brujita75@vetsoft.com",
             },
         )
         clients = Client.objects.all()
@@ -52,7 +52,7 @@ class ClientsTest(TestCase):
         self.assertEqual(clients[0].name, "Juan Sebastian Veron")
         self.assertEqual(clients[0].phone, "54221555232")
         self.assertEqual(clients[0].address, "13 y 44")
-        self.assertEqual(clients[0].email, "brujita75@hotmail.com")
+        self.assertEqual(clients[0].email, "brujita75@vetsoft.com")
 
         self.assertRedirects(response, reverse("clients_repo"))
 
@@ -88,7 +88,7 @@ class ClientsTest(TestCase):
             name="Juan Sebastián Veron",
             address="13 y 44",
             phone="54221555232",
-            email="brujita75@hotmail.com",
+            email="brujita75@vetsoft.com",
         )
 
         response = self.client.post(
@@ -165,7 +165,7 @@ class ProviderIntegrationTest(TestCase):
 
 class PetsIntegrationTest(TestCase):
   def test_cannot_create_pet_with_future_birthday(self):
-    
+
     today = date.today()
     future_date = today + timedelta(days=1)
     pet_data = {

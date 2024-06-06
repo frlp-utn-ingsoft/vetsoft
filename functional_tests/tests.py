@@ -1,3 +1,4 @@
+from datetime import date, timedelta
 import os
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
@@ -5,7 +6,7 @@ from playwright.sync_api import sync_playwright, expect, Browser
 
 from django.urls import reverse
 
-from app.models import Client, Provider, Pet
+from app.models import Client, Medicine, Provider, Pet
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 playwright = sync_playwright().start()
@@ -39,25 +40,47 @@ class HomeTestCase(PlaywrightTestCase):
     def test_should_have_navbar_with_links(self):
         self.page.goto(self.live_server_url)
 
+        # Home
         navbar_home_link = self.page.get_by_test_id("navbar-Home")
-
         expect(navbar_home_link).to_be_visible()
         expect(navbar_home_link).to_have_text("Home")
-        expect(navbar_home_link).to_have_attribute("href", reverse("home"))
+        expect(navbar_home_link).to_have_attribute("href", self.live_server_url + reverse("home"))
 
+        # Clientes
         navbar_clients_link = self.page.get_by_test_id("navbar-Clientes")
-
         expect(navbar_clients_link).to_be_visible()
         expect(navbar_clients_link).to_have_text("Clientes")
-        expect(navbar_clients_link).to_have_attribute("href", reverse("clients_repo"))
-               
-        #Provedor
-        navbar_providers_link = self.page.get_by_test_id("navbar-Proveedores")
+        expect(navbar_clients_link).to_have_attribute("href", self.live_server_url + reverse("clients_repo"))
 
+        # Proveedores
+        navbar_providers_link = self.page.get_by_test_id("navbar-Proveedores")
         expect(navbar_providers_link).to_be_visible()
         expect(navbar_providers_link).to_have_text("Proveedores")
-        expect(navbar_providers_link).to_have_attribute("href", reverse("providers_repo"))
+        expect(navbar_providers_link).to_have_attribute("href", self.live_server_url + reverse("providers_repo"))
 
+        # Medicinas
+        navbar_medicines_link = self.page.get_by_test_id("navbar-Medicinas")
+        expect(navbar_medicines_link).to_be_visible()
+        expect(navbar_medicines_link).to_have_text("Medicinas")
+        expect(navbar_medicines_link).to_have_attribute("href", self.live_server_url + reverse("medicines_repo"))
+
+        # Productos
+        navbar_products_link = self.page.get_by_test_id("navbar-Productos")
+        expect(navbar_products_link).to_be_visible()
+        expect(navbar_products_link).to_have_text("Productos")
+        expect(navbar_products_link).to_have_attribute("href", self.live_server_url + reverse("products_repo"))
+
+        # Veterinarias
+        navbar_vets_link = self.page.get_by_test_id("navbar-Veterinarias")
+        expect(navbar_vets_link).to_be_visible()
+        expect(navbar_vets_link).to_have_text("Veterinarias")
+        expect(navbar_vets_link).to_have_attribute("href", self.live_server_url + reverse("vets_repo"))
+
+        # Mascotas
+        navbar_pets_link = self.page.get_by_test_id("navbar-Mascotas")
+        expect(navbar_pets_link).to_be_visible()
+        expect(navbar_pets_link).to_have_text("Mascotas")
+        expect(navbar_pets_link).to_have_attribute("href", self.live_server_url + reverse("pets_repo"))
 
     def test_should_have_home_cards_with_links(self):
         self.page.goto(self.live_server_url)
@@ -154,6 +177,7 @@ class ClientsRepoTestCase(PlaywrightTestCase):
         expect(client_id_input).to_have_value(str(client.id))
         expect(edit_form.get_by_role("button", name="Eliminar")).to_be_visible()
 
+    #! No anda
     def test_should_can_be_able_to_delete_a_client(self):
         Client.objects.create(
             name="Juan Sebastián Veron",
@@ -259,7 +283,6 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
 
 
 #provedor
-
 class ProvidersRepoTestCase(PlaywrightTestCase):
     def test_should_show_message_if_table_is_empty(self):
         self.page.goto(f"{self.live_server_url}{reverse('providers_repo')}")
@@ -456,10 +479,170 @@ class ProviderCreateEditTestCase(PlaywrightTestCase):
             "href", reverse("providers_edit", kwargs={"id": provider.id})
         )
 
+class MedicineTest(PlaywrightTestCase):
+    def test_should_show_message_if_table_is_empty(self):
+        self.page.goto(f"{self.live_server_url}{reverse('medicine_repo')}")
+        expect(self.page.get_by_text("No existen medicinas")).to_be_visible()
+
+    def test_should_show_medicines_data(self):
+        Medicine.objects.create(
+            name="Aspirina",
+            description="Analgesico",
+            dose=5.0,
+        )
+
+        Medicine.objects.create(
+            name="Ibuprofeno",
+            description="Antiinflamatorio",
+            dose=7.5,
+        )
+
+        self.page.goto(f"{self.live_server_url}{reverse('medicine_repo')}")
+
+        expect(self.page.get_by_text("No existen medicinas")).not_to_be_visible()
+
+        expect(self.page.get_by_text("Aspirina")).to_be_visible()
+        expect(self.page.get_by_text("Analgesico")).to_be_visible()
+        expect(self.page.get_by_text("5.0")).to_be_visible()
+
+        expect(self.page.get_by_text("Ibuprofeno")).to_be_visible()
+        expect(self.page.get_by_text("Antiinflamatorio")).to_be_visible()
+        expect(self.page.get_by_text("7.5")).to_be_visible()
+
+    def test_should_show_add_medicine_action(self):
+        self.page.goto(f"{self.live_server_url}{reverse('medicine_repo')}")
+
+        add_medicine_action = self.page.get_by_role(
+            "link", name="Nueva medicina", exact=False
+        )
+        expect(add_medicine_action).to_have_attribute("href", reverse("medicine_form"))
+
+    def test_should_show_medicine_edit_action(self):
+        medicine = Medicine.objects.create(
+            name="Aspirina",
+            description="Analgesico",
+            dose=5.0,
+        )
+
+        self.page.goto(f"{self.live_server_url}{reverse('medicine_repo')}")
+
+        edit_action = self.page.get_by_role("link", name="Editar")
+        expect(edit_action).to_have_attribute(
+            "href", reverse("medicine_edit", kwargs={"id": medicine.id})
+        )
+
+    def test_should_show_medicine_delete_action(self):
+        medicine = Medicine.objects.create(
+            name="Aspirina",
+            description="Analgesico",
+            dose=5.0,
+        )
+
+        self.page.goto(f"{self.live_server_url}{reverse('medicine_repo')}")
+
+        edit_form = self.page.get_by_role(
+            "form", name="Formulario de eliminación de medicina"
+        )
+        medicine_id_input = edit_form.locator("input[name=medicine_id]")
+
+        expect(edit_form).to_be_visible()
+        expect(edit_form).to_have_attribute("action", reverse("medicine_delete"))
+        expect(medicine_id_input).not_to_be_visible()
+        expect(medicine_id_input).to_have_value(str(medicine.id))
+        expect(edit_form.get_by_role("button", name="Eliminar")).to_be_visible()
+
+    def test_should_can_be_able_to_delete_a_medicine(self):
+        Medicine.objects.create(
+            name="Aspirina",
+            description="Analgesico",
+            dose=5.0,
+        )
+
+        self.page.goto(f"{self.live_server_url}{reverse('medicine_repo')}")
+
+        expect(self.page.get_by_text("Aspirina")).to_be_visible()
+
+        def is_delete_response(response):
+            return response.url.find(reverse("medicine_delete"))
+
+        with self.page.expect_response(is_delete_response) as response_info:
+            self.page.get_by_role("button", name="Eliminar").click()
+
+        response = response_info.value
+        self.assertTrue(response.status < 400)
+
+        expect(self.page.get_by_text("Aspirina")).not_to_be_visible()
+
+    #! no anda
+    def test_should_be_able_to_create_a_new_medicine(self):
+        self.page.goto(f"{self.live_server_url}{reverse('medicine_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Paracetamol")
+        self.page.get_by_label("Descripción").fill("Antipirético")
+        self.page.get_by_label("Dosis").fill("7.5")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Paracetamol")).to_be_visible()
+        expect(self.page.get_by_text("Antipirético")).to_be_visible()
+        expect(self.page.get_by_text("7.5")).to_be_visible()
+
+    def test_should_view_errors_if_form_is_invalid(self):
+        self.page.goto(f"{self.live_server_url}{reverse('medicine_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una descripción")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una dosis")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("Paracetamol")
+        self.page.get_by_label("Descripción").fill("Antipirético")
+        self.page.get_by_label("Dosis").fill("15")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Las dosis deben estar entre 1 y 10")).to_be_visible()
+
+    #! no anda
+    def test_should_be_able_to_edit_a_medicine(self):
+        medicine = Medicine.objects.create(
+            name="Ibuprofeno",
+            description="Antiinflamatorio",
+            dose=7.5,
+        )
+
+        path = reverse("medicines_edit", kwargs={"id": medicine.id})
+        self.page.goto(f"{self.live_server_url}{path}")
+
+        self.page.get_by_label("Nombre").fill("Naproxeno")
+        self.page.get_by_label("Descripción").fill("Analgésico")
+        self.page.get_by_label("Dosis").fill("5")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("Ibuprofeno")).not_to_be_visible()
+        expect(self.page.get_by_text("Antiinflamatorio")).not_to_be_visible()
+        expect(self.page.get_by_text("7.5")).not_to_be_visible()
+
+        expect(self.page.get_by_text("Naproxeno")).to_be_visible()
+        expect(self.page.get_by_text("Analgésico")).to_be_visible()
+        expect(self.page.get_by_text("5")).to_be_visible()
+
+        edit_action = self.page.get_by_role("link", name="Editar")
+        expect(edit_action).to_have_attribute(
+            "href", reverse("medicine_edit", kwargs={"id": medicine.id})
+        )
+
+
 ####PET####
 class PetTests(PlaywrightTestCase):
     def test_should_validate_pet_date_of_birth_less_than_today(self):
-        today_date = get_today_date()
+        today_date = date.today().strftime("%Y-%m-%d")
 
         self.page.goto(f"{self.live_server_url}{reverse('pet_create')}")
 
