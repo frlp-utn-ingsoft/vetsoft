@@ -95,7 +95,7 @@ def pets_form(request, id=None):
             request, "pets/form.html", {"errors": errors,
                                         "pet": request.POST,
                                         "breeds": breed},
-        ),
+        )
 
     pet = None
     if id is not None:
