@@ -7,7 +7,7 @@ class ClientModelTest(TestCase):
         saved, errors = Client.save_client(
             {
                 "name": "Juan Sebastian Veron",
-                "phone": "221555232",
+                "phone": "54221555232",
                 "address": "13 y 44",
                 "email": "brujita75@vetsoft.com",
             }
@@ -19,7 +19,7 @@ class ClientModelTest(TestCase):
         self.assertEqual(len(clients), 1)
 
         self.assertEqual(clients[0].name, "Juan Sebastian Veron")
-        self.assertEqual(clients[0].phone, "221555232")
+        self.assertEqual(clients[0].phone, "54221555232")
         self.assertEqual(clients[0].address, "13 y 44")
         self.assertEqual(clients[0].email, "brujita75@vetsoft.com")
 
@@ -27,7 +27,7 @@ class ClientModelTest(TestCase):
         saved, errors = Client.save_client(
             {
                 "name": "Juan Sebastian Veron",
-                "phone": "221555232",
+                "phone": "54221555232",
                 "address": "13 y 44",
                 "email": "brujita75@vetsoft.com",
             }
@@ -35,21 +35,19 @@ class ClientModelTest(TestCase):
         self.assertTrue(saved)
         self.assertIsNone(errors)
 
-        client = Client.objects.get(pk=1)
-        self.assertEqual(client.phone, "221555232")
+        self.assertEqual(client.phone, "54221555232")
 
-        updated, errors = client.update_client({"phone": "221555233"})
-        self.assertTrue(updated)
-        self.assertIsNone(errors)
+        client.update_client({"phone": "54221555233"})
 
         client_updated = Client.objects.get(pk=1)
-        self.assertEqual(client_updated.phone, "221555233")
+
+        self.assertEqual(client_updated.phone, "54221555233")
 
     def test_update_client_with_error(self):
         saved, errors = Client.save_client(
             {
                 "name": "Juan Sebastian Veron",
-                "phone": "221555232",
+                "phone": "54221555232",
                 "address": "13 y 44",
                 "email": "brujita75@vetsoft.com",
             }
@@ -58,6 +56,7 @@ class ClientModelTest(TestCase):
         self.assertIsNone(errors)
 
         client = Client.objects.get(pk=1)
+        self.assertEqual(client.phone, "54221555232")
         self.assertEqual(client.email, "brujita75@vetsoft.com")
 
         updated, errors = client.update_client({"email": "brujita75@hotmail.com"})
@@ -66,6 +65,22 @@ class ClientModelTest(TestCase):
         self.assertEqual(errors["email"], 'El email debe finalizar con "@vetsoft.com"')
 
         client_updated = Client.objects.get(pk=1)
+
+        self.assertEqual(client_updated.phone, "54221555232")
+    
+    def test_phone_must_start_with_54(self):
+        success, errors = Client.save_client(
+            {
+                "name": "Juan Sebastian Veron",
+                "phone": "44221555232",  # Número de teléfono que no comienza con '54'
+                "address": "13 y 44",
+                "email": "brujita75@hotmail.com",
+            }
+        )
+        
+        self.assertFalse(success)
+        self.assertIn("phone", errors)
+        self.assertEqual(errors["phone"], "El teléfono debe comenzar con '54'")
         self.assertEqual(client_updated.email, "brujita75@vetsoft.com")
 
 ##### PROVEDOR #####

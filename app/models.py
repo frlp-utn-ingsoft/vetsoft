@@ -26,6 +26,8 @@ class Client(models.Model):
 
         if phone == "":
             errors["phone"] = "Por favor ingrese un teléfono"
+        elif not phone.startswith('54'):
+            errors["phone"] = "El teléfono debe comenzar con '54'"
 
         if email == "":
             errors["email"] = "Por favor ingrese un email"
