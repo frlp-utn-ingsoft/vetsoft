@@ -337,7 +337,7 @@ class ClientModelTest(TestCase):
         self.assertEqual(len(clients), 1)
 
         self.assertEqual(clients[0].name, "Nombre")
-        self.assertEqual(clients[0].phone, "541555232")
+        self.assertEqual(clients[0].phone, 541555232)
         self.assertEqual(clients[0].address, "direccion")
         self.assertEqual(clients[0].email, "hola@vetsoft.com")
 

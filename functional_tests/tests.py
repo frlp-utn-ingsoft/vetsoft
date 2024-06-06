@@ -4,7 +4,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import reverse
 from playwright.sync_api import Browser, expect, sync_playwright
 
-from app.models import Provider, Vet, Pet, Breed
+from app.models import Provider, Vet
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 playwright = sync_playwright().start()
@@ -77,8 +77,7 @@ class ProvidersRepoTestCase(PlaywrightTestCase):
 
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text(
-            "Por favor ingrese una dirección")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una dirección")).to_be_visible()
 
     def test_should_show_error_for_invalid_email_domain(self):
         self.page.goto(f"{self.live_server_url}{reverse('clients_form')}")
@@ -90,10 +89,9 @@ class ProvidersRepoTestCase(PlaywrightTestCase):
 
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text(
-            "Por favor el email debe ser de dominio '@vetsoft.com'")).to_be_visible()
+        expect(self.page.get_by_text("Por favor el email debe ser de dominio '@vetsoft.com'")).to_be_visible()        
 
-# class ClientsRepoTestCase(PlaywrightTestCase):
+#class ClientsRepoTestCase(PlaywrightTestCase):
 #    def test_should_show_message_if_table_is_empty(self):
 #        self.page.goto(f"{self.live_server_url}{reverse('clients_repo')}")
 
@@ -269,16 +267,12 @@ class ClientsRepoTestCase(PlaywrightTestCase):
         self.page.get_by_label("Dirección").fill("La Plata")
         self.page.get_by_label("Teléfono").fill("23145553")
         self.page.get_by_label("Email").fill("eduardola@gmail.com")
-
+        
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text(
-            "El nombre solo puede contener letras y espacios")).to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor ingrese un teléfono")).not_to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor ingrese un email")).not_to_be_visible()
-
+        expect(self.page.get_by_text("El nombre solo puede contener letras y espacios")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un teléfono")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un email")).not_to_be_visible()
 
 class ProductCreateTestCase(PlaywrightTestCase):
     def test_should_be_able_to_create_a_new_product(self):
@@ -289,7 +283,7 @@ class ProductCreateTestCase(PlaywrightTestCase):
         self.page.get_by_label("Nombre").fill("NombreProducto")
         self.page.get_by_label("Tipo").fill("TipoProducto")
         self.page.get_by_label("Precio").fill("8")
-
+        
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("NombreProducto")).to_be_visible()
@@ -303,12 +297,9 @@ class ProductCreateTestCase(PlaywrightTestCase):
 
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text(
-            "Por favor ingrese un nombre")).to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor ingrese un tipo del producto")).to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor ingrese un precio")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un tipo del producto")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un precio")).to_be_visible()
 
         self.page.get_by_label("Nombre").fill("NombreProducto")
         self.page.get_by_label("Tipo").fill("TipoProducto")
@@ -316,12 +307,9 @@ class ProductCreateTestCase(PlaywrightTestCase):
 
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text(
-            "Por favor ingrese un nombre")).not_to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor ingrese un tipo del producto")).not_to_be_visible()
-        expect(self.page.get_by_text(
-            "El precio debe ser mayor a cero")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un tipo del producto")).not_to_be_visible()
+        expect(self.page.get_by_text("El precio debe ser mayor a cero")).to_be_visible()
 
     def test_should_not_be_able_to_create_a_no_product(self):
         self.page.goto(f"{self.live_server_url}{reverse('products_form')}")
@@ -335,16 +323,13 @@ class ProductCreateTestCase(PlaywrightTestCase):
         self.page.get_by_label("Precio").fill("0")
 
         self.page.get_by_role("button", name="Guardar").click()
-
-        expect(self.page.get_by_text(
-            "Por favor ingrese un nombre")).not_to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor ingrese un tipo del producto")).not_to_be_visible()
-        expect(self.page.get_by_text(
-            "El precio debe ser mayor a cero")).to_be_visible()
+        
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un tipo del producto")).not_to_be_visible()
+        expect(self.page.get_by_text("El precio debe ser mayor a cero")).to_be_visible()
 
 
-# Test de Vet
+#Test de Vet
 class VetsRepoTestCase(PlaywrightTestCase):
     def test_should_show_vets_data(self):
         Vet.objects.create(
@@ -362,11 +347,10 @@ class VetsRepoTestCase(PlaywrightTestCase):
             email="emily@example.com",
             speciality="dentista"
         )
-
+        
         self.page.goto(f"{self.live_server_url}{reverse('vets_repo')}")
 
-        expect(self.page.get_by_text(
-            "No existen veterinarios")).not_to_be_visible()
+        expect(self.page.get_by_text("No existen veterinarios")).not_to_be_visible()
 
         expect(self.page.get_by_text("Dr. Michael Smith")).to_be_visible()
         expect(self.page.get_by_text("789 Oak St")).to_be_visible()
@@ -388,17 +372,13 @@ class VetsRepoTestCase(PlaywrightTestCase):
         self.page.get_by_label("Teléfono").fill("23145553")
         self.page.get_by_label("Email").fill("eduardola@gmail.com")
         self.page.get_by_label("Especialidad").fill("")
-
+        
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text(
-            "Por favor ingrese un nombre")).not_to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor ingrese un teléfono")).not_to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor ingrese un email")).not_to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor seleccione una especialidad")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un teléfono")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un email")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor seleccione una especialidad")).to_be_visible()
 
 
 class MedicineCreateTestCase(PlaywrightTestCase):
@@ -408,15 +388,13 @@ class MedicineCreateTestCase(PlaywrightTestCase):
         expect(self.page.get_by_role("form")).to_be_visible()
 
         self.page.get_by_label("Nombre").fill("Amoxicilina")
-        self.page.get_by_label("Descripción").fill(
-            "Antibiotico de amplio espectro")
+        self.page.get_by_label("Descripción").fill("Antibiotico de amplio espectro")
         self.page.get_by_label("Dosis").fill("6")
 
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("Amoxicilina")).to_be_visible()
-        expect(self.page.get_by_text(
-            "Antibiotico de amplio espectro")).to_be_visible()
+        expect(self.page.get_by_text("Antibiotico de amplio espectro")).to_be_visible()
         expect(self.page.get_by_text("6")).to_be_visible()
 
     def test_should_view_errors_if_dose_is_zero(self):
@@ -426,27 +404,20 @@ class MedicineCreateTestCase(PlaywrightTestCase):
 
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text(
-            "Por favor ingrese un nombre")).to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor ingrese una descripción")).to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor ingrese una dosis")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una descripción")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una dosis")).to_be_visible()
 
         self.page.get_by_label("Nombre").fill("Amoxicilina")
-        self.page.get_by_label("Descripción").fill(
-            "Antibiotico de amplio espectro")
+        self.page.get_by_label("Descripción").fill("Antibiotico de amplio espectro")
         self.page.get_by_label("Dosis").fill("0")
 
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text(
-            "Por favor ingrese un nombre")).not_to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor ingrese una descripción")).not_to_be_visible()
-        expect(self.page.get_by_text(
-            "La dosis debe estar entre 1 a 10")).to_be_visible()
-
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una descripción")).not_to_be_visible()
+        expect(self.page.get_by_text("La dosis debe estar entre 1 a 10")).to_be_visible()
+    
     def test_should_view_errors_if_dose_is_out_of_range(self):
         self.page.goto(f"{self.live_server_url}{reverse('medicines_form')}")
 
@@ -454,26 +425,19 @@ class MedicineCreateTestCase(PlaywrightTestCase):
 
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text(
-            "Por favor ingrese un nombre")).to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor ingrese una descripción")).to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor ingrese una dosis")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una descripción")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una dosis")).to_be_visible()
 
         self.page.get_by_label("Nombre").fill("Amoxicilina")
-        self.page.get_by_label("Descripción").fill(
-            "Antibiotico de amplio espectro")
+        self.page.get_by_label("Descripción").fill("Antibiotico de amplio espectro")
         self.page.get_by_label("Dosis").fill("11")
 
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text(
-            "Por favor ingrese un nombre")).not_to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor ingrese una descripción")).not_to_be_visible()
-        expect(self.page.get_by_text(
-            "La dosis debe estar entre 1 a 10")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una descripción")).not_to_be_visible()
+        expect(self.page.get_by_text("La dosis debe estar entre 1 a 10")).to_be_visible()
 
     def test_should_view_errors_if_dose_is_negative(self):
         self.page.goto(f"{self.live_server_url}{reverse('medicines_form')}")
@@ -482,25 +446,19 @@ class MedicineCreateTestCase(PlaywrightTestCase):
 
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text(
-            "Por favor ingrese un nombre")).to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor ingrese una descripción")).to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor ingrese una dosis")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una descripción")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese una dosis")).to_be_visible()
 
         self.page.get_by_label("Nombre").fill("Amoxicilina")
-        self.page.get_by_label("Descripción").fill(
-            "Antibiotico de amplio espectro")
+        self.page.get_by_label("Descripción").fill("Antibiotico de amplio espectro")
         self.page.get_by_label("Dosis").fill("-5")
 
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text(
-            "Por favor ingrese una descripción")).not_to_be_visible()
-        expect(self.page.get_by_text(
-            "La dosis debe ser un número entero positivo")).to_be_visible()
 
+        expect(self.page.get_by_text("Por favor ingrese una descripción")).not_to_be_visible()
+        expect(self.page.get_by_text("La dosis debe ser un número entero positivo")).to_be_visible()
 
 class ClientCreateTestCasePhone(PlaywrightTestCase):
     def test_should_be_able_to_create_a_new_client_phone(self):
@@ -512,7 +470,7 @@ class ClientCreateTestCasePhone(PlaywrightTestCase):
         self.page.get_by_label("Teléfono").fill("54221555232")
         self.page.get_by_label("Email").fill("email@vetsoft.com")
         self.page.get_by_label("Dirección").fill("Direccion")
-
+        
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("NombrePersona")).to_be_visible()
@@ -521,19 +479,16 @@ class ClientCreateTestCasePhone(PlaywrightTestCase):
         expect(self.page.get_by_text("Direccion")).to_be_visible()
 
     def test_should_not_be_able_to_create_a_client_phone(self):
-
+        
         self.page.goto(f"{self.live_server_url}{reverse('clients_form')}")
 
         expect(self.page.get_by_role("form")).to_be_visible()
 
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text(
-            "Por favor ingrese un nombre")).to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor ingrese un teléfono")).to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor ingrese un email")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un teléfono")).to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un email")).to_be_visible()
 
         self.page.get_by_label("Nombre").fill("Nombre")
         self.page.get_by_label("Teléfono").fill("221555232")
@@ -542,26 +497,7 @@ class ClientCreateTestCasePhone(PlaywrightTestCase):
 
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text(
-            "Por favor ingrese un nombre")).not_to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor ingrese un teléfono")).not_to_be_visible()
-        expect(self.page.get_by_text(
-            "Por favor ingrese un email")).not_to_be_visible()
-        expect(self.page.get_by_text("El teléfono debe comenzar con 54")
-               # SEPARADOR ###################################
-               ).to_be_visible()
-#########################################################################
-
-
-# class PetCreateTestCase(PlaywrightTestCase):
-#     def test_should_be_able_to_create_a_new_pet(self):
-#         self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
-
-#         expect(self.page.get_by_role("form")).to_be_visible()
-
-#         self.page.get_by_label("Nombre").fill("Firulais")
-#         self.page.get_by_label("Raza").fill("DOG")
-#         self.page.get_by_label("Fecha de Nacimiento").fill("2021-01-01")
-
-#         self.page.get_by_role("button", name="Guardar").click()
+        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un teléfono")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un email")).not_to_be_visible()
+        expect(self.page.get_by_text("El teléfono debe comenzar con 54")).to_be_visible()
