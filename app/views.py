@@ -33,7 +33,7 @@ def clients_form(request, id=None):
 
         return render(
             request, "clients/form.html", {"errors": errors,
-                                           "client": request.POST}
+                                           "client": request.POST},
         )
 
     client = None
@@ -95,7 +95,7 @@ def pets_form(request, id=None):
         return render(
             request, "pets/form.html", {"errors": errors,
                                            "pet": request.POST,
-                                           "breeds": breed}
+                                           "breeds": breed},
         )
 
     pet = None
@@ -145,7 +145,7 @@ def medicines_form(request, id=None):
         # Renderiza el formulario con errores si no se pudo guardar
         return render(
             request, "medicines/form.html", {"errors": errors,
-                                             "medicine": request.POST}
+                                             "medicine": request.POST},
         )
 
     # Obtiene el medicamento si se está editando
@@ -193,7 +193,7 @@ def providers_form(request, id=None):
 
         return render(
             request, "providers/form.html", {"errors": errors,
-                                             "provider": request.POST}
+                                             "provider": request.POST},
         )
 
     provider = None
@@ -236,7 +236,7 @@ def products_form(request, id=None):
 
         return render(
             request, "products/form.html", {"errors": errors,
-                                            "product": request.POST}
+                                            "product": request.POST},
         )
 
     product = None
@@ -280,7 +280,7 @@ def vets_form(request, id=None):
 
         return render(
             request, "vets/form.html", {"vet_errors": errors,
-                                        "vet": request.POST}
+                                        "vet": request.POST},
         )
 
     vet = None
