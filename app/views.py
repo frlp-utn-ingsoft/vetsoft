@@ -1,7 +1,9 @@
-from django.shortcuts import render, redirect, reverse, get_object_or_404
-from django.views.generic import TemplateView
+from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.views import View
-from .models import Breed, Client, Medicine, Product, Vet, Provider, Pet
+from django.views.generic import TemplateView
+
+from .models import Breed, Client, Medicine, Pet, Product, Provider, Vet
+
 
 def home(request):
     buttonsHome = [
