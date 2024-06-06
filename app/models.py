@@ -1,6 +1,7 @@
+from datetime import date, datetime
 
 from django.db import models
-from datetime import date, datetime
+
 
 ############################################## CLIENT ##############################################
 class Client(models.Model):
@@ -311,6 +312,9 @@ class Provider(models.Model):
 
 ############################################ BREED_PET #############################################
 class Breed(models.Model):
+    """
+    Representa a los tipos de razas
+    """
     name = models.CharField(max_length=50, unique=True)
     def _str_(self):
         return self.name
