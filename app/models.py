@@ -158,7 +158,7 @@ class Pet(models.Model):
         Pet.objects.create(
             name=pet_data.get("name"),
             breed=pet_data.get("breed"),
-            birthday=pet_data.get("birthday")
+            birthday=pet_data.get("birthday"),
 
         )
         return True, None
