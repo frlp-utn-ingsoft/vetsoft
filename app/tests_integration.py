@@ -1,7 +1,9 @@
 from django.shortcuts import reverse
 from django.test import TestCase
 
-from app.models import Client, Medicine, Product, Provider, Vet
+from app.models import Client, Medicine, Product, Provider, Vet, Pet, Breed
+import datetime
+
 
 class HomePageTest(TestCase):
     def test_use_home_template(self):
@@ -9,7 +11,6 @@ class HomePageTest(TestCase):
         self.assertTemplateUsed(response, "home.html")
 
 
-
 # class ClientsTest(TestCase):
 #     def test_repo_use_repo_template(self):
 #         response = self.client.get(reverse("clients_repo"))
@@ -69,20 +70,21 @@ class HomePageTest(TestCase):
 #         )
 
 #         self.assertContains(response, "Por favor ingrese un email valido")
-    
+
 class ClientsTest(TestCase):
-    
+
     def test_validation_invalid_name(self):
-            response = self.client.post(
-                reverse("clients_form"),
-                data={
-                    "name": "1234$#%",
-                    "phone": "22165438",
-                    "address": "1 y 62",
-                    "email": "tomasbret@hotmail.com",
-                },
-            )
-            self.assertContains(response, "El nombre solo puede contener letras y espacios")
+        response = self.client.post(
+            reverse("clients_form"),
+            data={
+                "name": "1234$#%",
+                "phone": "22165438",
+                "address": "1 y 62",
+                "email": "tomasbret@hotmail.com",
+            },
+        )
+        self.assertContains(
+            response, "El nombre solo puede contener letras y espacios")
 
 # class ClientsTest(TestCase):
 #     def test_repo_use_repo_template(self):
@@ -143,7 +145,6 @@ class ClientsTest(TestCase):
 #         )
 
 #         self.assertContains(response, "Por favor ingrese un email valido")
-
 
     # def test_edit_user_with_valid_data(self):
     #     client = Client.objects.create(
@@ -185,7 +186,8 @@ class MedicinesTest(TestCase):
         self.assertEqual(len(medicines), 1)
 
         self.assertEqual(medicines[0].name, "Amoxicilina")
-        self.assertEqual(medicines[0].description, "Antibiotico de amplio espectro")
+        self.assertEqual(medicines[0].description,
+                         "Antibiotico de amplio espectro")
         self.assertEqual(medicines[0].dose, 6)
 
         self.assertRedirects(response, reverse("medicines_repo"))
@@ -221,7 +223,9 @@ class MedicinesTest(TestCase):
                 "dose": "-5",
             },
         )
-        self.assertContains(response, "La dosis debe ser un número entero positivo")
+        self.assertContains(
+            response, "La dosis debe ser un número entero positivo")
+
 
 class ProviderTest(TestCase):
     def test_can_create_provider_with_address(self):
@@ -256,40 +260,42 @@ class ProviderTest(TestCase):
 
 class VetsTest(TestCase):
     def test_can_create_vet(self):
-            response = self.client.post(
-                reverse("vets_form"),
-                data={
-                    "name": "Joaquin Munos",
-                    "phone": "22165438",
-                    "address": "20 y 60",
-                    "email": "joaquin10@hotmail.com",
-                    "especialidad": "general",
-                },
-            )
-            vets = Vet.objects.all()
-            self.assertEqual(len(vets), 1)
+        response = self.client.post(
+            reverse("vets_form"),
+            data={
+                "name": "Joaquin Munos",
+                "phone": "22165438",
+                "address": "20 y 60",
+                "email": "joaquin10@hotmail.com",
+                "especialidad": "general",
+            },
+        )
+        vets = Vet.objects.all()
+        self.assertEqual(len(vets), 1)
 
-            self.assertEqual(vets[0].name, "Joaquin Munos")
-            self.assertEqual(vets[0].phone, "22165438")
-            self.assertEqual(vets[0].address, "20 y 60")
-            self.assertEqual(vets[0].email, "joaquin10@hotmail.com")
-            self.assertEqual(vets[0].speciality, "general")
+        self.assertEqual(vets[0].name, "Joaquin Munos")
+        self.assertEqual(vets[0].phone, "22165438")
+        self.assertEqual(vets[0].address, "20 y 60")
+        self.assertEqual(vets[0].email, "joaquin10@hotmail.com")
+        self.assertEqual(vets[0].speciality, "general")
 
-            self.assertRedirects(response, reverse("vets_repo"))
+        self.assertRedirects(response, reverse("vets_repo"))
 
     def test_validation_invalid_especialidad(self):
-            response = self.client.post(
-                reverse("vets_form"),
-                data={
-                    "name": "Joaquin Munos",
-                    "phone": "22165438",
-                    "address": "20 y 60",
-                    "email": "joaquin10@hotmail.com",
-                    "especialidad": "",
-                },
-            )
+        response = self.client.post(
+            reverse("vets_form"),
+            data={
+                "name": "Joaquin Munos",
+                "phone": "22165438",
+                "address": "20 y 60",
+                "email": "joaquin10@hotmail.com",
+                "especialidad": "",
+            },
+        )
 
-            self.assertContains(response, "Por favor seleccione una especialidad") 
+        self.assertContains(
+            response, "Por favor seleccione una especialidad")
+
 
 class ProductsTest(TestCase):
     def test_can_create_product(self):
@@ -373,6 +379,7 @@ class ProductsTest(TestCase):
 #         # self.assertTrue(pet.exists())
 #         # self.assertEqual(pet.first().breed, Breed.DOG)
 
+
 class ClientsTestPhone(TestCase):
     def test_can_create_client_phone_54(self):
         response = self.client.post(
@@ -405,3 +412,21 @@ class ClientsTestPhone(TestCase):
             },
         )
         self.assertContains(response, "El teléfono debe comenzar con 54")
+
+
+class PetTest(TestCase):
+    def test_can_create_pet(self):
+        response = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": "Nombre",
+                "breed": Breed.DOG,
+                "birthday": "2024-06-01",
+            },
+        )
+        pets = Pet.objects.all()
+        self.assertEqual(len(pets), 1)
+
+        self.assertEqual(pets[0].name, "Nombre")
+        self.assertEqual(pets[0].breed, Breed.DOG)
+        self.assertEqual(pets[0].birthday, datetime.date(2024, 6, 1))
