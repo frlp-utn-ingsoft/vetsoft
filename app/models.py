@@ -277,10 +277,9 @@ class Product(models.Model):
         if len(errors.keys()) > 0:
             return False, errors
 
-        self.name = product_data.get("name", "") or self.name
-        self.type = product_data.get("type", "") or self.type
-        self.price = product_data.get("price", "") or self.price
-
+        self.name = product_data.get("name")
+        self.type = product_data.get("type")
+        self.price = product_data.get("price")
         self.save()
 
         return True, None
