@@ -26,11 +26,18 @@ def validate_client(data):
         errors["phone"] = "El número debe ser positivo"
 
     if email == "":
-        errors["email"] = "Por favor ingrese un email"
-    elif "vetsoft.com" not in email:
-        errors["email"] = "Por favor el email debe ser de dominio '@vetsoft.com'"
-    elif email.count("@") == 0:
-        errors["email"] = "Por favor ingrese un email válido"
+            errors["email"] = "Por favor ingrese un email"
+    elif "@" not in email:
+        errors["email"] = "El email debe contener '@'"
+    else:
+        try:
+            local_part, domain_part = email.rsplit("@", 1)
+            if domain_part != "vetsoft.com":
+                errors["email"] = "Por favor el email debe ser del dominio @vetsoft.com"
+            elif local_part == "":
+                errors["email"] = "Por favor el email debe tener una parte local antes de @vetsoft.com"
+        except ValueError:
+            errors["email"] = "Por favor ingrese un email válido"
 
     return errors
 
