@@ -80,7 +80,19 @@ class ClientModelTest(TestCase):
         self.assertEqual(len(clients), 0)
         self.assertEqual(response[1]['phone'], 'El número debe ser positivo')
 
-
+    def test_email_empty_local_part(self):
+        success, errors = Client.save_client(
+            {
+                "name": "Juan Perez",
+                "phone": "123456789",
+                "address": "Calle Falsa 123",
+                "email": "@vetsoft.com",
+            }
+        )
+        self.assertFalse(success)
+        self.assertIn("email", errors)
+        self.assertEqual(errors["email"], "Por favor el email debe tener una parte local antes de @vetsoft.com")
+        
 #         self.assertEqual(clients[0].name, "Juan Sebastian Veron")
 #         self.assertEqual(clients[0].phone, "221555232")
 #         self.assertEqual(clients[0].address, "13 y 44")
