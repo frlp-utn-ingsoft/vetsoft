@@ -90,8 +90,7 @@ class ProvidersRepoTestCase(PlaywrightTestCase):
 
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text(
-            "Por favor el email debe ser de dominio '@vetsoft.com'")).to_be_visible()
+        expect(self.page.get_by_text("Por favor el email debe ser del dominio @vetsoft.com")).to_be_visible()
 
 # class ClientsRepoTestCase(PlaywrightTestCase):
 #    def test_should_show_message_if_table_is_empty(self):
