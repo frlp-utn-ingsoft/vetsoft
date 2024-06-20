@@ -86,6 +86,19 @@ class ClientsTest(TestCase):
         self.assertContains(
             response, "El nombre solo puede contener letras y espacios")
 
+    def test_validation_errors_create_client_with_invalid_email_domain(self):
+        response = self.client.post(
+            reverse("clients_form"),
+            data={
+                "name": "Juan Perez",
+                "phone": "123456789",
+                "address": "Calle Falsa 123",
+                "email": "juan@gmail.com",
+            },
+        )
+
+        self.assertContains(response, "Por favor el email debe ser del dominio @vetsoft.com")
+
 # class ClientsTest(TestCase):
 #     def test_repo_use_repo_template(self):
 #         response = self.client.get(reverse("clients_repo"))
