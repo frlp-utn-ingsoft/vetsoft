@@ -222,7 +222,7 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         ).not_to_be_visible()
 
         expect(
-            self.page.get_by_text("Por favor ingrese un email válido")
+            self.page.get_by_text("El email debe contener @")
         ).to_be_visible()
 
     def test_should_be_able_to_edit_a_client(self):

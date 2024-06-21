@@ -69,7 +69,7 @@ class ClientsTest(TestCase):
             },
         )
 
-        self.assertContains(response, "Por favor ingrese un email válido")
+        self.assertContains(response, "El email debe contener @")
 
     def test_validation_invalid_name(self):
         response = self.client.post(

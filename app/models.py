@@ -28,7 +28,7 @@ def validate_client(data):
     if email == "":
         errors["email"] = "Por favor ingrese un email"
     elif "@" not in email:
-        errors["email"] = "El email debe contener '@'"
+        errors["email"] = "El email debe contener @"
     else:
         try:
             local_part, domain_part = email.rsplit("@", 1)
