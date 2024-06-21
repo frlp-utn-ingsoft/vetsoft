@@ -26,7 +26,7 @@ def validate_client(data):
         errors["phone"] = "El número debe ser positivo"
 
     if email == "":
-            errors["email"] = "Por favor ingrese un email"
+        errors["email"] = "Por favor ingrese un email"
     elif "@" not in email:
         errors["email"] = "El email debe contener '@'"
     else:
@@ -38,7 +38,7 @@ def validate_client(data):
                 errors["email"] = "Por favor el email debe tener una parte local antes de @vetsoft.com"
         except ValueError:
             errors["email"] = "Por favor ingrese un email válido"
-
+            
     return errors
 
 

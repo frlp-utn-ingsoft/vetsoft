@@ -45,6 +45,7 @@
                         value="{{client.phone}}"
                         pattern="[5][4][0-9]"
                         min="1"
+                        oninput="this.value = this.value.replace(/[^\d]/g, '')"
                         required
                     />
 
