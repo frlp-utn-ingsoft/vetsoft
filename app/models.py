@@ -130,7 +130,7 @@ def validate_pet(data):
     if breed == "":
         errors["breed"] = "Por favor ingrese la raza de la mascota"
 
-    if not (breed, breed) in Breed.choices:
+    if (breed, breed) not in Breed.choices:
         errors["breed"] = "No esta esa opcion"
 
     if birthday == "":
