@@ -433,7 +433,7 @@ class PetCreateTestCase(PlaywrightTestCase):
         expect(self.page.get_by_role("form")).to_be_visible()
 
         self.page.get_by_label("Nombre").fill("NombreMascota")
-        self.page.get_by_label("Raza").select_option("Seleccione una Opcione")
+        self.page.get_by_label("Raza").select_option("Seleccione una opción")
         self.page.get_by_label("Fecha de Nacimiento").fill("2024-06-01")
 
         self.page.get_by_role("button", name="Guardar").click()

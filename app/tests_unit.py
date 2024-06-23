@@ -314,7 +314,7 @@ class PetModelTest(TestCase):
         response = Pet.save_pet(
             {
                 "name ": "Nombre",
-                "breed": Breed.DOG,
+                "breed": "mascota",
                 "birthday": "2024-06-01",
             }
         )

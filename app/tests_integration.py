@@ -322,7 +322,7 @@ class PetTest(TestCase):
             reverse("pets_form"),
             data={
                 "name": "Nombre",
-                "breed": "Dog",
+                "breed": "Mascota",
                 "birthday": "2024-06-01",
             },
         )
