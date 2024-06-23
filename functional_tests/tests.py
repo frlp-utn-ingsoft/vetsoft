@@ -48,7 +48,8 @@ class HomeTestCase(PlaywrightTestCase):
 
         expect(navbar_clients_link).to_be_visible()
         expect(navbar_clients_link).to_have_text("Clientes")
-        expect(navbar_clients_link).to_have_attribute("href", reverse("clients_repo"))
+        expect(navbar_clients_link).to_have_attribute(
+            "href", reverse("clients_repo"))
 
     def test_should_have_home_cards_with_links(self):
         self.page.goto(self.live_server_url)
@@ -57,7 +58,8 @@ class HomeTestCase(PlaywrightTestCase):
 
         expect(home_clients_link).to_be_visible()
         expect(home_clients_link).to_have_text("Clientes")
-        expect(home_clients_link).to_have_attribute("href", reverse("clients_repo"))
+        expect(home_clients_link).to_have_attribute(
+            "href", reverse("clients_repo"))
 
 
 class ProvidersRepoTestCase(PlaywrightTestCase):
@@ -90,14 +92,15 @@ class ProvidersRepoTestCase(PlaywrightTestCase):
 
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text("Por favor el email debe ser del dominio @vetsoft.com")).to_be_visible()
+        expect(self.page.get_by_text(
+            "Por favor el email debe ser del dominio @vetsoft.com")).to_be_visible()
+
 
 class ClientsRepoTestCase(PlaywrightTestCase):
     def test_should_show_message_if_table_is_empty(self):
         self.page.goto(f"{self.live_server_url}{reverse('clients_repo')}")
 
         self.page.goto(f"{self.live_server_url}{reverse('clients_repo')}")
-
 
         expect(self.page.get_by_text("No existen clientes")).not_to_be_visible()
 
@@ -117,7 +120,8 @@ class ClientsRepoTestCase(PlaywrightTestCase):
         add_client_action = self.page.get_by_role(
             "link", name="Nuevo cliente", exact=False
         )
-        expect(add_client_action).to_have_attribute("href", reverse("clients_form"))
+        expect(add_client_action).to_have_attribute(
+            "href", reverse("clients_form"))
 
     def test_should_show_client_edit_action(self):
         client = Client.objects.create(
@@ -150,7 +154,8 @@ class ClientsRepoTestCase(PlaywrightTestCase):
         client_id_input = edit_form.locator("input[name=client_id]")
 
         expect(edit_form).to_be_visible()
-        expect(edit_form).to_have_attribute("action", reverse("clients_delete"))
+        expect(edit_form).to_have_attribute(
+            "action", reverse("clients_delete"))
         expect(client_id_input).not_to_be_visible()
         expect(client_id_input).to_have_value(str(client.id))
         expect(edit_form.get_by_role("button", name="Eliminar")).to_be_visible()
@@ -205,9 +210,12 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
 
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text("Por favor ingrese un nombre")).to_be_visible()
-        expect(self.page.get_by_text("Por favor ingrese un teléfono")).to_be_visible()
-        expect(self.page.get_by_text("Por favor ingrese un email")).to_be_visible()
+        expect(self.page.get_by_text(
+            "Por favor ingrese un nombre")).to_be_visible()
+        expect(self.page.get_by_text(
+            "Por favor ingrese un teléfono")).to_be_visible()
+        expect(self.page.get_by_text(
+            "Por favor ingrese un email")).to_be_visible()
 
         self.page.get_by_label("Nombre").fill("Juan Sebastián Veron")
         self.page.get_by_label("Teléfono").fill("54221555232")
@@ -216,7 +224,8 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
 
         self.page.get_by_role("button", name="Guardar").click()
 
-        expect(self.page.get_by_text("Por favor ingrese un nombre")).not_to_be_visible()
+        expect(self.page.get_by_text(
+            "Por favor ingrese un nombre")).not_to_be_visible()
         expect(
             self.page.get_by_text("Por favor ingrese un teléfono")
         ).not_to_be_visible()
@@ -257,6 +266,7 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         expect(edit_action).to_have_attribute(
             "href", reverse("clients_edit", kwargs={"id": client.id})
         )
+
 
 class ClientsRepoTestCase(PlaywrightTestCase):
     def test_should_not_be_able_to_create_a_name(self):
@@ -416,6 +426,18 @@ class PetCreateTestCase(PlaywrightTestCase):
         expect(self.page.get_by_text("NombreMascota")).to_be_visible()
         expect(self.page.get_by_text("Dog")).to_be_visible()
         expect(self.page.get_by_text("June 1, 2024")).to_be_visible()
+
+    def test_should_not_be_able_to_create_a_new_pet(self):
+        self.page.goto(f"{self.live_server_url}{reverse('pets_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("NombreMascota")
+        self.page.get_by_label("Raza").select_option("Seleccione una Opcione")
+        self.page.get_by_label("Fecha de Nacimiento").fill("2024-06-01")
+
+        self.page.get_by_role("button", name="Guardar").click()
+        expect(self.page.get_by_text("No esta esa opcion")).to_be_visible()
 
 
 class MedicineCreateTestCase(PlaywrightTestCase):
