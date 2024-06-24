@@ -69,6 +69,8 @@
                     <div class="invalid-feedback">{{ errors.email }}</div>
                     {% endif %}
                 </div>
+
+                {% comment  %}
                 <div>
                     <label for="address" class="form-label">Dirección</label>
                     <input
@@ -83,7 +85,21 @@
                         La dirrección es opcional
                     </div>
                 </div>
-
+                {% endcomment %}
+                <div>
+                    <label for="city" class="form-label">Ciudad</label>
+                    <select id="city" name="city" class="form-select" required>
+                        <option value="" disabled selected>Seleccione una opción</option>
+                        {% for value, label in cities %}
+                            <option value="{{ value }}" {% if client.city == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% if errors.city %}
+                    <div class="invalid-feedback">{{ errors.city }}</div>
+                    {% endif %}
+                </div>
                 <button class="btn btn-primary">Guardar</button>
             </form>
         </div>
