@@ -567,3 +567,21 @@ class ClientCreateTestCasePhone(PlaywrightTestCase):
             "Por favor ingrese un email")).not_to_be_visible()
         expect(self.page.get_by_text(
             "El teléfono debe comenzar con 54")).to_be_visible()
+
+    def test_should_not_be_able_to_create_a_new_client_character_phone(self):
+        self.page.goto(f"{self.live_server_url}{reverse('clients_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("NombrePersona")
+        self.page.get_by_label("Teléfono").fill("telefono")
+        self.page.get_by_label("Email").fill("email@vetsoft.com")
+        self.page.get_by_label("Dirección").fill("Direccion")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text("NombrePersona")).not_to_be_visible()
+        expect(self.page.get_by_text("hola")).not_to_be_visible()
+        expect(self.page.get_by_text("Por favor ingrese un teléfono")).to_be_visible()
+        expect(self.page.get_by_text("email@vetsoft.com")).not_to_be_visible()
+        expect(self.page.get_by_text("Direccion")).not_to_be_visible()
