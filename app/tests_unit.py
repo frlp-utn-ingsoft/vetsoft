@@ -50,13 +50,13 @@ class ClientModelTest(TestCase):
             {
                 "name": "Nombre",
                 "phone": "54666777",
-                "email": "email@vet.com",
+                "email": "email@vetsoft.com",
                 "city": "Ciudad",
             }
         )
         clients = Client.objects.all()
         self.assertEqual(len(clients), 1)
-        self.assertEqual(response[1]["city"], "Por favor ingrese una ciudad")
+        self.assertEqual(response[1]["city"], "Por favor ingrese una ciudad válida")
 
     def test_phone_empty(self):
         response = Client.save_client(
