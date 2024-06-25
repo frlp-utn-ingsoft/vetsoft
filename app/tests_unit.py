@@ -50,13 +50,13 @@ class ClientModelTest(TestCase):
             {
                 "name": "Nombre",
                 "phone": "54666777",
-                "email": "email@vetsoft.com",
+                "email": "email@vet.com",
                 "city": "Ciudad",
             }
         )
         clients = Client.objects.all()
         self.assertEqual(len(clients), 1)
-        self.assertEqual(response[1]["city"], "No esta esa opcion")
+        self.assertEqual(response[1]["city"], "Por favor ingrese una ciudad")
 
     def test_phone_empty(self):
         response = Client.save_client(
@@ -381,32 +381,3 @@ class ClientModelTest(TestCase):
         self.assertEqual(response[1]["phone"],
                          "El teléfono debe comenzar con 54")
 
-
-# class ClientModelTest(TestCase):
-
-#     def test_cannot_create_a_client(self):
-#         response = Pet.save_pet(
-#             {
-#                 "name ": "Nombre"
-#                 "breed": "mascota",
-#                 "birthday": "2024-06-01",
-#             }
-#         )
-
-#         pets = Pet.objects.all()
-#         self.assertEqual(len(pets), 0)
-#         self.assertEqual(response[1]["breed"], "No esta esa opcion")
-
-#     def test_breed_choices(self):
-#         # Crea mascotas con cada opción de raza
-#         pet_dog = Pet.objects.create(
-#             name="Dog Pet", breed=Breed.DOG, birthday="2022-01-01")
-#         pet_cat = Pet.objects.create(
-#             name="Cat Pet", breed=Breed.CAT, birthday="2022-01-01")
-#         pet_bird = Pet.objects.create(
-#             name="Bird Pet", breed=Breed.BIRD, birthday="2022-01-01")
-
-#         # Verifica que las mascotas se hayan guardado con las razas correctas
-#         self.assertEqual(pet_dog.breed, Breed.DOG)
-#         self.assertEqual(pet_cat.breed, Breed.CAT)
-#         self.assertEqual(pet_bird.breed, Breed.BIRD)

@@ -97,6 +97,39 @@ class ClientsTest(TestCase):
 
         self.assertContains(response, "Por favor el email debe ser del dominio @vetsoft.com")
 
+    def test_can_create_a_client_city(self):
+        response = self.client.post(
+            reverse("clients_form"),
+            data={
+                "name": "Nombre",
+                "phone": "54312321",
+                "city": "Berisso",
+                "email": "email@vetsoft.com",
+            },
+        )
+
+        clients = Client.objects.all()
+        self.assertEqual(len(clients), 1)
+        self.assertEqual(clients[0].name, "Nombre")
+        self.assertEqual(clients[0].phone, 54312321)
+        self.assertEqual(clients[0].email, "email@vetsoft.com")
+        self.assertEqual(clients[0].city, "Berisso")
+
+    def test_cannot_create_a_client_city(self):
+        response = self.client.post(
+            reverse("clients_form"),
+            data={
+                "name": "Nombre",
+                "phone": "54312321",
+                "city": "Ciudad",
+                "email": "email@vetsoft.com",
+            },
+        )
+
+        clients = Client.objects.all()
+        self.assertEqual(len(clients), 0)
+        self.assertContains(response, "Por favor ingrese una ciudad")
+
 class MedicinesTest(TestCase):
     def test_can_create_medicine(self):
         response = self.client.post(

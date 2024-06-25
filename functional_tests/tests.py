@@ -122,9 +122,9 @@ class ClientsRepoTestCase(PlaywrightTestCase):
     def test_should_show_client_edit_action(self):
         client = Client.objects.create(
             name="Juan Sebastián Veron",
-            address="13 y 44",
-            phone="221555232",
-            email="brujita75@hotmail.com",
+            city="Berisso",
+            phone="54221555232",
+            email="brujita75@vetsoft.com",
         )
 
         self.page.goto(f"{self.live_server_url}{reverse('clients_repo')}")
@@ -567,3 +567,40 @@ class ClientCreateTestCasePhone(PlaywrightTestCase):
             "Por favor ingrese un email")).not_to_be_visible()
         expect(self.page.get_by_text(
             "El teléfono debe comenzar con 54")).to_be_visible()
+
+class ClientCreateTestCaseCity(PlaywrightTestCase):
+    def test_should_be_able_to_create_a_new_client_city(self):
+        self.page.goto(f"{self.live_server_url}{reverse('clients_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("NombreCliente")
+        self.page.get_by_label("Teléfono").fill("54221555232")
+        self.page.get_by_label("Email").fill("email@vetsoft.com")
+        self.page.get_by_label("Ciudad").select_option("Berisso")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text(
+            "NombreCliente")).to_be_visible()
+        expect(self.page.get_by_text(
+            "54221555232")).to_be_visible()
+        expect(self.page.get_by_text(
+            "email@vetsoft.com")).to_be_visible()
+        expect(self.page.get_by_text(
+            "Berisso")).to_be_visible()
+
+    def test_should_be_able_to_create_a_new_client_city(self):
+        self.page.goto(f"{self.live_server_url}{reverse('clients_form')}")
+
+        expect(self.page.get_by_role("form")).to_be_visible()
+
+        self.page.get_by_label("Nombre").fill("NombreCliente")
+        self.page.get_by_label("Teléfono").fill("54221555232")
+        self.page.get_by_label("Email").fill("email@vetsoft.com")
+        self.page.get_by_label("Ciudad").select_option("Seleccione una opción")
+
+        self.page.get_by_role("button", name="Guardar").click()
+
+        expect(self.page.get_by_text(
+            "Por favor ingrese una ciudad")).to_be_visible()
