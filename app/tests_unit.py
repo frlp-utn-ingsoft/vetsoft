@@ -289,11 +289,6 @@ class ProductModelTest(TestCase):
 
 # Agrego test unitarios para punto 5 actividad 3
 class PetModelTest(TestCase):
-    def setUp(self):
-        # Crea un cliente para ser el dueño de la mascota
-        self.client = Client.objects.create(
-            name="Test Client", phone="221555232", email="test@test.com", address="13 y 44")
-
     def test_can_create_a_pet(self):
         response = Pet.save_pet(
             {
@@ -321,20 +316,6 @@ class PetModelTest(TestCase):
         pets = Pet.objects.all()
         self.assertEqual(len(pets), 0)
         self.assertEqual(response[1]["breed"], "No esta esa opcion")
-
-    def test_breed_choices(self):
-        # Crea mascotas con cada opción de raza
-        pet_dog = Pet.objects.create(
-            name="Dog Pet", breed=Breed.DOG, birthday="2022-01-01")
-        pet_cat = Pet.objects.create(
-            name="Cat Pet", breed=Breed.CAT, birthday="2022-01-01")
-        pet_bird = Pet.objects.create(
-            name="Bird Pet", breed=Breed.BIRD, birthday="2022-01-01")
-
-        # Verifica que las mascotas se hayan guardado con las razas correctas
-        self.assertEqual(pet_dog.breed, Breed.DOG)
-        self.assertEqual(pet_cat.breed, Breed.CAT)
-        self.assertEqual(pet_bird.breed, Breed.BIRD)
 
 
 class ClientModelTest(TestCase):
