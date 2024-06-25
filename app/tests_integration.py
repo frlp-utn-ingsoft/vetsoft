@@ -30,7 +30,7 @@ class ClientsTest(TestCase):
             data={
                 "name": "Juan Sebastian Veron",
                 "phone": "54221555232",
-                "address": "13 y 44",
+                "city": "Berisso",
                 "email": "brujita75@vetsoft.com",
             },
         )
@@ -39,7 +39,7 @@ class ClientsTest(TestCase):
 
         self.assertEqual(clients[0].name, "Juan Sebastian Veron")
         self.assertEqual(clients[0].phone, 54221555232)
-        self.assertEqual(clients[0].address, "13 y 44")
+        self.assertEqual(clients[0].city, "Berisso")
         self.assertEqual(clients[0].email, "brujita75@vetsoft.com")
 
         self.assertRedirects(response, reverse("clients_repo"))
@@ -263,47 +263,6 @@ class ProductsTest(TestCase):
         )
         self.assertContains(response, "El precio debe ser mayor a cero")
 
-# class PetIntegrationTest(TestCase):
-#     def setUp(self):
-#         # Crea un cliente para ser el dueño de la mascota
-#         self.client_obj = Client.objects.create(
-#             name="Test Client", phone="221555232", email="test@test.com", address="13 y 44")
-
-#         # Crea un cliente para enviar solicitudes HTTP
-#         self.http_client = Client()
-
-#     def test_create_pet(self):
-#         # # Define la URL y los datos que se enviarán en la solicitud
-#         # # Reemplaza 'create_pet' con la URL de tu vista
-#         # url = reverse('pets_form')
-#         # data = {
-#         #     'name': 'Test Pet',
-#         #     'breed': Breed.DOG,
-#         #     'birthday': '2022-01-01',
-#         #     'owner': self.client_obj.id
-#         # }
-
-#         response = self.client.post(
-#             reverse("pets_form"),
-#             data={
-#                 "name": "Fido",
-#                 "breed": Breed.DOG,
-#                 "birthday": "2022-01-01",
-#                 'owner': self.client_obj.id
-#             },
-#         )
-
-#         # # Envía una solicitud POST a la vista
-#         # response = self.http_client.post(url, data)
-
-#         # Comprueba que la respuesta tenga un código de estado 200
-#         # self.assertEqual(response.status_code, 200)
-
-#         # Comprueba que la mascota se haya creado en la base de datos
-#         # pet = Pet.objects.filter(name='Test Pet')
-#         # self.assertTrue(pet.exists())
-#         # self.assertEqual(pet.first().breed, Breed.DOG)
-
 
 class ClientsTestPhone(TestCase):
     def test_can_create_client_phone_54(self):
@@ -312,7 +271,7 @@ class ClientsTestPhone(TestCase):
             data={
                 "name": "Nombre",
                 "phone": "54221555232",
-                "address": "Direccion",
+                "city": "Berisso",
                 "email": "email@vetsoft.com",
             },
         )
@@ -321,7 +280,7 @@ class ClientsTestPhone(TestCase):
 
         self.assertEqual(clients[0].name, "Nombre")
         self.assertEqual(clients[0].phone, 54221555232)
-        self.assertEqual(clients[0].address, "Direccion")
+        self.assertEqual(clients[0].city, "Berisso")
         self.assertEqual(clients[0].email, "email@vetsoft.com")
 
         self.assertRedirects(response, reverse("clients_repo"))

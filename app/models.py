@@ -71,7 +71,7 @@ def validate_provider(data):
 
 
 class City(models.TextChoices):
-    """Define las opciones de razas para las mascotas"""
+    """Define las opciones de ciudad para clientes"""
     LA_PLATA = "La Plata",
     BERISSO = "Berisso",
     ENSENADA = "Ensenada",

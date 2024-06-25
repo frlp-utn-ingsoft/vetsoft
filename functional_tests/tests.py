@@ -86,7 +86,7 @@ class ProvidersRepoTestCase(PlaywrightTestCase):
         self.page.get_by_label("Nombre").fill("Juan Pérez")
         self.page.get_by_label("Teléfono").fill("123456789")
         self.page.get_by_label("Email").fill("juan@example")
-        self.page.get_by_label("Dirección").fill("Calle Falsa 123")
+        self.page.get_by_label("Ciudad").select_option("Berisso")
 
         self.page.get_by_role("button", name="Guardar").click()
 
@@ -189,14 +189,14 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         self.page.get_by_label("Nombre").fill("Juan Sebastian Veron")
         self.page.get_by_label("Teléfono").fill("54221555232")
         self.page.get_by_label("Email").fill("brujita75@vetsoft.com")
-        self.page.get_by_label("Dirección").fill("13 y 44")
+        self.page.get_by_label("Ciudad").select_option("Berisso")
 
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("Juan Sebastian Veron")).to_be_visible()
         expect(self.page.get_by_text("54221555232")).to_be_visible()
         expect(self.page.get_by_text("brujita75@vetsoft.com")).to_be_visible()
-        expect(self.page.get_by_text("13 y 44")).to_be_visible()
+        expect(self.page.get_by_text("Berisso")).to_be_visible()
 
     def test_should_view_errors_if_form_is_invalid(self):
         self.page.goto(f"{self.live_server_url}{reverse('clients_form')}")
@@ -212,7 +212,7 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         self.page.get_by_label("Nombre").fill("Juan Sebastián Veron")
         self.page.get_by_label("Teléfono").fill("54221555232")
         self.page.get_by_label("Email").fill("brujita75")
-        self.page.get_by_label("Dirección").fill("13 y 44")
+        self.page.get_by_label("Ciudad").select_option("Seleccione una opción")
 
         self.page.get_by_role("button", name="Guardar").click()
 
@@ -228,7 +228,7 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
     def test_should_be_able_to_edit_a_client(self):
         client = Client.objects.create(
             name="Juan Sebastián Veron",
-            address="13 y 44",
+            city="Berisso",
             phone="54221555232",
             email="brujita75@vetsoft.com",
         )
@@ -239,17 +239,17 @@ class ClientCreateEditTestCase(PlaywrightTestCase):
         self.page.get_by_label("Nombre").fill("Guido Carrillo")
         self.page.get_by_label("Teléfono").fill("54221232555")
         self.page.get_by_label("Email").fill("goleador@vetsoft.com")
-        self.page.get_by_label("Dirección").fill("1 y 57")
+        self.page.get_by_label("Ciudad").select_option("Ensenada")
 
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("Juan Sebastián Veron")).not_to_be_visible()
-        expect(self.page.get_by_text("13 y 44")).not_to_be_visible()
+        expect(self.page.get_by_text("Berisso")).not_to_be_visible()
         expect(self.page.get_by_text("54221555232")).not_to_be_visible()
         expect(self.page.get_by_text("brujita75@vetsoft.com")).not_to_be_visible()
 
         expect(self.page.get_by_text("Guido Carrillo")).to_be_visible()
-        expect(self.page.get_by_text("1 y 57")).to_be_visible()
+        expect(self.page.get_by_text("Ensenada")).to_be_visible()
         expect(self.page.get_by_text("54221232555")).to_be_visible()
         expect(self.page.get_by_text("goleador@vetsoft.com")).to_be_visible()
 
@@ -265,7 +265,7 @@ class ClientsRepoTestCase(PlaywrightTestCase):
         expect(self.page.get_by_role("form")).to_be_visible()
 
         self.page.get_by_label("Nombre").fill("1243##$")
-        self.page.get_by_label("Dirección").fill("La Plata")
+        self.page.get_by_label("Ciudad").select_option("Berisso")
         self.page.get_by_label("Teléfono").fill("5423145553")
         self.page.get_by_label("Email").fill("eduardola@vetsoft.com")
 
@@ -528,14 +528,14 @@ class ClientCreateTestCasePhone(PlaywrightTestCase):
         self.page.get_by_label("Nombre").fill("NombrePersona")
         self.page.get_by_label("Teléfono").fill("54221555232")
         self.page.get_by_label("Email").fill("email@vetsoft.com")
-        self.page.get_by_label("Dirección").fill("Direccion")
+        self.page.get_by_label("Ciudad").select_option("Berisso")
 
         self.page.get_by_role("button", name="Guardar").click()
 
         expect(self.page.get_by_text("NombrePersona")).to_be_visible()
         expect(self.page.get_by_text("54221555232")).to_be_visible()
         expect(self.page.get_by_text("email@vetsoft.com")).to_be_visible()
-        expect(self.page.get_by_text("Direccion")).to_be_visible()
+        expect(self.page.get_by_text("Berisso")).to_be_visible()
 
     def test_should_not_be_able_to_create_a_client_phone(self):
 
@@ -555,7 +555,7 @@ class ClientCreateTestCasePhone(PlaywrightTestCase):
         self.page.get_by_label("Nombre").fill("Nombre")
         self.page.get_by_label("Teléfono").fill("221555232")
         self.page.get_by_label("Email").fill("email@vetsoft.com")
-        self.page.get_by_label("Dirección").fill("Direccion")
+        self.page.get_by_label("Ciudad").select_option("Seleccione una opción")
 
         self.page.get_by_role("button", name="Guardar").click()
 

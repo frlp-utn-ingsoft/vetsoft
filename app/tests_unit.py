@@ -28,7 +28,6 @@ class ProviderModelTest(TestCase):
 
 
 class ClientModelTest(TestCase):
-
     def test_can_create_a_client_city(self):
         response = Client.save_client(
             {
@@ -58,18 +57,6 @@ class ClientModelTest(TestCase):
         clients = Client.objects.all()
         self.assertEqual(len(clients), 1)
         self.assertEqual(response[1]["city"], "No esta esa opcion")
-
-    # def test_can_create_and_get_client(self):
-    #     Client.save_client(
-    #         {
-    #             "name": "Juan Sebastian Veron",
-    #             "phone": "221555232",
-    #             "email": "brujita75@hotmail.com",
-    #             "address": "13 y 44",
-    #         }
-    #     )
-    #     clients = Client.objects.all()
-    #     self.assertEqual(len(clients), 1)
 
     def test_phone_empty(self):
         response = Client.save_client(
@@ -321,11 +308,6 @@ class ProductModelTest(TestCase):
 # Agrego test unitarios para punto 5 actividad 3
 # cambios por nueva rama  feature-agregaropcionesrazamascota
 class PetModelTest(TestCase):
-    def setUp(self):
-        # Crea un cliente para ser el dueño de la mascota
-        self.client = Client.objects.create(
-            name="Test Client", phone="221555232", email="test@test.com", address="13 y 44")
-
     def test_create_pet(self):
         # Crea una nueva mascota
         pet = Pet.objects.create(
@@ -372,7 +354,7 @@ class ClientModelTest(TestCase):
             {
                 "name": "Nombre",
                 "phone": "541555232",
-                "address": "direccion",
+                "city": "Berisso",
                 "email": "hola@vetsoft.com",
             }
         )
@@ -381,7 +363,7 @@ class ClientModelTest(TestCase):
 
         self.assertEqual(clients[0].name, "Nombre")
         self.assertEqual(clients[0].phone, 541555232)
-        self.assertEqual(clients[0].address, "direccion")
+        self.assertEqual(clients[0].city, "Berisso")
         self.assertEqual(clients[0].email, "hola@vetsoft.com")
 
     def test_cannot_create_a_client_phone(self):
