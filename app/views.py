@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 
-from .models import Breed, Client, Medicine, Pet, Product, Provider, Vet, City
+from .models import Breed, City, Client, Medicine, Pet, Product, Provider, Vet
 
 
 def home(request):
@@ -33,7 +33,7 @@ def clients_form(request, id=None):
 
         return render(
             request, "clients/form.html", {"errors": errors,
-                                           "client": request.POST, }
+                                           "client": request.POST, },
 
         )
 
