@@ -1,12 +1,11 @@
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 
-from .models import Breed, Client, Medicine, Pet, Product, Provider, Vet
+from .models import Breed, City, Client, Medicine, Pet, Product, Provider, Vet
 
 
 def home(request):
     """Renderiza la página de inicio."""
     return render(request, "home.html")
-
 
 
 def clients_repository(request):
@@ -17,6 +16,7 @@ def clients_repository(request):
 
 def clients_form(request, id=None):
     """Renderiza y maneja el formulario para crear o editar clientes."""
+    city = City.choices
     if request.method == "POST":
         client_id = request.POST.get("id", "")
         errors = {}
@@ -33,14 +33,16 @@ def clients_form(request, id=None):
 
         return render(
             request, "clients/form.html", {"errors": errors,
-                                           "client": request.POST},
+                                           "client": request.POST,
+                                           "city": city},
+
         )
 
     client = None
     if id is not None:
         client = get_object_or_404(Client, pk=id)
 
-    return render(request, "clients/form.html", {"client": client})
+    return render(request, "clients/form.html", {"client": client, "cities": city})
 
 
 def clients_delete(request):
@@ -57,23 +59,6 @@ def pets_repository(request):
     pets = Pet.objects.all()
     return render(request, "pets/repository.html", {"pets": pets})
 
-
-# def pets_form(request):
-#     if request.method == 'POST':
-#         name = request.POST.get('name')
-#         breed = request.POST.get('breed')
-#         birthday = request.POST.get('birthday')
-#         owner_id = request.POST.get('owner')
-#         owner = Client.objects.get(id=owner_id)
-
-#         Pet.objects.create(name=name, breed=breed,
-#                            birthday=birthday, owner=owner)
-
-#         # Asume que tienes una vista llamada 'pets_list'
-#         return redirect('pets_repo')
-#     else:
-#         clients = Client.objects.all()
-#         return render(request, 'pets/form.html', {'clients': clients})
 
 def pets_form(request, id=None):
     """Renderiza y maneja el formulario para crear o editar mascotas."""
@@ -94,8 +79,8 @@ def pets_form(request, id=None):
 
         return render(
             request, "pets/form.html", {"errors": errors,
-                                           "pet": request.POST,
-                                           "breeds": breed},
+                                        "pet": request.POST,
+                                        "breeds": breed},
         )
 
     pet = None

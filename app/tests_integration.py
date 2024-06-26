@@ -30,7 +30,7 @@ class ClientsTest(TestCase):
             data={
                 "name": "Juan Sebastian Veron",
                 "phone": "54221555232",
-                "address": "13 y 44",
+                "city": "Berisso",
                 "email": "brujita75@vetsoft.com",
             },
         )
@@ -39,7 +39,7 @@ class ClientsTest(TestCase):
 
         self.assertEqual(clients[0].name, "Juan Sebastian Veron")
         self.assertEqual(clients[0].phone, 54221555232)
-        self.assertEqual(clients[0].address, "13 y 44")
+        self.assertEqual(clients[0].city, "Berisso")
         self.assertEqual(clients[0].email, "brujita75@vetsoft.com")
 
         self.assertRedirects(response, reverse("clients_repo"))
@@ -98,6 +98,39 @@ class ClientsTest(TestCase):
         self.assertContains(
             response, "Por favor el email debe ser del dominio @vetsoft.com")
 
+
+    def test_can_create_a_client_city(self):
+        response = self.client.post(
+            reverse("clients_form"),
+            data={
+                "name": "Nombre",
+                "phone": "54312321",
+                "city": "Berisso",
+                "email": "email@vetsoft.com",
+            },
+        )
+
+        clients = Client.objects.all()
+        self.assertEqual(len(clients), 1)
+        self.assertEqual(clients[0].name, "Nombre")
+        self.assertEqual(clients[0].phone, 54312321)
+        self.assertEqual(clients[0].email, "email@vetsoft.com")
+        self.assertEqual(clients[0].city, "Berisso")
+
+    def test_cannot_create_a_client_city(self):
+        response = self.client.post(
+            reverse("clients_form"),
+            data={
+                "name": "Nombre",
+                "phone": "54312321",
+                "city": "Ciudad",
+                "email": "email@vetsoft.com",
+            },
+        )
+
+        clients = Client.objects.all()
+        self.assertEqual(len(clients), 0)
+        self.assertContains(response, "Por favor ingrese una ciudad")
 
 class MedicinesTest(TestCase):
     def test_can_create_medicine(self):
@@ -273,7 +306,7 @@ class ClientsTestPhone(TestCase):
             data={
                 "name": "Nombre",
                 "phone": "54221555232",
-                "address": "Direccion",
+                "city": "Berisso",
                 "email": "email@vetsoft.com",
             },
         )
@@ -282,7 +315,7 @@ class ClientsTestPhone(TestCase):
 
         self.assertEqual(clients[0].name, "Nombre")
         self.assertEqual(clients[0].phone, 54221555232)
-        self.assertEqual(clients[0].address, "Direccion")
+        self.assertEqual(clients[0].city, "Berisso")
         self.assertEqual(clients[0].email, "email@vetsoft.com")
 
         self.assertRedirects(response, reverse("clients_repo"))

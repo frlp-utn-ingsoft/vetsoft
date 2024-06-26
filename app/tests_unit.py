@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from app.models import Breed, Client, Medicine, Pet, Product, Provider, Vet
+from app.models import Breed, Client, Medicine, Pet, Product, Provider, Vet, City
 import datetime
 
 
@@ -28,17 +28,35 @@ class ProviderModelTest(TestCase):
 
 
 class ClientModelTest(TestCase):
-    def test_can_create_and_get_client(self):
-        Client.save_client(
+    def test_can_create_a_client_city(self):
+        response = Client.save_client(
             {
-                "name": "Juan Sebastian Veron",
-                "phone": "221555232",
-                "address": "13 y 44",
-                "email": "brujita75@hotmail.com",
+                "name": "Nombre",
+                "phone": "54666777",
+                "email": "email@vetsoft.com",
+                "city": City.BERISSO,
             }
         )
         clients = Client.objects.all()
         self.assertEqual(len(clients), 1)
+
+        self.assertEqual(clients[0].name, "Nombre")
+        self.assertEqual(clients[0].phone, 54666777)
+        self.assertEqual(clients[0].email, "email@vetsoft.com")
+        self.assertEqual(clients[0].city, City.BERISSO)
+
+    def test_cannot_create_a_client_city(self):
+        response = Client.save_client(
+            {
+                "name": "Nombre",
+                "phone": "54666777",
+                "email": "email@vetsoft.com",
+                "city": "Ciudad",
+            }
+        )
+        clients = Client.objects.all()
+        self.assertEqual(len(clients), 1)
+        self.assertEqual(response[1]["city"], "Por favor ingrese una ciudad válida")
 
     def test_phone_empty(self):
         response = Client.save_client(
@@ -324,7 +342,7 @@ class ClientModelTest(TestCase):
             {
                 "name": "Nombre",
                 "phone": "541555232",
-                "address": "direccion",
+                "city": "Berisso",
                 "email": "hola@vetsoft.com",
             }
         )
@@ -333,7 +351,7 @@ class ClientModelTest(TestCase):
 
         self.assertEqual(clients[0].name, "Nombre")
         self.assertEqual(clients[0].phone, 541555232)
-        self.assertEqual(clients[0].address, "direccion")
+        self.assertEqual(clients[0].city, "Berisso")
         self.assertEqual(clients[0].email, "hola@vetsoft.com")
 
     def test_cannot_create_a_client_phone(self):
@@ -350,3 +368,4 @@ class ClientModelTest(TestCase):
         self.assertEqual(len(clients), 0)
         self.assertEqual(response[1]["phone"],
                          "El teléfono debe comenzar con 54")
+

@@ -10,6 +10,7 @@ def validate_client(data):
     name = data.get("name", "")
     phone = data.get("phone", "")
     email = data.get("email", "")
+    city = data.get("city", "")
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
@@ -39,6 +40,11 @@ def validate_client(data):
         except ValueError:
             errors["email"] = "Por favor ingrese un email válido"
 
+    if city == "":
+        errors["city"] = "Por favor ingrese una ciudad"
+    elif not (city == "La Plata" or city == "Berisso" or city == "Ensenada"):
+        errors["city"] = "Por favor ingrese una ciudad válida"
+
     return errors
 
 
@@ -64,12 +70,23 @@ def validate_provider(data):
     return errors
 
 
+class City(models.TextChoices):
+    """Define las opciones de ciudad para clientes"""
+    LA_PLATA = "La Plata",
+    BERISSO = "Berisso",
+    ENSENADA = "Ensenada",
+
+
 class Client(models.Model):
     """Representa un cliente de la veterinaria"""
     name = models.CharField(max_length=100)
     phone = models.IntegerField()
     email = models.EmailField()
-    address = models.CharField(max_length=100, blank=True)
+    city = models.CharField(
+        max_length=100,
+        choices=City.choices,
+        default=City.LA_PLATA,
+    )
 
     def __str__(self):
         """Retorna la representación en cadena del cliente"""
@@ -87,7 +104,7 @@ class Client(models.Model):
             name=client_data.get("name"),
             phone=client_data.get("phone"),
             email=client_data.get("email"),
-            address=client_data.get("address"),
+            city=client_data.get("city"),
         )
 
         return True, None
@@ -102,7 +119,7 @@ class Client(models.Model):
         self.name = client_data.get("name", "") or self.name
         self.email = client_data.get("email", "") or self.email
         self.phone = client_data.get("phone", "") or self.phone
-        self.address = client_data.get("address", "") or self.address
+        self.city = client_data.get("city", "") or self.city
 
         self.save()
 
