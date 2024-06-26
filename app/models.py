@@ -10,6 +10,7 @@ def validate_client(data):
     name = data.get("name", "")
     phone = data.get("phone", "")
     email = data.get("email", "")
+    city = data.get("city", "")
 
     if name == "":
         errors["name"] = "Por favor ingrese un nombre"
@@ -22,7 +23,7 @@ def validate_client(data):
         errors["phone"] = "El teléfono debe comenzar con 54"
     elif not phone.isdigit():
         errors["phone"] = "Por favor ingrese un teléfono valido"
-    elif int(phone)<=0:
+    elif int(phone) <= 0:
         errors["phone"] = "El número debe ser positivo"
 
     if email == "":
@@ -38,7 +39,12 @@ def validate_client(data):
                 errors["email"] = "Por favor el email debe tener una parte local antes de @vetsoft.com"
         except ValueError:
             errors["email"] = "Por favor ingrese un email válido"
-            
+
+    if city == "":
+        errors["city"] = "Por favor ingrese una ciudad"
+    elif not (city == "La Plata" or city == "Berisso" or city == "Ensenada"):
+        errors["city"] = "Por favor ingrese una ciudad válida"
+
     return errors
 
 
@@ -64,12 +70,23 @@ def validate_provider(data):
     return errors
 
 
+class City(models.TextChoices):
+    """Define las opciones de ciudad para clientes"""
+    LA_PLATA = "La Plata",
+    BERISSO = "Berisso",
+    ENSENADA = "Ensenada",
+
+
 class Client(models.Model):
     """Representa un cliente de la veterinaria"""
     name = models.CharField(max_length=100)
     phone = models.IntegerField()
     email = models.EmailField()
-    address = models.CharField(max_length=100, blank=True)
+    city = models.CharField(
+        max_length=100,
+        choices=City.choices,
+        default=City.LA_PLATA,
+    )
 
     def __str__(self):
         """Retorna la representación en cadena del cliente"""
@@ -87,13 +104,13 @@ class Client(models.Model):
             name=client_data.get("name"),
             phone=client_data.get("phone"),
             email=client_data.get("email"),
-            address=client_data.get("address"),
+            city=client_data.get("city"),
         )
 
         return True, None
 
     def update_client(self, client_data):
-        """"Actualiza los datos de un cliente existente en la base de datos"""        
+        """"Actualiza los datos de un cliente existente en la base de datos"""
         errors = validate_client(client_data)
 
         if len(errors.keys()) > 0:
@@ -102,12 +119,11 @@ class Client(models.Model):
         self.name = client_data.get("name", "") or self.name
         self.email = client_data.get("email", "") or self.email
         self.phone = client_data.get("phone", "") or self.phone
-        self.address = client_data.get("address", "") or self.address
+        self.city = client_data.get("city", "") or self.city
 
         self.save()
 
         return True, None
-
 
 
 class Breed(models.TextChoices):
@@ -115,6 +131,7 @@ class Breed(models.TextChoices):
     DOG = "Dog",
     CAT = "Cat",
     BIRD = "Bird"
+
 
 def validate_pet(data):
     """Valida los datos de la mascosta"""
@@ -210,7 +227,7 @@ class Provider(models.Model):
         errors = validate_provider(provider_data)
         if len(errors.keys()) > 0:
             return False, errors
-        
+
         self.name = provider_data.get("name", "") or self.name
         self.email = provider_data.get("email", "") or self.email
         self.address = provider_data.get("address", "") or self.address
@@ -291,6 +308,7 @@ class Product(models.Model):
 
         return True, None
 
+
 def validate_vet(data):
     """Valida los datos del veterinario"""
     errors = {}
@@ -364,7 +382,7 @@ class Vet(models.Model):
         self.phone = vet_data.get("phone", "") or self.phone
         self.address = vet_data.get("address", "") or self.address
         self.speciality = vet_data.get("especialidad", "") or self.speciality
-        
+
         self.save()
 
         return True, None
@@ -436,11 +454,12 @@ class Medicine(models.Model):
         errors = validate_medicine(medicine_data)
         if len(errors.keys()) > 0:
             return False, errors
-    
+
         self.name = medicine_data.get("name", "") or self.name
-        self.description = medicine_data.get("description", "") or self.description
+        self.description = medicine_data.get(
+            "description", "") or self.description
         self.dose = medicine_data.get("dose", "") or self.dose
 
         self.save()
-        
+
         return True, None
