@@ -56,7 +56,8 @@ class ClientModelTest(TestCase):
         )
         clients = Client.objects.all()
         self.assertEqual(len(clients), 1)
-        self.assertEqual(response[1]["city"], "Por favor ingrese una ciudad válida")
+        self.assertEqual(response[1]["city"],
+                         "Por favor ingrese una ciudad válida")
 
     def test_phone_empty(self):
         response = Client.save_client(
@@ -323,6 +324,46 @@ class PetModelTest(TestCase):
         self.assertEqual(pets[0].breed, Breed.DOG)
         self.assertEqual(pets[0].birthday, datetime.date(2024, 6, 1))
 
+    def test_breed_choices(self):
+        # Crea mascotas con cada opción de raza usando la función save_pet
+        response_dog = Pet.save_pet(
+            {
+                "name": "Dog Pet",
+                "breed": Breed.DOG,
+                "birthday": "2022-01-01",
+            }
+        )
+        response_cat = Pet.save_pet(
+            {
+                "name": "Cat Pet",
+                "breed": Breed.CAT,
+                "birthday": "2022-01-01",
+            }
+        )
+        response_bird = Pet.save_pet(
+            {
+                "name": "Bird Pet",
+                "breed": Breed.BIRD,
+                "birthday": "2022-01-01",
+            }
+        )
+
+        # Verifica que las mascotas se hayan guardado con las razas correctas
+        pets = Pet.objects.all()
+        self.assertEqual(len(pets), 3)
+
+        self.assertEqual(pets[0].name, "Dog Pet")
+        self.assertEqual(pets[0].breed, Breed.DOG)
+        self.assertEqual(pets[0].birthday, datetime.date(2022, 1, 1))
+
+        self.assertEqual(pets[1].name, "Cat Pet")
+        self.assertEqual(pets[1].breed, Breed.CAT)
+        self.assertEqual(pets[1].birthday, datetime.date(2022, 1, 1))
+
+        self.assertEqual(pets[2].name, "Bird Pet")
+        self.assertEqual(pets[2].breed, Breed.BIRD)
+        self.assertEqual(pets[2].birthday, datetime.date(2022, 1, 1))
+
     def test_cannot_create_a_pet(self):
         response = Pet.save_pet(
             {
@@ -368,4 +409,3 @@ class ClientModelTest(TestCase):
         self.assertEqual(len(clients), 0)
         self.assertEqual(response[1]["phone"],
                          "El teléfono debe comenzar con 54")
-
