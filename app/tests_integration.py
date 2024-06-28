@@ -98,7 +98,6 @@ class ClientsTest(TestCase):
         self.assertContains(
             response, "Por favor el email debe ser del dominio @vetsoft.com")
 
-
     def test_can_create_a_client_city(self):
         response = self.client.post(
             reverse("clients_form"),
@@ -131,6 +130,7 @@ class ClientsTest(TestCase):
         clients = Client.objects.all()
         self.assertEqual(len(clients), 0)
         self.assertContains(response, "Por favor ingrese una ciudad")
+
 
 class MedicinesTest(TestCase):
     def test_can_create_medicine(self):
@@ -362,3 +362,46 @@ class PetTest(TestCase):
         pets = Pet.objects.all()
         self.assertEqual(len(pets), 0)
         self.assertContains(response, "No esta esa opcion")
+
+    def test_breed_choices(self):
+        # Crea mascotas con cada opción de raza usando la función save_pet
+        response_dog = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": "Dog Pet",
+                "breed": Breed.DOG,
+                "birthday": "2022-01-01",
+            }
+        )
+        response_cat = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": "Cat Pet",
+                "breed": Breed.CAT,
+                "birthday": "2022-01-01",
+            }
+        )
+        response_bird = self.client.post(
+            reverse("pets_form"),
+            data={
+                "name": "Bird Pet",
+                "breed": Breed.BIRD,
+                "birthday": "2022-01-01",
+            }
+        )
+
+        # Verifica que las mascotas se hayan guardado con las razas correctas
+        pets = Pet.objects.all()
+        self.assertEqual(len(pets), 3)
+
+        self.assertEqual(pets[0].name, "Dog Pet")
+        self.assertEqual(pets[0].breed, Breed.DOG)
+        self.assertEqual(pets[0].birthday, datetime.date(2022, 1, 1))
+
+        self.assertEqual(pets[1].name, "Cat Pet")
+        self.assertEqual(pets[1].breed, Breed.CAT)
+        self.assertEqual(pets[1].birthday, datetime.date(2022, 1, 1))
+
+        self.assertEqual(pets[2].name, "Bird Pet")
+        self.assertEqual(pets[2].breed, Breed.BIRD)
+        self.assertEqual(pets[2].birthday, datetime.date(2022, 1, 1))
